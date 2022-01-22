@@ -40,6 +40,24 @@ class CategoryController {
                 res.status(500).json(err);
             });
     }
+    static findCategoryById(req, res) {
+        categories.findById(req.params.id)
+            .then((response) => {
+                res.status(200).json({message:"success find category by id", data:response});
+            })
+            .catch((err) => {
+                res.status(500).json(err);
+            });
+    }
+    static updateCategory(req, res){
+        categories.findByIdAndUpdate(req.params.id, req.body, {new: true})
+            .then((response) => {
+                res.status(200).json({message:"success update category", data:response});
+            })
+            .catch((err) => {
+                res.status(500).json(err);
+            });
+    }
 }
 
 
