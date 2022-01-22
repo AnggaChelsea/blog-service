@@ -17,9 +17,13 @@ const api = process.env.API_URL;
 //router
 const productsRoutes = require("./routes/products");
 const categoryRouter = require("./routes/category");
+const userRoutes = require("./routes/user");
+const rolesRouter = require("./routes/roles");
 // mongoose.connect('mongodb+srv://olx:Sayangmamah1.@cluster0.ma8no.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
 app.use(productsRoutes);
-app.use(categoryRouter)
+app.use(categoryRouter);
+app.use(userRoutes);
+app.use(rolesRouter);
 
 app.listen(8000, () => {
   console.log("listening on port 8000");

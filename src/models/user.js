@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const UserSchema = mongoose.Schema({
 
     name: String,
@@ -11,47 +10,45 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    image: String,
-    countInStock: {
-        type: Number,
-        required: true
+    image: {
+        type: String,
+        default: 'avatar.png'
     },
-    alamat:{
-        type:String,
-        default:''
+
+    alamat: {
+        type: String,
+        default: ''
     },
-    numberphone:{
-        type:Number,
-        maxlength:12,
-        minlength:11,
-        default:0
+
+    role: {
+        // type: mongoose.Schema.Types.ObjectId,
+        type: String,
+        default: 'user'
+    },
+
+    numberphone: {
+        type: String,
+        maxlength: 12,
+        minlength: 11,
+        default: 0
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
+    updated_at: {
+        type: Date,
+        default: Date.now
     }
 })
 
-UserSchema.pre('save', function (next) {
-    var user = this;
-
-    // only hash the password if it has been modified (or is new)
-    if (!user.isModified('password')) return next();
-
-    // generate a salt
-    bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
-        if (err) return next(err);
-
-        // hash the password using our new salt
-        bcrypt.hash(user.password, salt, function (_, hash) {
-            if (err) return next(err);
-            // override the cleartext password with the hashed one
-            user.password = hash;
-            next();
-        });
-    });
+UserSchema.virtual('id').get(function () {
+    return this._id.toHexString();
 });
 
-UserSchema.methods.comparePassword = function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-        if (err) return cb(err);
-        cb(null, isMatch);
-    });
-};
-exports.User = mongoose.model('users', userSchema);
+// Ensure virtual fields are serialised.
+UserSchema.set('toJSON', {
+    virtuals: true
+});
+const UserModel = mongoose.model('users', UserSchema);
+module.exports = UserModel;

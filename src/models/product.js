@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 // mongoose schema
 const productSchema = new schema({
+    
     name: {
         type: String,
         required: true,
@@ -61,5 +62,13 @@ const productSchema = new schema({
         default:Date.now,
     }
 })
+productSchema.virtual('id').get(function(){
+    return this._id.toHexString();
+});
+
+// Ensure virtual fields are serialised.
+productSchema.set('toJSON', {
+    virtuals: true
+});
 const products = mongoose.model('products', productSchema)
 module.exports = products
