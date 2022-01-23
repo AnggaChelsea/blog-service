@@ -66,9 +66,6 @@ class ProductController {
     }
   }
   static updateProduct(req, res) {
-    // if (!mongoose.isValidaObjectId(req.params.id)) {
-    //   res.status(400).json('invalid id');
-    // }
     const category = categories.findById(req.body.category);
     if (!category) return res.status(404).json('invalid category');
     products.findByIdAndUpdate(req.params.id, req.body, {
@@ -84,21 +81,20 @@ class ProductController {
         res.status(500).json(err);
       });
   }
-  static countProduct(req, res) {
-    const productcount = products.find()
-    productcount.count((err, count) => {
-      if (err) return res.status(500).json(err);
-      res.status(200).json(count);
-    });
+  static async countProduct(req, res) {
+    const count = req.params.count ? req.params.count : 0 
+    const productcount = await products.find({isFeature: true}).limit(+count)
     if(!productcount){
       res.status(404).json({succes:false})
     }
     res.send(productcount)
   } 
+
   static findFilter(req, res){
     const filtering = {}
     if(req.query.categories){
-      filtering = {category: req.query.categories.split(',')}
+      let filteringbe = {category: req.query.categories.split(',')}
+      filtering.push(filteringbe)
     }
     const filtered = products.find(filtering)
     if(!filtered) {

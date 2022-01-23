@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const ProductController = require("../controllers/productController");
+const jwtAdmin = require("../helper/jwtAdmin");
 
-router.get("/productfind", ProductController.getAllProducts);
+
+const jwtadminn = jwtAdmin();
+router.get("/productfind", jwtadminn, ProductController.getAllProducts);
 router.post("/add-product", ProductController.addProduct);
 router.get("/find-product-by-id/:id", ProductController.getProductbyId);
 router.put("/update-product/:id", ProductController.updateProduct);

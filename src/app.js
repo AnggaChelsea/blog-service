@@ -9,21 +9,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 mongooseConnection();
+
 require("dotenv").config();
 app.use(morgan("tiny"));
+
 app.use(bodyParser.json());
-const api = process.env.API_URL;
+
 
 //router
-const productsRoutes = require("./routes/products");
-const categoryRouter = require("./routes/category");
-const userRoutes = require("./routes/user");
 const rolesRouter = require("./routes/roles");
+const routes = require('./routes')
 // mongoose.connect('mongodb+srv://olx:Sayangmamah1.@cluster0.ma8no.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
-app.use(productsRoutes);
-app.use(categoryRouter);
-app.use(userRoutes);
-app.use(rolesRouter);
+app.use((err, req, res, next) => {
+  if (err) {
+    res.status(401).json({message:err});
+  }
+})
+app.use(routes);
 
 app.listen(8000, () => {
   console.log("listening on port 8000");

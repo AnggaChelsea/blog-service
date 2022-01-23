@@ -21,9 +21,9 @@ const UserSchema = mongoose.Schema({
     },
 
     role: {
-        // type: mongoose.Schema.Types.ObjectId,
-        type: String,
-        default: 'user'
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'roles',
+        required: true,
     },
 
     numberphone: {
