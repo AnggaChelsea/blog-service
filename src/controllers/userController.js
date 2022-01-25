@@ -4,18 +4,19 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 class UserController {
   static async register(req, res) {
-    const { name, email, password, countInStock, alamat, role, numberphone } =
+    const { name, email, password, image, countInStock, alamat, role, numberphone } =
       req.body;
     const newUser = new userModel({
       name,
       email,
       password: bcrypt.hashSync(password, 10),
+      image,
       countInStock,
       alamat,
       role,
       numberphone,
-    });
-    newUser
+    })
+      newUser
       .save()
       .then((response) => {
         res.status(200).json({ message: "success add user", data: response });
@@ -23,15 +24,8 @@ class UserController {
       .catch((err) => {
         res.status(500).json(err);
       });
-  }
-  static getUser(req, res) {
-    let users = userModel
-      .find().populate('role')
-      .select("-password")
-      if (users.role === "seller") {
-        res.status(200).json(response);
-      }
-        res.status(500).json(err);
+    
+   
   }
   static loginUser(req, res) {
     const secret = process.env.SCRET_KEY;
