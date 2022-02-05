@@ -17,9 +17,9 @@ function authJwtAdmin() {
 }
 
 async function revokeadmin(req, payload, done) {
-    const user = await userModel.findById(req.id);
-    const isSeller = users.role.name === 'seller';
-    if (user.role === isSeller) {
+    const user = await userModel.find();
+    const isAdmin = user.role.name === 'admin';
+    if (user.role === isAdmin) {
         return done(null, true);
     }
     return done(null, false);

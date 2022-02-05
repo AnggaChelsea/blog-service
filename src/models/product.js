@@ -27,22 +27,22 @@ const productSchema = new schema({
         default:''
     },
     price: {
-        type:Number,
+        type:String,
         default:0,
     },
     category:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: schema.Types.ObjectId,
         ref:'categories',
         required:true,
     },
     countInStock:{
-        type:Number,
+        type:String,
         required:true,
         min:0,
         max:255
     },
     rating: {
-        type:Number,
+        type:String,
         default:0,
     },
     numReviews:{

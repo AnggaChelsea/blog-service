@@ -7,6 +7,11 @@ const UserSchema = mongoose.Schema({
         required: true,
         unique: true
     },
+    verified: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     password: {
         type: String,
         required: true,
@@ -27,6 +32,17 @@ const UserSchema = mongoose.Schema({
         required: true,
     },
 
+    status: {
+        type: String, 
+        enum: ['Pending', 'Active'],
+        default: 'Pending'
+      },
+
+      confirmationCode: { 
+        type: String, 
+        unique: true 
+    },
+
     numberphone: {
         type: String,
         maxlength: 12,
@@ -34,6 +50,10 @@ const UserSchema = mongoose.Schema({
         default: '',
         unique: true
     },
+    message: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'messages',
+    }],
     created_at: {
         type: Date,
         default: Date.now
@@ -68,11 +88,11 @@ UserModel.schema.path('email').validate(function (value) {
 }, 'Email sudah terdaftar');
 //validate numberphone isexist
 UserModel.schema.path('numberphone').validate(function (value) {
-    return UserModel.findOne({ numberphone: value }).then(function (user) {
+    return UserModel.findOne({ numberphone: value }).then( ((user) => {
         if (user) {
             return false;
         }
         return true;
-    });
+    }));
 }, 'Nomor telepon sudah terdaftar');
 module.exports = UserModel;

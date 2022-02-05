@@ -1,11 +1,21 @@
 const userModel = require("../models/user");
-
+const messageModel = require("../models/message");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const sendVeryficationEmail = require("../helper/emailVerifycation");
+const nodemailer = require("../config/nodemailer");
 class UserController {
   static async register(req, res) {
-    const { name, email, password, image, countInStock, alamat, role, numberphone } =
-      req.body;
+    const {
+      name,
+      email,
+      password,
+      image,
+      countInStock,
+      alamat,
+      role,
+      numberphone,
+    } = req.body;
     const newUser = new userModel({
       name,
       email,
@@ -15,48 +25,160 @@ class UserController {
       alamat,
       role,
       numberphone,
-    })
-      newUser
+    });
+
+    newUser
       .save()
       .then((response) => {
-        res.status(200).json({ message: "success add user", data: response });
+        res.status(200).json({
+          message: "success add user",
+          data: response,
+        });
       })
       .catch((err) => {
         res.status(500).json(err);
       });
-    
-   
   }
-  static loginUser(req, res) {
-    const secret = process.env.SCRET_KEY;
-    const { email, password } = req.body;
-   
-    userModel
-      .findOne({ email })
+
+  // static loginUser(req, res) {
+  //   const secret = process.env.SCRET_KEY;
+  //   const userStatus = userModel.find();
+  //   console.log(userStatus.status);
+  //   const email = req.body.email;
+  //   const password = req.body.password;
+
+  //   const usercheck = userModel.findOne({
+  //     email,
+  //   });
+  //   if (usercheck) {
+  //     if (bcrypt.compareSync(password, usercheck.password)) {
+  //       const token = jwt.sign(
+  //         {
+  //           userId: usercheck.id,
+  //         },
+  //         secret,
+  //         {
+  //           expiresIn: "1h",
+  //         }
+  //       );
+
+  //       res.status(200).json({
+  //         email: usercheck.email,
+  //         username: usercheck.name,
+  //         token,
+  //       });
+  //     } else {
+  //       res.status(400).json({
+  //         message: "password or email wrong",
+  //       });
+  //     }
+  //   } else {
+  //     res.status(400).json({
+  //       message: "email tidak terdaftar",
+  //     });
+  //   }
+  // }
+
+  static async loginUser(req, res){
+    const {email, password} = req.body;
+    const user = await userModel.findOne({
+      email
+    })
+    if(user){
+      if(bcrypt.compareSync(password, user.password)){
+        const token = jwt.sign({
+          userId: user.id
+        }, process.env.SCRET_KEY, {
+          expiresIn: '1h'
+        })
+        res.status(200).json({
+          message: 'success login',
+          token
+        })
+      }else{
+        res.status(400).json({
+          message: 'password or email wrong'
+        })
+      }
+    }else{
+      res.status(400).json({
+        message: 'email not found'
+      })
+    }
+  }
+
+  static async message(req, res) {
+    const { message, uploadfile } = req.body;
+    const userId = req.params.id;
+
+    let userid = await userModel
+      .findOne({
+        id: userId,
+      })
+      .then((user) => {
+        const newChat = new ChatRooms({
+          message,
+          uploadfile,
+        });
+        newChat
+          .save()
+          .then((response) => {
+            res.status(200).json({
+              response,
+              user: userid,
+              message: "success sended",
+            });
+          })
+          .catch((err) => {
+            res.status(500).json(err);
+          });
+      });
+    let messageC = await new messageModel({
+      message,
+      uploadfile,
+    });
+    messageC
+      .save()
       .then((response) => {
-        if (response) {
-          if (bcrypt.compareSync(password, response.password)) {
-            const token = jwt.sign(
-              {
-                userId: response.id,
-              },
-              secret,
-              { expiresIn: "1h" }
-            );
-           
-            res
-              .status(200)
-              .json({ email: response.email, username: response.name, token });
-          } else {
-            res.status(400).json({ message: "password or email wrong" });
-          }
-        } else {
-          res.status(400).json({ message: "email tidak terdaftar" });
-        }
+        res.status(200).json({
+          response,
+          user: userid,
+          message: "success add chat",
+        });
       })
       .catch((err) => {
         res.status(500).json(err);
       });
+  }
+
+  static sendmessagetouser(req, res) {
+    const { message, uploadfile, userId } = req.body;
+    const userid = userModel.findOne({
+      id: userId,
+    });
+    if (!userid) {
+      res.status(404).json({
+        message: "user not found",
+      });
+    } else {
+      const newChat = new messageModel({
+        message,
+        uploadfile,
+        userId: userid,
+      });
+      newChat
+        .save()
+        .then((response) => {
+          res.status(200).json({
+            response,
+            user: userid,
+            message: "success add chat",
+          });
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    }
   }
 }
 
