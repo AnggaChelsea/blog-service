@@ -8,6 +8,8 @@ var server   = require('http').Server(app);
 var io       = require('socket.io')(server);
 const nodemailer = require("nodemailer");
 
+//cors
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "/assets/images");

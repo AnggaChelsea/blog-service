@@ -7,12 +7,14 @@ const home = require('./home')
 const order =  require("./order")
 const api = process.env.API_URL;
 
+
+router.use(`/user`, userRouter);
 router.use(`/`, home)
-router.use(`${api}user`, userRouter);
-router.use(`${api}category`, categoryRouter);
-router.use(`${api}products`, products);
-router.use(`${api}roles`, require("./roles"));
-router.use(`${api}orders`, order);
-router.use(`${api}chat`, require("./chat"));
+
+router.use(`/category`, categoryRouter);
+router.use(`/products`, products);
+router.use(`/roles`, require("./roles"));
+router.use(`/orders`, order);
+router.use(`/chat`, require("./chat"));
 
 module.exports = router;

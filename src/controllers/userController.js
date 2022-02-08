@@ -88,10 +88,10 @@ class UserController {
       if(bcrypt.compareSync(password, user.password)){
         const token = jwt.sign({
           userId: user.id
-        }, process.env.SCRET_KEY, {
+        }, "sayangmamah", {
           expiresIn: '1h'
         })
-        res.status(200).json({
+        return res.status(200).json({
           message: 'success login',
           token
         })
@@ -153,8 +153,9 @@ class UserController {
 
   static sendmessagetouser(req, res) {
     const { message, uploadfile, userId } = req.body;
+    const {paramUserId} = req.params.id;
     const userid = userModel.findOne({
-      id: userId,
+      id: paramUserId,
     });
     if (!userid) {
       res.status(404).json({
@@ -179,6 +180,53 @@ class UserController {
           res.status(500).json(err);
         });
     }
+  }
+  static async confirmaitoncode(req, res) {
+    const { email } = req.body;
+    const user = await userModel.findOne({
+      email,
+    });
+    if (user) {
+      const secret = process.env.SCRET_KEY;
+      const token = jwt.sign(
+        {
+          userId: user.id,
+        },
+        secret,
+        {
+          expiresIn: "1h",
+        }
+      );
+      const email = user.email;
+      const name = user.name;
+      const code = Math.floor(Math.random() * 1000000);
+      const link = `${process.env.API_URL}/user/verify?token=${token}&code=${code}`;
+      const mailOptions = {
+        from: "freelancer9@gmail.com",
+        to: email,
+        subject: "Verify your email",
+        html: `<h1>Hello ${name}</h1>
+        <p>Please click the link to verify your email</p>
+        <a href=${link}>${link}</a>`,
+      };
+      nodemailer.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(info);
+        }
+      }
+      );
+      res.status(200).json({
+        message: "success send email",
+        code,
+      });
+    } else {
+      res.status(400).json({
+        message: "email not found",
+      });
+    }
+    
   }
 }
 

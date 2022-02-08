@@ -3,7 +3,8 @@ const userModel = require('../models/user');
 
 function authJwtAdmin() {
     require("dotenv").config();
-    const secret = process.env.SCRET_KEY;
+    // const secret = process.env.SCRET_KEY;
+    const secret = "sayangkamu"
     return expressjwt({
         secret,
         algorithms: ['HS256'],

@@ -21,4 +21,13 @@ categorySchema.set('toJSON', {
     virtuals: true
 });
 const categories = mongoose.model('categories', categorySchema);
+categories.schema.path('name').validate(function(value){
+   return categories.findOne({name:value}).then(function(category){
+         if(category){
+              return false;
+         }
+         return true;
+    });
+}, 'Categiry already exists');
+
 module.exports = categories;
