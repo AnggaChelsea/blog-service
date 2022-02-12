@@ -41,6 +41,10 @@ app.get("/", function(req,res){
   res.send("<h1>Hallo world</h1>");
 })
 
+app.use(cors())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const upload = multer({ storage: storage });
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
