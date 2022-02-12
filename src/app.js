@@ -9,7 +9,7 @@ var server   = require('http').Server(app);
 var io       = require('socket.io')(server);
 const nodemailer = require("nodemailer");
 
-const port = process.env.PORT ||8080;
+const port = process.env.PORT ||8002;
 
 //cors
 app.use(function (req, res, next) {
@@ -35,6 +35,10 @@ const storage = multer.diskStorage({
     cb(null,fileName + "-" + Date);
   },
 });
+
+app.get("/", function(req,res){
+  res.send("<h1>Hallo world</h1>");
+})
 
 const upload = multer({ storage: storage });
 app.use(express.urlencoded({ extended: false }));
