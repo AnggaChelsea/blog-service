@@ -12,7 +12,7 @@ class CategoryController {
             res.status(200).json(category)
         }
     }
-    static async addCategory(req, res) {
+    static async addCategory(req, res, next) {
         try {
             const category = new categories({
                 name: req.body.name,
@@ -27,9 +27,11 @@ class CategoryController {
                 .catch((err) => {
                     res.status(500).json(err);
                 });
+                next();
         } catch (err) {
             res.status(500).json(err);
         }
+       
     }
     static deleteCategory(req, res) {
         categories.findByIdAndDelete(req.params.id)

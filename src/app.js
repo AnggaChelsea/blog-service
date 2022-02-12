@@ -8,6 +8,7 @@ var server   = require('http').Server(app);
 var io       = require('socket.io')(server);
 const nodemailer = require("nodemailer");
 
+const port = process.env.PORT ||8000;
 //cors
 
 const storage = multer.diskStorage({
@@ -45,6 +46,6 @@ app.use((err, req, res, next) => {
 });
 app.use(routes);
 
-server.listen(8000, () => {
-  console.log("listening on port 8000");
+server.listen(port, () => {
+  console.log("listening on port " + port);
 });

@@ -151,7 +151,7 @@ class ProductController {
     }
   }
   static async getFeedsProduct(req, res) {
-    const product = await products.find({ isFeature: true }).limit(4);
+    const product = await products.find({"$where": "this.rating > 10"}).limit(4);
     if (!product) {
       res.status(404).json({
         status: 404,
@@ -277,6 +277,31 @@ class ProductController {
       .save()
       .then((response) => {
         res.status(200).json(response);
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  }
+  static async addLikeProduct(req,res) {
+    const product = await products.findById(req.params.id);
+    if (!product) return res.status(404).json("invalid product");
+    product.rating = product.rating + 1;
+    product
+      .save()
+      .then((response) => {
+        res.status(200).json(response);
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  }
+  static async deleteProduct(req, res){
+    const product = await products.findById(req.params.id);
+    if (!product) return res.status(404).json("invalid product");
+    product
+      .remove()
+      .then((response) => {
+        res.status(200).json({message: "success delete product"});
       })
       .catch((err) => {
         res.status(500).json(err);

@@ -16,5 +16,10 @@ router.post("/uploadimage/:id", ProductController.uploadImage);
 
 //without validate
 router.post("/addnewproduct", ProductController.newproduct);
+router.get("/product_feed", ProductController.getFeedsProduct);
+
+router.post("/like/:id", ProductController.addLikeProduct)
+
+router.delete("/product_delete/:id", ProductController.deleteProduct)
 
 module.exports = router;
