@@ -26,7 +26,6 @@ class UserController {
       role,
       numberphone,
     });
-
     newUser
       .save()
       .then((response) => {
@@ -39,45 +38,6 @@ class UserController {
         res.status(500).json(err);
       });
   }
-
-  // static loginUser(req, res) {
-  //   const secret = process.env.SCRET_KEY;
-  //   const userStatus = userModel.find();
-  //   console.log(userStatus.status);
-  //   const email = req.body.email;
-  //   const password = req.body.password;
-
-  //   const usercheck = userModel.findOne({
-  //     email,
-  //   });
-  //   if (usercheck) {
-  //     if (bcrypt.compareSync(password, usercheck.password)) {
-  //       const token = jwt.sign(
-  //         {
-  //           userId: usercheck.id,
-  //         },
-  //         secret,
-  //         {
-  //           expiresIn: "1h",
-  //         }
-  //       );
-
-  //       res.status(200).json({
-  //         email: usercheck.email,
-  //         username: usercheck.name,
-  //         token,
-  //       });
-  //     } else {
-  //       res.status(400).json({
-  //         message: "password or email wrong",
-  //       });
-  //     }
-  //   } else {
-  //     res.status(400).json({
-  //       message: "email tidak terdaftar",
-  //     });
-  //   }
-  // }
 
   static async loginUser(req, res){
     const {email, password} = req.body;
@@ -187,10 +147,11 @@ class UserController {
   }
   static async confirmaitoncode(req, res) {
     const { email } = req.body;
+    const userId = req.params.id;
     const user = await userModel.findOne({
       email,
     });
-    if (user) {
+    if (user && userId === user.id) {
       const secret = process.env.SCRET_KEY;
       const token = jwt.sign(
         {
@@ -201,13 +162,14 @@ class UserController {
           expiresIn: "1h",
         }
       );
-      const email = user.email;
+      const emails = user.email;
       const name = user.name;
       const code = Math.floor(Math.random() * 1000000);
       const link = `${process.env.API_URL}/user/verify?token=${token}&code=${code}`;
+    
       const mailOptions = {
         from: "freelancer9@gmail.com",
-        to: email,
+        to: emails,
         subject: "Verify your email",
         html: `<h1>Hello ${name}</h1>
         <p>Please click the link to verify your email</p>
@@ -231,6 +193,50 @@ class UserController {
       });
     }
     
+  }
+
+  static async updateUser(req, res) {
+    const {
+      name,
+      email,
+      password,
+      image,
+      countInStock,
+      alamat,
+      role,
+      numberphone,
+    } = req.body;
+    const userId = req.params.id;
+    const user = await userModel.findOne({
+      id: userId,
+    });
+    if (user) {
+      const newUser = new userModel({
+        name,
+        email,
+        password: bcrypt.hashSync(password, 10),
+        image,
+        countInStock,
+        alamat,
+        role,
+        numberphone,
+      });
+      newUser
+        .save()
+        .then((response) => {
+          res.status(200).json({
+            message: "success update user",
+            data: response,
+          });
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    } else {
+      res.status(400).json({
+        message: "user not found",
+      });
+    }
   }
 }
 

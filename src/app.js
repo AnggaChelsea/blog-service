@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+const cors = require("cors");
 const mongooseConnection = require("./config/db");
 const multer = require("multer");
 var server   = require('http').Server(app);
@@ -58,6 +59,8 @@ app.use((err, req, res, next) => {
     res.status(401).json({ message: err });
   }
 });
+
+app.use(cors({origin: 'https://arcane-tor-29221.herokuapp.com/'}));
 app.use(routes);
 
 server.listen(port, () => {

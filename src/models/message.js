@@ -2,19 +2,18 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const MessageSChema = Schema({
-    message :{
-        type:String,
-        minlength:1,
-        required:true
+    message: {
+        type: String,
+        minlength: 1,
+        required: true
     },
-    uploadfile:{
-        type:String,
+    uploadfile: {
+        type: String,
     },
-    userId:{
-        type:Schema.Types.ObjectId,
-        ref:'users',
-        required:true
-    },
+    from: {
+        type: String,
+        required: true
+    }
 })
 
 
