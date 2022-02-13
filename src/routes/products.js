@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ProductController = require("../controllers/productController");
+const auth = require("../middleware/auth");
 const jwtAdmin = require("../middleware/jwtAdmin");
 
 router.get('/homepage', ProductController.homepage)

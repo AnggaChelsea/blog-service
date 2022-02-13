@@ -12,7 +12,7 @@ class CategoryController {
             res.status(200).json(category)
         }
     }
-    static async addCategory(req, res, next) {
+    static async addCategory(req, res) {
         try {
             const category = new categories({
                 name: req.body.name,
@@ -22,12 +22,12 @@ class CategoryController {
             category
                 .save()
                 .then((response) => {
-                    res.status(200).json({message:"success add category", data:response});
+                   return res.status(200).json({message:"success add category", data:response});
                 })
                 .catch((err) => {
-                    res.status(500).json(err);
+                    return res.status(500).json(err);
                 });
-                next();
+              
         } catch (err) {
             res.status(500).json(err);
         }

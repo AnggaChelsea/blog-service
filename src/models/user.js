@@ -38,17 +38,15 @@ const UserSchema = mongoose.Schema({
     default: "Pending",
   },
 
-  confirmationCode: {
-    type: String,
-    unique: true,
-  },
+  // confirmationCode: {
+  //   type: String,
+  
+  // },
 
   numberphone: {
     type: String,
     maxlength: 12,
-    minlength: 11,
     default: "",
-    unique: true,
   },
   message: [
     {

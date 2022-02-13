@@ -13,6 +13,14 @@ require('dotenv').config();
 const port = process.env.PORT ||8002;
 
 //cors
+app.all('*', function(req, res, next) {
+  var origin = req.get('origin'); 
+  res.header('Access-Control-Allow-Origin', origin);
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
@@ -69,7 +77,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.use(cors({origin: 'https://arcane-tor-29221.herokuapp.com/'}));
+app.use(cors({origin: 'http://localhost:8100/'}));
 app.use(routes);
 
 server.listen(port, () => {
