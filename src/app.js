@@ -77,7 +77,6 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.use(cors({origin: 'http://localhost:8100/'}));
 app.use(routes);
 
 server.listen(port, () => {
