@@ -46,7 +46,7 @@ const storage = multer.diskStorage({
 });
 
 app.get("/", function(req,res){
-  res.send("<h1>Hallo world</h1>");
+  res.send("<h1>Hallo world w</h1>");
 })
 
 app.use(cors())
