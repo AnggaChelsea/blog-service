@@ -8,6 +8,7 @@ const multer = require("multer");
 var server   = require('http').Server(app);
 var io       = require('socket.io')(server);
 const nodemailer = require("nodemailer");
+const http = require('http').Server(app);
 require('dotenv').config();
 
 const port = process.env.PORT ||8002;

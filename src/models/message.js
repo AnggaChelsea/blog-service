@@ -2,18 +2,26 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const MessageSChema = Schema({
-    message: {
-        type: String,
-        minlength: 1,
-        required: true
+    senderId: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+
     },
-    uploadfile: {
+    message:{
         type: String,
+        required: true,
     },
-    from: {
+    file:{
         type: String,
-        required: true
-    }
+        default: "",
+    },
+    meta:{
+        type: String,
+        default: "",
+    },
+    deleteUserId:{
+        
+    },
 })
 
 

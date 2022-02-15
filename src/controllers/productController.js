@@ -28,9 +28,12 @@ class ProductController {
         message: "Products not found",
       });
       return
-     
+
     } else {
-     res.status(200).json({ message: "success", data: product });
+      res.status(200).json({
+        message: "success",
+        data: product
+      });
     }
   }
   static async getFeature(req, res) {
@@ -49,7 +52,7 @@ class ProductController {
     }
   }
 
-  static getProductbyId(req, res) {
+  static getProductbyId(req, res) {uploadfile,
     products
       .findById(req.params.id)
       .populate("category")
@@ -78,36 +81,43 @@ class ProductController {
   }
 
   static async addProduct(req, res) {
-    const category = await categories.findById(req.body.category);
-    console.log("thisis category", category);
-    if (!category) return res.status(404).json("invalid category");
-    try {
-      const product = new products({
-        name: req.body.name,
-        description: req.body.description,
-        richDecription: req.body.richDecription,
-        image: basePath,
-        images: basePath,
-        brand: req.body.brand,
-        price: req.body.price,
-        category: req.body.category,
-        countInStock: req.body.countInStock,
-        rating: req.body.rating,
-        numReviews: req.body.numReviews,
-        isFeature: req.body.isFeature,
-      });
-      console.log(product);
-      product
-        .save()
-        .then((response) => {
-          res.status(200).json(response);
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
-    } catch (err) {
-      res.status(500).json(err);
-    }
+
+    const {
+      seller,
+      name,
+      description,
+      richDecription,
+      image,
+      images,
+      brand,
+      price,
+      category,
+      countInStock,
+      rating,
+      numReviews,
+      isFeature
+    } = req.body;
+    const product = await new products({
+      seller,
+      name,
+      description,
+      richDecription,
+      image,
+      images,
+      brand,
+      price,
+      category,
+      countInStock,
+      rating,
+      numReviews,
+      isFeature,
+    });
+    product.save().then((response) => {
+     return res.status(200).json(response);
+    }).catch((err) => {
+     return res.status(500).json(err);
+    });
+
   }
   static updateProduct(req, res) {
     const category = categories.findById(req.body.category);
@@ -184,19 +194,14 @@ class ProductController {
   }
 
   static async getProductbyCategory(req, res) {
-    const product = await products
-      .find({
-        category: req.params.id
-      })
-      .populate("category");
-    if (!product) {
+    const procat = products.find().populate("category");
+    if (!procat) {
       res.status(404).json({
         status: 404,
         message: "Products not found",
       });
-    } else {
-      res.status(200).json(product);
     }
+    res.status(200).json(procat);
   }
 
   static async addProductByCategory(req, res) {
@@ -269,6 +274,7 @@ class ProductController {
   }
   static async newproduct(req, res) {
     const {
+      seller,
       name,
       description,
       richDecription,
@@ -283,6 +289,7 @@ class ProductController {
       isFeature,
     } = req.body;
     const product = new products({
+      seller,
       name,
       description,
       richDecription,
@@ -331,6 +338,14 @@ class ProductController {
       .catch((err) => {
         res.status(500).json(err);
       });
+  }
+
+  static async filterbyCategory(req, res){
+    const product = await products.find({
+      category: req.params.id
+    });
+    if (!product) return res.status(404).json("invalid product");
+    res.status(200).json(product);
   }
 }
 

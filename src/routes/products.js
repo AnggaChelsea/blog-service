@@ -23,4 +23,8 @@ router.post("/like/:id", ProductController.addLikeProduct)
 
 router.delete("/product_delete/:id", ProductController.deleteProduct)
 
+router.get('/getproduct-by-category', ProductController.getProductbyCategory)
+
+router.get("/filterbyCategory/:id", ProductController.filterbyCategory)
+
 module.exports = router;

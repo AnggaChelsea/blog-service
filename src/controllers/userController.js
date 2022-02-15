@@ -39,13 +39,16 @@ class UserController {
       });
   }
 
-  static async loginUser(req, res){
-    const {email, password} = req.body;
+  static async loginUser(req, res) {
+    const {
+      email,
+      password
+    } = req.body;
     const user = await userModel.findOne({
       email
     })
-    if(user){
-      if(bcrypt.compareSync(password, user.password)){
+    if (user) {
+      if (bcrypt.compareSync(password, user.password)) {
         const token = jwt.sign({
           userId: user.id,
           userRole: user.role
@@ -59,12 +62,12 @@ class UserController {
           image: user.image,
           token
         })
-      }else{
+      } else {
         res.status(400).json({
           message: 'password or email wrong'
         })
       }
-    }else{
+    } else {
       res.status(400).json({
         message: 'email not found'
       })
@@ -72,7 +75,10 @@ class UserController {
   }
 
   static async message(req, res) {
-    const { message, uploadfile } = req.body;
+    const {
+      message,
+      uploadfile
+    } = req.body;
     const userId = req.params.id;
 
     let userid = await userModel
@@ -116,8 +122,14 @@ class UserController {
   }
 
   static sendmessagetouser(req, res) {
-    const { message, uploadfile, userId } = req.body;
-    const {paramUserId} = req.params.id;
+    const {
+      message,
+      uploadfile,
+      userId
+    } = req.body;
+    const {
+      paramUserId
+    } = req.params.id;
     const userid = userModel.findOne({
       id: paramUserId,
     });
@@ -146,19 +158,19 @@ class UserController {
     }
   }
   static async confirmaitoncode(req, res) {
-    const { email } = req.body;
+    const {
+      email
+    } = req.body;
     const userId = req.params.id;
     const user = await userModel.findOne({
       email,
     });
     if (user && userId === user.id) {
       const secret = process.env.SCRET_KEY;
-      const token = jwt.sign(
-        {
+      const token = jwt.sign({
           userId: user.id,
         },
-        secret,
-        {
+        secret, {
           expiresIn: "1h",
         }
       );
@@ -166,7 +178,7 @@ class UserController {
       const name = user.name;
       const code = Math.floor(Math.random() * 1000000);
       const link = `${process.env.API_URL}/user/verify?token=${token}&code=${code}`;
-    
+
       const mailOptions = {
         from: "freelancer9@gmail.com",
         to: emails,
@@ -181,8 +193,7 @@ class UserController {
         } else {
           console.log(info);
         }
-      }
-      );
+      });
       res.status(200).json({
         message: "success send email",
         code,
@@ -192,7 +203,7 @@ class UserController {
         message: "email not found",
       });
     }
-    
+
   }
 
   static async updateUser(req, res) {
@@ -200,6 +211,7 @@ class UserController {
       name,
       email,
       password,
+      confirmationPassword,
       image,
       countInStock,
       alamat,
@@ -215,12 +227,18 @@ class UserController {
         name,
         email,
         password: bcrypt.hashSync(password, 10),
+        confirmationPassword: bcrypt.hashSync(password, 10),
         image,
         countInStock,
         alamat,
         role,
         numberphone,
       });
+      if (password != confirmationPassword) {
+        return res.status(400).json({
+          message: "password not same",
+        });
+      }
       newUser
         .save()
         .then((response) => {
@@ -232,6 +250,55 @@ class UserController {
         .catch((err) => {
           res.status(500).json(err);
         });
+    } else {
+      res.status(400).json({
+        message: "user not found",
+      });
+    }
+  }
+  static async registeruser(req, res) {
+    const {
+      name,
+      email,
+      password,
+      image,
+      countInStock,
+      alamat,
+      role,
+      numberphone
+    } = req.body;
+    const newUser = new userModel({
+      name,
+      email,
+      password: bcrypt.hashSync(password, 10),
+      image,
+      countInStock,
+      alamat,
+      role,
+      numberphone,
+    });
+    newUser
+      .save()
+      .then((response) => {
+        res.status(200).json({
+          message: "success add user",
+          data: response,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  }
+  static async profile(req, res) {
+    const userId = req.params.id;
+    const user = await userModel.findOne({
+      id: userId,
+    });
+    if (user) {
+      res.status(200).json({
+        message: "success get user",
+        data: user,
+      });
     } else {
       res.status(400).json({
         message: "user not found",

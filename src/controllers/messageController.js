@@ -60,4 +60,25 @@ class MessageController {
         data: messageUpdate,
         });
     }
+     static async senderMessage(req, res){
+        const { id } = req.params;
+        const {
+        message,
+        uploadfile,
+        from,
+        } = req.body;
+        const messageUpdate = await messagemodel.findByIdAndUpdate(
+        id,
+        {
+            message,
+            uploadfile,
+            from,
+        },
+        { new: true }
+        );
+        res.status(200).json({
+        message: "success update message",
+        data: messageUpdate,
+        });
+    }
     }
