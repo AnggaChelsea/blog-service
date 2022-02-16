@@ -27,4 +27,6 @@ router.get('/getproduct-by-category', ProductController.getProductbyCategory)
 
 router.get("/filterbyCategory/:id", ProductController.filterbyCategory)
 
+router.get('/getProductByUser/:id', ProductController.getProductByUser)
+
 module.exports = router;

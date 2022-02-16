@@ -305,6 +305,19 @@ class UserController {
       });
     }
   }
+  static async getAllUser(req, res) {
+    const user = await userModel.find();
+    if (user) {
+      res.status(200).json({
+        message: "success get all user",
+        data: user,
+      });
+    } else {
+      res.status(400).json({
+        message: "user not found",
+      });
+    }
+  }
 }
 
 module.exports = UserController;

@@ -59,9 +59,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-io.on("connection", function (socket) {
-  console.log("User connected", socket.id);
-});
+
 mongooseConnection();
 
 require("dotenv").config();
@@ -76,6 +74,10 @@ app.use((err, req, res, next) => {
   if (err) {
     res.status(401).json({ message: err });
   }
+});
+io.on("connection", function (socket) {
+  console.log("User connected", socket.id);
+
 });
 
 app.use(routes);

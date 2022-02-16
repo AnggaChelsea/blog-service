@@ -17,5 +17,6 @@ router.use(`/products`, products);
 router.use(`/roles`, require("./roles"));
 router.use(`/orders`, order);
 router.use(`/chat`, require("./chat"));
+router.use(`/inbox`, require("./inbox"));
 
 module.exports = router;
