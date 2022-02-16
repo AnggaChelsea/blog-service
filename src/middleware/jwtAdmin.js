@@ -3,8 +3,7 @@ const userModel = require('../models/user');
 
 function authJwtAdmin() {
     require("dotenv").config();
-    // const secret = process.env.SCRET_KEY;
-    const secret = "sayangkamu"
+    const secret = process.env.SCRET_KEY;
     return expressjwt({
         secret,
         algorithms: ['HS256'],
@@ -26,5 +25,21 @@ async function revokeadmin(req, payload, done) {
     return done(null, false);
 }
 
+const authorization = (req, res, next) => {
+    if (req.headers.authorization) {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, 'sayangmamah');
+        req.userId = decoded.userId;
+        req.userRole = decoded.userRole;
+        next();
+    } else {
+        res.status(401).json({
+            message: 'Unauthorized'
+        })
+    }
+}
 
-module.exports = authJwtAdmin;
+module.exports = {
+    authJwtAdmin,
+    authorization
+}

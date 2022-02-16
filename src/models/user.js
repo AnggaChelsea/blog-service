@@ -38,22 +38,15 @@ const UserSchema = mongoose.Schema({
     default: "Pending",
   },
 
-//   confirmationCode: {
-//     type: String,
-//     unique: true,
-//   },
-
   numberphone: {
     type: String,
     maxlength: 12,
-    minlength: 11,
     default: "",
-    unique: true,
   },
-  message: [
+  inbox: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "messages",
+      ref: "inboxs",
     },
   ],
   created_at: {

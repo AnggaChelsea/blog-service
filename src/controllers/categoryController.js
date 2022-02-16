@@ -22,14 +22,16 @@ class CategoryController {
             category
                 .save()
                 .then((response) => {
-                    res.status(200).json({message:"success add category", data:response});
+                   return res.status(200).json({message:"success add category", data:response});
                 })
                 .catch((err) => {
-                    res.status(500).json(err);
+                    return res.status(500).json(err);
                 });
+              
         } catch (err) {
             res.status(500).json(err);
         }
+       
     }
     static deleteCategory(req, res) {
         categories.findByIdAndDelete(req.params.id)

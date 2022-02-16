@@ -2,7 +2,10 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 // mongoose schema
 const productSchema = new schema({
-    
+    seller:{
+        type: schema.Types.ObjectId,
+        ref: 'users'
+    },  
     name: {
         type: String,
         required: true,
@@ -31,9 +34,7 @@ const productSchema = new schema({
         default:0,
     },
     category:{
-        type: schema.Types.ObjectId,
-        ref:'categories',
-        required:true,
+        type: String,
     },
     countInStock:{
         type:String,
@@ -42,7 +43,7 @@ const productSchema = new schema({
         max:255
     },
     rating: {
-        type:String,
+        type:Number,
         default:0,
     },
     numReviews:{
