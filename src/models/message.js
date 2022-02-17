@@ -2,28 +2,23 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const MessageSChema = Schema({
-    senderId: {
+    productId: {
         type: Schema.Types.ObjectId,
-        ref: "users",
-
+        ref: 'products'
     },
-    message:{
+    sellerId:{
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    },
+    buyerId:{
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    },
+    message: {
         type: String,
-        required: true,
-    },
-    file:{
-        type: String,
-        default: "",
-    },
-    meta:{
-        type: String,
-        default: "",
-    },
-    deleteUserId:{
-        
+        required: true
     },
 })
-
 
 MessageSChema.virtual('id').get(function () {
     return this._id.toHexString();

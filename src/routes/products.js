@@ -29,4 +29,7 @@ router.get("/filterbyCategory/:id", ProductController.filterbyCategory)
 
 router.get('/getProductByUser/:id', ProductController.getProductByUser)
 
+router.post('/sendMessageToBuy/:id', ProductController.sendMessageToBuy)
+router.get('/getMessageToBuy/:id', ProductController.getMessageToBuy)
+
 module.exports = router;

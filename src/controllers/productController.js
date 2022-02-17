@@ -3,6 +3,7 @@ const categories = require("../models/category");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const jwt = require("../middleware/jwtAdmin");
+const messageModel = require('../models/message');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,7 +22,7 @@ class ProductController {
   static async getAllProducts(req, res, next) {
     const product = await products
       .find()
-      .populate("category"); /*.select('name -_id image'); */
+      .populate("category");
     if (!product) {
       await res.status(404).json({
         status: 404,
@@ -52,16 +53,15 @@ class ProductController {
     }
   }
 
-  static getProductbyId(req, res) {uploadfile,
-    products
-      .findById(req.params.id)
-      .populate("category")
-      .then((response) => {
-        res.status(200).json(response);
-      })
-      .catch((err) => {
-        res.status(500).json(err);
+  static async getProductbyId(req, res) {
+    const product = await products.findById(req.params.id).populate("seller")
+    if (!product) {
+      res.status(404).json({
+        status: 404,
+        message: "Products not found",
       });
+    }
+    res.status(200).json(product);
   }
 
   static discound(req, res) {
@@ -113,9 +113,9 @@ class ProductController {
       isFeature,
     });
     product.save().then((response) => {
-     return res.status(200).json(response);
+      return res.status(200).json(response);
     }).catch((err) => {
-     return res.status(500).json(err);
+      return res.status(500).json(err);
     });
 
   }
@@ -340,20 +340,50 @@ class ProductController {
       });
   }
 
-  static async filterbyCategory(req, res){
+  static async filterbyCategory(req, res) {
     const product = await products.find({
       category: req.params.id
     });
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json(product);
   }
-  static async getProductByUser(req,res){
+  static async getProductByUser(req, res) {
     const product = await products.find({
       seller: req.params.id
     }).populate("seller")
     if (!product) return res.status(404).json("invalid product");
     if (product.length === 0) return res.status(404).json("kosong product");
     res.status(200).json(product);
+  }
+  static async sendMessageToBuy(req, res) {
+    const product = await products.findById(req.params.id);
+    if (!product) return res.status(404).json("invalid product");
+    const message = new messageModel({
+      productId: req.params.id,
+      sellerId: req.body.sellerId,
+      buyerId: req.body.buyerId,
+      message: req.body.message
+    });
+    message
+      .save()
+      .then((response) => {
+        res.status(200).json(response);
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  }
+  static async getMessageToBuy(req, res) {
+    const messageId = req.params.id;
+    const message = await messageModel.find({
+      messageId
+    })
+    .populate('sellerId')
+    .populate('buyerId')
+    .populate('productId')
+    if (!message) return res.status(404).json("invalid message");
+    if (message.length === 0) return res.status(404).json("kosong message");
+    res.status(200).json(message);
   }
 }
 

@@ -54,6 +54,10 @@ const productSchema = new schema({
         type:Boolean,
         default:false,
     },
+    linkButtonMessage: {
+        type: String,
+        default:'http://localhost:8002/products/messages/'
+    },
     dateCreated:{
         type:Date,
         default:Date.now,
