@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 const jwtAdmin = require("../middleware/jwtAdmin");
 
 router.get('/homepage', ProductController.homepage)
-router.get("/productfind", ProductController.getAllProducts);
+router.get("/productfind",  ProductController.getAllProducts);
 router.post("/add-product", ProductController.addProductByCategory);
 router.get("/find-product-by-id/:id", ProductController.getProductbyId);
 router.put("/update-product/:id", ProductController.updateProduct);
@@ -19,7 +19,7 @@ router.post("/uploadimage/:id", ProductController.uploadImage);
 router.post("/addnewproduct", ProductController.newproduct);
 router.get("/product_feed", ProductController.getFeedsProduct);
 
-router.post("/like/:id", ProductController.addLikeProduct)
+router.post("/like/:id",auth , ProductController.addLikeProduct)
 
 router.delete("/product_delete/:id", ProductController.deleteProduct)
 
