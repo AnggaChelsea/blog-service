@@ -44,24 +44,29 @@ class ProductController {
       })
       .populate("category");
     if (!product) {
-      res.status(404).json({
+      return res.status(404).json({
         status: 404,
         message: "Products not found",
       });
-    } else {
-      res.status(200).json(product);
     }
+    return res.status(200).json(product);
+
   }
 
   static async getProductbyId(req, res) {
-    const product = await products.findById(req.params.id).populate("seller")
+    const {
+      userId
+    } = req.params.id
+    const product = await products.findOne({
+      userId
+    }).populate("seller")
     if (!product) {
       res.status(404).json({
         status: 404,
         message: "Products not found",
       });
     }
-    res.status(200).json(product);
+    res.status(200).json({data: product, "linkbutton": product.linkButtonMessage});
   }
 
   static discound(req, res) {
@@ -80,45 +85,6 @@ class ProductController {
     res.status(200).json(discountProducts);
   }
 
-  static async addProduct(req, res) {
-
-    const {
-      seller,
-      name,
-      description,
-      richDecription,
-      image,
-      images,
-      brand,
-      price,
-      category,
-      countInStock,
-      rating,
-      numReviews,
-      isFeature
-    } = req.body;
-    const product = await new products({
-      seller,
-      name,
-      description,
-      richDecription,
-      image,
-      images,
-      brand,
-      price,
-      category,
-      countInStock,
-      rating,
-      numReviews,
-      isFeature,
-    });
-    product.save().then((response) => {
-      return res.status(200).json(response);
-    }).catch((err) => {
-      return res.status(500).json(err);
-    });
-
-  }
   static updateProduct(req, res) {
     const category = categories.findById(req.body.category);
     if (!category) return res.status(404).json("invalid category");
@@ -181,11 +147,13 @@ class ProductController {
   }
   static async getFeedsProduct(req, res) {
     const product = await products.find({
-      "$where": "this.rating > 10"
+      "rating": {
+        $gte: 0
+      }
     }).limit(4);
-    if (!product) {
-      res.status(404).json({
-        status: 404,
+    if (product.rating > 0) {
+      res.status(500).json({
+        status: 500,
         message: "Products not found",
       });
     } else {
@@ -288,6 +256,8 @@ class ProductController {
       numReviews,
       isFeature,
     } = req.body;
+    console.log(req.body.price);
+    const linkButtonMessage = `http://localhost:8002/products/messages/${seller}`;
     const product = new products({
       seller,
       name,
@@ -302,7 +272,9 @@ class ProductController {
       rating,
       numReviews,
       isFeature,
+      linkButtonMessage,
     });
+    console.log('ini after', product.price);
     product
       .save()
       .then((response) => {
@@ -376,11 +348,11 @@ class ProductController {
   static async getMessageToBuy(req, res) {
     const messageId = req.params.id;
     const message = await messageModel.find({
-      messageId
-    })
-    .populate('sellerId')
-    .populate('buyerId')
-    .populate('productId')
+        messageId
+      })
+      .populate('sellerId')
+      .populate('buyerId')
+      .populate('productId')
     if (!message) return res.status(404).json("invalid message");
     if (message.length === 0) return res.status(404).json("kosong message");
     res.status(200).json(message);

@@ -20,7 +20,7 @@ const productSchema = new schema({
     },
     image:{
         type:String,
-        default:''
+        default:'avatar.svg'
     },
     images : [{
         type:String,
@@ -56,7 +56,7 @@ const productSchema = new schema({
     },
     linkButtonMessage: {
         type: String,
-        default:'http://localhost:8002/products/messages/'
+        default:''
     },
     dateCreated:{
         type:Date,

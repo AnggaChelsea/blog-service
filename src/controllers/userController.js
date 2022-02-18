@@ -289,22 +289,6 @@ class UserController {
         res.status(500).json(err);
       });
   }
-  static async profile(req, res) {
-    const userId = req.params.id;
-    const user = await userModel.findOne({
-      id: userId,
-    });
-    if (user) {
-      res.status(200).json({
-        message: "success get user",
-        data: user,
-      });
-    } else {
-      res.status(400).json({
-        message: "user not found",
-      });
-    }
-  }
   static async getAllUser(req, res) {
     const user = await userModel.find();
     if (user) {
@@ -317,6 +301,48 @@ class UserController {
         message: "user not found",
       });
     }
+  }
+  static async getUserById(req, res) {
+    const user = await userModel.findOne({
+      id: req.params.id,
+    })
+    if (!user) {
+      res.status(400).json({
+        message: "user not found",
+      });
+    }
+    res.status(200).json({
+      message: "success get user by id",
+      data: user,
+    })
+  }
+  static async forgotPassword(req, res) {
+    const {
+      email
+    } = req.params.email;
+    const user = await userModel.findOne({
+      email,
+    });
+    if (!user) {
+      return res.status(404).json({
+        message: "email belum terdaftar",
+      });
+    }
+    const newPassword = await new userModel({
+      password: bcrypt.hashSync(password, 10),
+    })
+    newPassword
+      .save()
+      .then((response) => {
+        res.status(200).json({
+          message: "success update user",
+          data: response,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      })
+
   }
 }
 

@@ -78,6 +78,30 @@ class InboxController {
             })
         }
     }
+    static async getInboxByUserId(req, res){
+        try {
+            const inbox = await inboxModel.find({
+                reciveId: req.params.id
+            })
+            .populate('reciveId')
+            .populate('senderId')
+            if(inbox === null){
+                res.status(400).json({
+                    message: "Inbox not found",
+                    data: inbox
+                })
+            }
+            res.status(200).json({
+                message: "Successfully get inbox",
+                data: inbox
+            })
+        } catch (error) {
+            res.status(500).json({
+                message: "Failed to get inbox",
+                error
+            })
+        }
+    }
 }
 
 module.exports = InboxController

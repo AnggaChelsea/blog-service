@@ -29,7 +29,11 @@ const inboxSchema = new Schema({
     inboxHash: {
         type: String,
         default: "",
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 })
 const inboxChat = mongoose.model('inboxs', inboxSchema);
 module.exports = inboxChat;
