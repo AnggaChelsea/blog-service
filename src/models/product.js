@@ -31,7 +31,7 @@ const productSchema = new schema({
     },
     price: {
         type:String,
-        default:0,
+        required: true,
     },
     category:{
         type: String,
