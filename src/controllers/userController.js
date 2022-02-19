@@ -14,7 +14,6 @@ class UserController {
       countInStock,
       alamat,
       role,
-      numberphone,
     } = req.body;
     const newUser = new userModel({
       name,
@@ -24,7 +23,6 @@ class UserController {
       countInStock,
       alamat,
       role,
-      numberphone,
     });
     newUser
       .save()
@@ -265,7 +263,6 @@ class UserController {
       countInStock,
       alamat,
       role,
-      numberphone
     } = req.body;
     const newUser = new userModel({
       name,
@@ -275,7 +272,6 @@ class UserController {
       countInStock,
       alamat,
       role,
-      numberphone,
     });
     newUser
       .save()

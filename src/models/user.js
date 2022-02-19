@@ -41,7 +41,7 @@ const UserSchema = mongoose.Schema({
   numberphone: {
     type: String,
     maxlength: 12,
-    default: "",
+    required: false,
   },
   inbox: [
     {
