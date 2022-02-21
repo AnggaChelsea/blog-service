@@ -241,12 +241,24 @@ class ProductController {
       });
   }
   static async newproduct(req, res) {
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, '/assets/products');
+      },
+      filename: function (req, file, cb) {
+        const fileName = file.originalname.toLowerCase().split(" ").join("-");
+        cb(null, fileName + '-' + Date.now())
+      }
+    })
+    
+   
+    const upload = req.body.filename  
     const {
       seller,
       name,
       description,
       richDecription,
-      image,
+      
       images,
       brand,
       price,
@@ -263,7 +275,7 @@ class ProductController {
       name,
       description,
       richDecription,
-      image,
+      image:upload,
       images,
       brand,
       price,
@@ -317,7 +329,7 @@ class ProductController {
       category: req.params.id
     });
     if (!product) return res.status(404).json("invalid product");
-    res.status(200).json(product);
+    res.status(200).json({message:'success', data: product});
   }
   static async getProductByUser(req, res) {
     const product = await products.find({
