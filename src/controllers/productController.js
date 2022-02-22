@@ -329,7 +329,7 @@ class ProductController {
       category: req.params.id
     });
     if (!product) return res.status(404).json("invalid product");
-    res.status(200).json({message:'success', data: product});
+    res.status(200).json(product);
   }
   static async getProductByUser(req, res) {
     const product = await products.find({
