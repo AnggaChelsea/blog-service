@@ -18,6 +18,14 @@ const MessageSChema = Schema({
         type: String,
         required: true
     },
+    seen: {
+        type: Boolean,
+        default: false
+    },
+    created_at: {
+        type: Date,
+        default: Date.now,
+    }
 })
 
 MessageSChema.virtual('id').get(function () {

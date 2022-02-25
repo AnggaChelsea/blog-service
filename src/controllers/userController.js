@@ -5,6 +5,34 @@ const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const nodemailer = require("../config/nodemailer");
 class UserController {
+
+  static async followeUser(req, res){
+    const 
+      followers
+     = req.body.followers;
+    const user = await userModel.findById(
+      req.params.id
+    );
+    if (user) {
+      const newFollow = await new userModel({
+        followers,
+      });
+      newFollow
+        .save()
+        .then((response) => {
+          return res.status(200).json({
+            response,
+            user: userid,
+            message: "followers bertambah",
+          });
+
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+      }
+  }
+
   static async register(req, res) {
     const {
       name,
@@ -119,42 +147,6 @@ class UserController {
       });
   }
 
-  static sendmessagetouser(req, res) {
-    const {
-      message,
-      uploadfile,
-      userId
-    } = req.body;
-    const {
-      paramUserId
-    } = req.params.id;
-    const userid = userModel.findOne({
-      id: paramUserId,
-    });
-    if (!userid) {
-      res.status(404).json({
-        message: "user not found",
-      });
-    } else {
-      const newChat = new messageModel({
-        message,
-        uploadfile,
-        userId: userid,
-      });
-      newChat
-        .save()
-        .then((response) => {
-          res.status(200).json({
-            response,
-            user: userid,
-            message: "success add chat",
-          });
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
-    }
-  }
   static async confirmaitoncode(req, res) {
     const {
       email
