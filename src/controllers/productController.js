@@ -52,23 +52,6 @@ class ProductController {
     return res.status(200).json(product);
 
   }
-
-  static async getProductbyId(req, res) {
-    const {
-      userId
-    } = req.params.id
-    const product = await products.findOne({
-      userId
-    }).populate("seller")
-    if (!product) {
-      res.status(404).json({
-        status: 404,
-        message: "Products not found",
-      });
-    }
-    res.status(200).json({data: product, "linkbutton": product.linkButtonMessage});
-  }
-
   static discound(req, res) {
     const discount = req.params.discount;
     const discountProducts = products.find({
@@ -146,20 +129,16 @@ class ProductController {
     }
   }
   static async getFeedsProduct(req, res) {
-    const product = await products.find({
-      "rating": {
-        $gte: 0
-      }
-    }).limit(4);
-    if (product.rating > 0) {
-      res.status(500).json({
-        status: 500,
+    const product = await products.find(
+      rating < 5
+    ).populate("category");
+      res.status(404).json({
+        status: 404,
         message: "Products not found",
       });
-    } else {
       res.status(200).json(product);
     }
-  }
+  
 
   static async getProductbyCategory(req, res) {
     const procat = products.find().populate("category");
@@ -368,6 +347,16 @@ class ProductController {
     if (!message) return res.status(404).json("invalid message");
     if (message.length === 0) return res.status(404).json("kosong message");
     res.status(200).json(message);
+  }
+  static getproductByIdnew(req, res){
+    const product = products.findById(req.params.id)
+    if (!product) return res.status(404).json("invalid product");
+    res.status(200).json(product);
+  }
+  static async getProductById(req, res){
+    const product = await products.findById(req.params.id)
+    if (!product) return res.status(404).json("invalid product");
+    res.status(200).json(product);
   }
 }
 

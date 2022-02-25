@@ -4,10 +4,10 @@ const ProductController = require("../controllers/productController");
 const auth = require("../middleware/auth");
 const jwtAdmin = require("../middleware/jwtAdmin");
 
+
 router.get('/homepage', ProductController.homepage)
 router.get("/productfind",  ProductController.getAllProducts);
 router.post("/add-product", ProductController.addProductByCategory);
-router.get("/find-product-by-id/:id", ProductController.getProductbyId);
 router.put("/update-product/:id", ProductController.updateProduct);
 router.get("/count/product", ProductController.countProduct);
 router.get("/get-feature", ProductController.getFeature);
@@ -31,5 +31,7 @@ router.get('/getProductByUser/:id', ProductController.getProductByUser)
 
 router.post('/sendMessageToBuy/:id', ProductController.sendMessageToBuy)
 router.get('/getMessageToBuy/:id', ProductController.getMessageToBuy)
+
+router.get('/productidby/:id', ProductController.getProductById)
 
 module.exports = router;
