@@ -354,9 +354,9 @@ class ProductController {
     res.status(200).json(product);
   }
   static async getProductById(req, res){
-    const product = await products.findById(req.params.id)
+    const product = await products.findById(req.params.id).populate("seller")
     if (!product) return res.status(404).json("invalid product");
-    res.status(200).json(product);
+    res.status(200).json({data: product, seller: product.seller});
   }
 }
 
