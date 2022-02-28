@@ -33,7 +33,7 @@ class ProductController {
     } else {
       res.status(200).json({
         message: "success",
-        data: product
+        data: productgetProductbyCategory
       });
     }
   }
@@ -237,17 +237,17 @@ class ProductController {
       name,
       description,
       richDecription,
-      
+      hargaBeli,
       images,
       brand,
-      price,
+      hargaJual,
       category,
       countInStock,
       rating,
       numReviews,
       isFeature,
     } = req.body;
-    console.log(req.body.price);
+    console.log(req.body.hargaJual);
     const linkButtonMessage = `http://localhost:8002/products/messages/${seller}`;
     const product = new products({
       seller,
@@ -257,7 +257,8 @@ class ProductController {
       image:upload,
       images,
       brand,
-      price,
+      hargaJual,
+      hargaBeli,
       category,
       countInStock,
       rating,

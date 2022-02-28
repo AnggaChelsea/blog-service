@@ -29,9 +29,13 @@ const productSchema = new schema({
         type: String,
         default:''
     },
-    price: {
+    hargaJual: {
         type:String,
         required: true,
+    },
+    hargaBeli:{
+        type:String,
+        default:''
     },
     category:{
         type: String,
