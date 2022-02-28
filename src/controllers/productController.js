@@ -220,17 +220,7 @@ class ProductController {
       });
   }
   static async newproduct(req, res) {
-    const storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, '/assets/products');
-      },
-      filename: function (req, file, cb) {
-        const fileName = file.originalname.toLowerCase().split(" ").join("-");
-        cb(null, fileName + '-' + Date.now())
-      }
-    })
-    
-   
+    header("Access-Control-Allow-Origin: *");
     const upload = req.body.filename  
     const {
       seller,
