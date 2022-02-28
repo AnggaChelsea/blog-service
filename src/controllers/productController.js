@@ -220,7 +220,7 @@ class ProductController {
       });
   }
   static async newproduct(req, res) {
-    header("Access-Control-Allow-Origin: *");
+   
     const upload = req.body.filename  
     const {
       seller,
