@@ -61,7 +61,7 @@ class Followers {
         const followers = req.body
         const followersM = await followersModel.findOne({
             followers: followers
-        })
+        }).populate('followersId')
         if (followersM) {
             res.status(200).json({
                 message: "Successfully get followers",
@@ -114,8 +114,23 @@ class Followers {
             });
             newFollowers.save()
         }
-
-
+    }
+    static async countFollowers(req, res) {
+        
+        const followers = await followersModel.findOne({
+            followId: req.params._id
+        })
+        if (followers) {
+            res.status(200).json({
+                message: "Successfully get followers",
+                data: followers
+            })
+        } else {
+            res.status(404).json({
+                message: "No followers found",
+                data: followers
+            })
+        }
     }
 }
 module.exports = Followers;

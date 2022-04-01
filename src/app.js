@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
 const http = require('http').Server(app);
 require('dotenv').config();
 
-const port = process.env.PORT ||8002;
+const port = process.env.PORT ||8001;
 
 //cors
 app.all('*', function(req, res, next) {
@@ -35,6 +35,8 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
+
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

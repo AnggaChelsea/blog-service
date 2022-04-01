@@ -7,6 +7,8 @@ const home = require('./home')
 const order =  require("./order")
 const jwta = require("../middleware/jwtAdmin")
 const api = process.env.API_URL;
+const followers = require("./followers")
+const productR = require("./products/getproducts")
 
 
 router.use(`/user`, userRouter);
@@ -18,5 +20,8 @@ router.use(`/roles`, require("./roles"));
 router.use(`/orders`, order);
 router.use(`/chat`, require("./chat"));
 router.use(`/inbox`, require("./inbox"));
+router.use(`/followers`, followers);
+router.use(`/product`, productR);
+
 
 module.exports = router;

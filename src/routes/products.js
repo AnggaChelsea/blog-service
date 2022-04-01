@@ -2,21 +2,20 @@ const express = require("express");
 const router = express.Router();
 const ProductController = require("../controllers/productController");
 const auth = require("../middleware/auth");
-const jwtAdmin = require("../middleware/jwtAdmin");
 
 
 router.get('/homepage', ProductController.homepage)
 router.get("/productfind",  ProductController.getAllProducts);
-router.post("/add-product", ProductController.addProductByCategory);
+router.post("/add-product", auth, ProductController.addProductByCategory);
 router.put("/update-product/:id", ProductController.updateProduct);
 router.get("/count/product", ProductController.countProduct);
 router.get("/get-feature", ProductController.getFeature);
 router.get("/filtering-product-category", ProductController.findFilter);
-router.post("/uploadimage/:id", ProductController.uploadImage);
-router.post("/uploadimage/:id", ProductController.uploadImage);
+router.post("/uploadimage/:id", auth, ProductController.uploadImage);
+router.post("/uploadimage/:id", auth, ProductController.uploadImage);
 
 //without validate
-router.post("/addnewproduct", ProductController.newproduct);
+router.post("/addnewproduct",  ProductController.newproduct);
 router.get("/product_feed", ProductController.getFeedsProduct);
 
 router.post("/like/:id",auth , ProductController.addLikeProduct)
@@ -29,9 +28,10 @@ router.get("/filterbyCategory/:id", ProductController.filterbyCategory)
 
 router.get('/getProductByUser/:id', ProductController.getProductByUser)
 
-router.post('/sendMessageToBuy/:id', ProductController.sendMessageToBuy)
-router.get('/getMessageToBuy/:id', ProductController.getMessageToBuy)
+router.post('/sendMessageToBuy/:id', auth, ProductController.sendMessageToBuy)
+router.get('/getMessageToBuy/:id',auth, ProductController.getMessageToBuy)
 
 router.get('/productidby/:id', ProductController.getProductById)
+// router.post('/createnewproducts', ProductController.updateProductById)
 
 module.exports = router;

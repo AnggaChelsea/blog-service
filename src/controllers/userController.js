@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const nodemailer = require("../config/nodemailer");
+const allProduct = require("../models/allproducts");
 class UserController {
 
   static async followeUser(req, res){
@@ -86,6 +87,7 @@ class UserController {
           id: user.id,
           name: user.name,
           image: user.image,
+          alamat: user.alamat,
           token
         })
       } else {
@@ -330,7 +332,73 @@ class UserController {
       .catch((err) => {
         res.status(500).json(err);
       })
+  }
 
+  static async updateUser(req, res){
+    const {
+      name,
+      email,
+      password,
+      image,
+      countInStock,
+      alamat,
+      role,
+      numberphone,
+    } = req.body;
+    const userId = req.params.id;
+    const user = await userModel.findOne({
+      id: userId,
+    });
+    if (user) {
+      const newUser = new userModel({
+        name,
+        email,
+        password: bcrypt.hashSync(password, 10),
+        image,
+        countInStock,
+        alamat,
+        role,
+        numberphone,
+      });
+      if (password != confirmationPassword) {
+        return res.status(400).json({
+          message: "password not same",
+        });
+      }
+      newUser
+        .save()
+        .then((response) => {
+          res.status(200).json({
+            message: "success update user",
+            data: response,
+          });
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    } else {
+      res.status(400).json({
+        message: "user not found",
+      });
+    }
+  }
+  static async getAllProducts(req, res, next) {
+    const product = await allProduct
+      .find()
+      .populate("category");
+    if (!product) {
+      await res.status(404).json({
+        status: 404,
+        message: "Products not found",
+      });
+      return
+
+    } else {
+      res.status(200).json({
+        message: "success",
+        data: productgetProductbyCategory
+      });
+    }
   }
 }
 

@@ -49,6 +49,10 @@ const UserSchema = mongoose.Schema({
       ref: "inboxs",
     },
   ],
+  followers: [{
+    type: String,
+    default: '',
+  }],
   created_at: {
     type: Date,
     default: Date.now,
