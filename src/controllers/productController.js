@@ -234,6 +234,7 @@ class ProductController {
       category,
       countInStock,
       rating,
+      ketentuan,
       numReviews,
       isFeature,
     } = req.body;
@@ -249,6 +250,7 @@ class ProductController {
       brand,
       hargaJual,
       hargaBeli,
+      ketentuan,
       category,
       countInStock,
       rating,

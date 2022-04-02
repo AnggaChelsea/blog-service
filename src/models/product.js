@@ -18,6 +18,10 @@ const productSchema = new schema({
         type: String,
         default: ''
     },
+    ketentuan:{
+        type: String,
+        required: true,
+    },
     image:{
         type:String,
         default:'avatar.svg'

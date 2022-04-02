@@ -83,7 +83,7 @@ class UserController {
           expiresIn: '1h'
         })
         return res.status(200).json({
-          message: 'success login',
+          success: true,
           id: user.id,
           name: user.name,
           image: user.image,
@@ -91,13 +91,13 @@ class UserController {
           token
         })
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'password or email wrong'
         })
       }
     } else {
-      res.status(400).json({
-        message: 'email not found'
+      res.status(500).json({
+        success: false,
       })
     }
   }
