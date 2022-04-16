@@ -21,16 +21,18 @@ class ProductController {
       });
     }
   }
-  static async filterByAlamat(req, res){
-      const alamat = req.body;
-      const product = await products.findOne(
-          alamat
-      )
-      if(product){
-          res.status(200).json(product);
-      }else{
-          res.status(404).json({ message: "Product not found" });
-      }
+  static async filterByAlamat(req, res) {
+    const alamat = req.body;
+    const product = await products.findOne(
+      alamat
+    )
+    if (product) {
+      res.status(200).json(product);
+    } else {
+      res.status(404).json({
+        message: "Product not found"
+      });
+    }
   }
   static async getFeature(req, res) {
     const product = await products
@@ -145,6 +147,7 @@ class ProductController {
       isFeature,
     } = req.body;
     const changetolower = name.toLowerCase();
+    const alamatTolower = alamat.toLowerCase();
     const changeToSPlitHargabeli = harga_beli.split(".").join("");
     const changeToSPlitHargajual = harga_jual.split(".").join("");
     console.log(req.body.hargaJual);
@@ -152,7 +155,7 @@ class ProductController {
     const product = new products({
       seller,
       name: changetolower,
-      alamat,
+      alamat: alamatTolower,
       description,
       richDecription,
       image: upload,
@@ -181,11 +184,11 @@ class ProductController {
       });
   }
   static async addLikeProduct(req, res) {
-    const product = await products.findById(req.params.id);
-    if (!product) return res.status(404).json("invalid product");
-    product.rating = product.rating + 1;
-    product
-      .save()
+    const product = await products.findById(req.params.id, {
+      like: +1
+    });
+    if (product) return res.status(201).json("success")
+      product.save()
       .then((response) => {
         res.status(200).json(response);
       })
@@ -264,17 +267,19 @@ class ProductController {
   static async getProductById(req, res) {
     const product = await products.findById(req.params.id).populate("seller");
     if (!product) return res.status(404).json("invalid product");
-    res.status(200).json({ data: product, seller: product.seller });
+    res.status(200).json({
+      data: product,
+      seller: product.seller
+    });
   }
-  static async filterProductNew(req, res){
+  static async filterProductNew(req, res) {
     const nameProduct = req.body
-    const productfind = await products.find({
-      name: nameProduct
-    })
-    if(productfind.length > 0 ){
+    const productfind = await products.findOne(
+      nameProduct
+    )
+    if (productfind) {
       res.status(200).json(productfind)
-    }
-    else{
+    } else {
       res.status(404).json({
         message: "Product not found"
       })

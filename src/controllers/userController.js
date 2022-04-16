@@ -34,6 +34,32 @@ class UserController {
       }
   }
 
+  static async getChatByBuyer(req, res){
+    const { buyerId, sellerId } = req.body;
+    const chat = await messageModel.find({
+      buyerId,
+      sellerId
+    }).populate('buyerId', 'name').populate('sellerId', 'name');
+    if (chat) {
+      return res.status(200).json({
+        chat,
+        message: "chat ditemukan",
+      });
+    }
+    return res.status(400).json({
+      message: "chat not found",
+    });
+    // if(chat.buyerId === buyerId && chat.sellerId === sellerId){
+    //   res.status(200).json({
+    //     chat
+    //   })
+    // }else{
+    //   res.status(404).json({
+    //     message: 'chat not found'
+    //   })
+    // }
+  }
+
   static async register(req, res) {
     const {
       name,
@@ -44,13 +70,16 @@ class UserController {
       alamat,
       role,
     } = req.body;
+    const tolowcasename = name.toLowerCase();
+    const mailtolowecase = email.toLowerCase();
+    const alamatTolower = alamat.toLowerCase();
     const newUser = new userModel({
-      name,
-      email,
+      name: tolowcasename,
+      email: mailtolowecase,
       password: bcrypt.hashSync(password, 10),
       image,
       countInStock,
-      alamat,
+      alamat: alamatTolower,
       role,
     });
     newUser
@@ -258,13 +287,16 @@ class UserController {
       alamat,
       role,
     } = req.body;
+    const tolowcasename = name.toLowerCase();
+    const mailtolowecase = email.toLowerCase();
+    const alamatTolower = alamat.toLowerCase();
     const newUser = new userModel({
-      name,
-      email,
+      name: tolowcasename,
+      email: mailtolowecase,
       password: bcrypt.hashSync(password, 10),
       image,
       countInStock,
-      alamat,
+      alamat: alamatTolower,
       role,
     });
     newUser

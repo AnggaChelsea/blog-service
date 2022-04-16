@@ -27,7 +27,7 @@ router.get("/filtering-product-category", ProductController.findFilter);
 //without validate
 router.post("/addnewproduct",  multer({ storage: storage }).single("photo"), ProductController.newproduct);
 
-router.post("/like/:id",auth , ProductController.addLikeProduct)
+router.post("/like/:id" , ProductController.addLikeProduct)
 
 router.delete("/product_delete/:id", ProductController.deleteProduct)
 

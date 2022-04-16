@@ -25,5 +25,6 @@ router.post('/user/followers/:id',  followrs.follow);
 router.post('/user/product', productNew.createNewProducts);
 router.get('/user/product', productNew.getproduct);
 router.get('/user/product', registerController.getAllProducts)
+router.post('/user/chat/buyyerseller', registerController.getChatByBuyer);
 
 module.exports = router;
