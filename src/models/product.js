@@ -10,6 +10,14 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
+    alamat: {
+        type: String,
+        required: true,
+    },
+    like: {
+        type: Number,
+        default: 0
+    },
     description: {
         type: String,
         required: true,
@@ -19,12 +27,16 @@ const productSchema = new schema({
         default: ''
     },
     ketentuan:{
-        type: String,
+        type: Boolean,
+        required: true,
+    },
+    baru: {
+        type: Boolean,
         required: true,
     },
     image:{
         type:String,
-        default:'avatar.svg'
+        required: true,
     },
     images : [{
         type:String,
@@ -33,11 +45,11 @@ const productSchema = new schema({
         type: String,
         default:''
     },
-    hargaJual: {
+    harga_jual: {
         type:String,
         required: true,
     },
-    hargaBeli:{
+    harga_beli:{
         type:String,
         default:''
     },

@@ -2,21 +2,30 @@ const express = require("express");
 const router = express.Router();
 const ProductController = require("../controllers/productController");
 const auth = require("../middleware/auth");
+const multer = require("multer");
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join("./assets/images/"));
+    },
+    filename: function (req, file, cb) {
+      const fileName = file.originalname.toLowerCase().split(" ").join("-");
+      cb(null, fileName + "-" + Date.now());
+    },
+  });
 
-router.get('/homepage', ProductController.homepage)
+  const uploadOption = multer({
+    storage: storage,
+  });
+
 router.get("/productfind",  ProductController.getAllProducts);
-router.post("/add-product", auth, ProductController.addProductByCategory);
 router.put("/update-product/:id", ProductController.updateProduct);
 router.get("/count/product", ProductController.countProduct);
 router.get("/get-feature", ProductController.getFeature);
 router.get("/filtering-product-category", ProductController.findFilter);
-router.post("/uploadimage/:id", auth, ProductController.uploadImage);
-router.post("/uploadimage/:id", auth, ProductController.uploadImage);
 
 //without validate
-router.post("/addnewproduct",  ProductController.newproduct);
-router.get("/product_feed", ProductController.getFeedsProduct);
+router.post("/addnewproduct",  multer({ storage: storage }).single("photo"), ProductController.newproduct);
 
 router.post("/like/:id",auth , ProductController.addLikeProduct)
 
@@ -33,5 +42,8 @@ router.get('/getMessageToBuy/:id',auth, ProductController.getMessageToBuy)
 
 router.get('/productidby/:id', ProductController.getProductById)
 // router.post('/createnewproducts', ProductController.updateProductById)
+router.post('/cari-product', ProductController.filterProductNew)
+
+router.post('/filter-by-alamat', ProductController.filterByAlamat)
 
 module.exports = router;
