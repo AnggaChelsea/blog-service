@@ -60,6 +60,32 @@ class UserController {
     // }
   }
 
+  static async follow(req, res) {
+    const followersId = req.body;
+    const {
+      id
+    } = req.params;
+    const user = await userModel.findById(id);
+    if (user) {
+      const newFollow = await new userModel({
+        followers: followersId,
+      });
+      newFollow
+        .save()
+        .then((response) => {
+          return res.status(200).json({
+            response,
+            user: userid,
+            message: "followers bertambah",
+          });
+
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+      }
+  }
+
   static async register(req, res) {
     const {
       name,

@@ -3,10 +3,9 @@ const router = express.Router();
 const Followers = require("../controllers/users/followers");
 const auth = require("../middleware/auth");
 
-router.post("/follow", auth,  Followers.createFollowers);
-router.get("/follow", Followers.getFollowers);
+router.post("/getfollowers", Followers.getFollowers);
 router.get("/follow/:id", Followers.getFollowersById);
-router.post("/unfollow/:id", Followers.removeeFollowers);
 router.get("/followers/:id", Followers.countFollowers);
+router.post('/followersbyuser/:id', Followers.follow);
 
 module.exports = router;

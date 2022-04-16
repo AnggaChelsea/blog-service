@@ -17,7 +17,7 @@ class ProductController {
     } else {
       res.status(200).json({
         message: "success",
-        data: productgetProductbyCategory,
+        data: product,
       });
     }
   }

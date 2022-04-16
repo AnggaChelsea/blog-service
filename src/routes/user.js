@@ -20,7 +20,7 @@ router.patch('/user/update/:id', registerController.updateUser);
 router.get('/user/:id', profile.getProfile);
 
 router.patch('/user/follow/:id',  registerController.followeUser);
-router.post('/user/followers/:id',  followrs.follow);
+router.post('/user/followers/:id',  registerController.follow);
 
 router.post('/user/product', productNew.createNewProducts);
 router.get('/user/product', productNew.getproduct);

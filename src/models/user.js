@@ -32,26 +32,14 @@ const UserSchema = mongoose.Schema({
     default: "User",
   },
 
-  status: {
-    type: String,
-    enum: ["Pending", "Active"],
-    default: "Pending",
-  },
-
   numberphone: {
     type: String,
     maxlength: 12,
     required: false,
   },
-  inbox: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "inboxs",
-    },
-  ],
   followers: [{
-    type: String,
-    default: '',
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
   }],
   created_at: {
     type: Date,
