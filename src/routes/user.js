@@ -14,8 +14,6 @@ router.post('/rere', registerController.registeruser)
 router.get('/get-all-users', registerController.getAllUser);
 router.get('/get-user-by-id/:id', registerController.getUserById);
 
-router.patch('/user/forgot/:email', registerController.forgotPassword);
-router.patch('/user/update/:id', registerController.updateUser);
 
 router.get('/user/:id', profile.getProfile);
 

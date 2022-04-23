@@ -137,8 +137,9 @@ class ProductController {
       }
     })
     const uploadOption = multer({ storage: storage }).single("image");
-    const image = req.body.filename;
-    const basePath = `${req.protocol}//${req.get("host")}/assets/images/`;
+   
+    const image = req.file.filename;
+    const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
     const {
       seller,
       name,
@@ -292,6 +293,97 @@ class ProductController {
     } else {
       res.status(404).json({
         message: "Product not found"
+      })
+    }
+  }
+
+  static async updateProductImage(req, res) {
+    var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, "assets/images");
+      },
+      filename: function (req, file, cb) {
+        const fileName = file.originalname.toLowerCase().split(" ").join("-");
+        const suffix = Date.now() +  "-" + Math.round(Math.random() * 1000)
+        cb(null, suffix  + "-" + fileName);
+      }
+    })
+    const uploadOption = multer({ storage: storage }).single("image");
+   
+    const image = req.file.filename;
+    const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
+    const {
+      seller,
+      name,
+      alamat,
+      description,
+      richDecription,
+      brand,
+      harga_jual,
+      harga_beli,
+      category,
+      countInStock,
+      rating,
+      ketentuan,
+      numReviews,
+      like,
+      baru,
+      isFeature,
+    } = req.body;
+    const product = await products.findById(req.params.id);
+    const categoryId = await categories.findById(req.body.category);
+    if(!categoryId){
+      return res.status(404).json({ message: "invalid category" })
+    }
+    const changetolower = name.toLowerCase();
+    const alamatTolower = alamat.toLowerCase();
+    const changeToSPlitHargabeli = harga_beli.split(".").join("");
+    const changeToSPlitHargajual = harga_jual.split(".").join("");
+    const file = req.file;
+    let imagePath;
+    if(file){
+      const fileName = file.filename;
+      const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
+      const imagePath = `${basePath}${fileName}`;
+    }else{
+      imagePath = product.image
+    }
+    if(categoryId){
+      
+    }
+    const productFindandUpdate = await products.findByIdAndUpdate(
+      req.params.id,
+      {
+        // $set: req.body, //if dont want to write to all field
+        seller,
+        name: changetolower,
+        alamat:alamatTolower,
+        description,
+        richDecription,
+        brand,
+        harga_jual,
+        harga_beli,
+        category,
+        countInStock,
+        rating,
+        ketentuan,
+        numReviews,
+        like,
+        baru,
+        isFeature,
+      },{
+        new: true
+      }
+    )
+    if(productFindandUpdate){
+      res.status(200).json({
+        message: "success update product",
+        data: productFindandUpdate
+      })
+    }
+    else{
+      res.status(500).json({
+        message: "server Error"
       })
     }
   }
