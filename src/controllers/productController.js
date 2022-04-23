@@ -133,12 +133,12 @@ class ProductController {
       filename: function (req, file, cb) {
         const fileName = file.originalname.toLowerCase().split(" ").join("-");
         const suffix = Date.now() +  "-" + Math.round(Math.random() * 1000)
-        cb(null, suffix  + "-" + fileName);
+        cb(null, suffix, fileName);
       }
     })
     const uploadOption = multer({ storage: storage }).single("image");
    
-    const image = req.file.filename;
+    const image = req.file;
     const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
     const {
       seller,
@@ -189,6 +189,7 @@ class ProductController {
       .save()
       .then((response) => {
         res.status(200).json(response);
+        console.log("ini response", response);
       })
       .catch((err) => {
         res.status(500).json(err);

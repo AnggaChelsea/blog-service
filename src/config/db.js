@@ -17,7 +17,7 @@ require('dotenv').config();
 const mongodbconnection = () => {
     // mongodb://olx_service:Sayangmamah1@cluster0-shard-00-00.ma8no.mongodb.net:27017,cluster0-shard-00-01.ma8no.mongodb.net:27017,cluster0-shard-00-02.ma8no.mongodb.net:27017/olxseervice?ssl=true&replicaSet=atlas-pjxqhg-shard-0&authSource=admin&retryWrites=true&w=majority
    
-    mongoose.connect("mongodb://olx_service:Sayangmamah1@cluster0-shard-00-00.ma8no.mongodb.net:27017,cluster0-shard-00-01.ma8no.mongodb.net:27017,cluster0-shard-00-02.ma8no.mongodb.net:27017/olxseervice?ssl=true&replicaSet=atlas-pjxqhg-shard-0&authSource=admin&retryWrites=true&w=majority", {
+    mongoose.connect(process.env.CONNECTION_STRING, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }, (err) => {
