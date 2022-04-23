@@ -93,7 +93,7 @@ class OrderController {
         
         const totalPrices = await Promise.all(orderItemsIds.map(async orderItemId => {
             const orderItem = await orderItemsModel.findById(orderItemId).populate('product', 'price')
-            const totalPrice = orderItem.product.price * orderItem.quantity;
+            const totalPrice = orderItem.product.harga_jual * orderItem.quantity;
             return totalPrice;
         }))
         const totalPricess = totalPrices.reduce((a, b) => a + b, 0);

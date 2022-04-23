@@ -10,7 +10,7 @@ class UserController {
   static async followeUser(req, res){
     const 
       followers
-     = req.body.followers;
+     = req.body;
     const user = await userModel.findById(
       req.params.id
     );
@@ -250,59 +250,40 @@ class UserController {
         message: "email not found",
       });
     }
-
   }
 
-  static async updateUser(req, res) {
+  static async changePassword(req, res) {
     const {
-      name,
-      email,
       password,
-      confirmationPassword,
-      image,
-      countInStock,
-      alamat,
-      role,
-      numberphone,
+      newpassword
     } = req.body;
     const userId = req.params.id;
     const user = await userModel.findOne({
       id: userId,
     });
     if (user) {
-      const newUser = new userModel({
-        name,
-        email,
-        password: bcrypt.hashSync(password, 10),
-        confirmationPassword: bcrypt.hashSync(password, 10),
-        image,
-        countInStock,
-        alamat,
-        role,
-        numberphone,
-      });
-      if (password != confirmationPassword) {
-        return res.status(400).json({
-          message: "password not same",
+      if (bcrypt.compareSync(password, user.password)) {
+        const newPassword = bcrypt.hashSync(newpassword, 10);
+        const newUser = await userModel.findOneAndUpdate({
+          id: userId,
+        }, {
+          password: newPassword,
+        });
+        res.status(200).json({
+          message: "success change password",
+        });
+      } else {
+        res.status(400).json({
+          message: "password wrong",
         });
       }
-      newUser
-        .save()
-        .then((response) => {
-          res.status(200).json({
-            message: "success update user",
-            data: response,
-          });
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
     } else {
       res.status(400).json({
         message: "user not found",
       });
     }
   }
+
   static async registeruser(req, res) {
     const {
       name,
@@ -364,82 +345,8 @@ class UserController {
       data: user,
     })
   }
-  static async forgotPassword(req, res) {
-    const {
-      email
-    } = req.params.email;
-    const user = await userModel.findOne({
-      email,
-    });
-    if (!user) {
-      return res.status(404).json({
-        message: "email belum terdaftar",
-      });
-    }
-    const newPassword = await new userModel({
-      password: bcrypt.hashSync(password, 10),
-    })
-    newPassword
-      .save()
-      .then((response) => {
-        res.status(200).json({
-          message: "success update user",
-          data: response,
-        });
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      })
-  }
+  
 
-  static async updateUser(req, res){
-    const {
-      name,
-      email,
-      password,
-      image,
-      countInStock,
-      alamat,
-      role,
-      numberphone,
-    } = req.body;
-    const userId = req.params.id;
-    const user = await userModel.findOne({
-      id: userId,
-    });
-    if (user) {
-      const newUser = new userModel({
-        name,
-        email,
-        password: bcrypt.hashSync(password, 10),
-        image,
-        countInStock,
-        alamat,
-        role,
-        numberphone,
-      });
-      if (password != confirmationPassword) {
-        return res.status(400).json({
-          message: "password not same",
-        });
-      }
-      newUser
-        .save()
-        .then((response) => {
-          res.status(200).json({
-            message: "success update user",
-            data: response,
-          });
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
-    } else {
-      res.status(400).json({
-        message: "user not found",
-      });
-    }
-  }
   static async getAllProducts(req, res, next) {
     const product = await allProduct
       .find()

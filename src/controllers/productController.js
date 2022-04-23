@@ -126,14 +126,25 @@ class ProductController {
   }
 
   static async newproduct(req, res) {
-    const upload = req.body.filename;
+    var storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, "assets/images");
+      },
+      filename: function (req, file, cb) {
+        const fileName = file.originalname.toLowerCase().split(" ").join("-");
+        const suffix = Date.now() +  "-" + Math.round(Math.random() * 1000)
+        cb(null, suffix  + "-" + fileName);
+      }
+    })
+    const uploadOption = multer({ storage: storage }).single("image");
+    const image = req.body.filename;
+    const basePath = `${req.protocol}//${req.get("host")}/assets/images/`;
     const {
       seller,
       name,
       alamat,
       description,
       richDecription,
-      image,
       brand,
       harga_jual,
       harga_beli,
@@ -158,8 +169,7 @@ class ProductController {
       alamat: alamatTolower,
       description,
       richDecription,
-      image: upload,
-      image,
+      image: `${basePath}${image}`,
       brand,
       like,
       harga_jual: changeToSPlitHargajual,
