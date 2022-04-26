@@ -14,10 +14,11 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
-    like: {
-        type: Number,
-        default: 0
-    },
+    like: [],
+    personlike: [{
+        type: schema.Types.ObjectId,
+        ref: 'users'
+    }],
     description: {
         type: String,
         required: true,

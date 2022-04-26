@@ -86,7 +86,10 @@ class UserController {
       }
   }
 
+  
+
   static async register(req, res) {
+    
     const {
       name,
       email,
@@ -96,6 +99,7 @@ class UserController {
       alamat,
       role,
     } = req.body;
+    const filee = req.file;
     const tolowcasename = name.toLowerCase();
     const mailtolowecase = email.toLowerCase();
     const alamatTolower = alamat.toLowerCase();
@@ -103,7 +107,7 @@ class UserController {
       name: tolowcasename,
       email: mailtolowecase,
       password: bcrypt.hashSync(password, 10),
-      image,
+      image: filee,
       countInStock,
       alamat: alamatTolower,
       role,
@@ -254,37 +258,29 @@ class UserController {
 
   static async changePassword(req, res) {
     const {
-      password,
       newpassword
     } = req.body;
-    const userId = req.params.id;
-    const user = await userModel.findOne({
-      id: userId,
+    const user = await userModel.findByIdAndUpdate(req.params.id, {
+      password: newpassword,
+    },{
+      new: true
     });
-    if (user) {
-      if (bcrypt.compareSync(password, user.password)) {
-        const newPassword = bcrypt.hashSync(newpassword, 10);
-        const newUser = await userModel.findOneAndUpdate({
-          id: userId,
-        }, {
-          password: newPassword,
-        });
+    if(user){
+      user.save().then((user)=>{
         res.status(200).json({
           message: "success change password",
-        });
-      } else {
-        res.status(400).json({
-          message: "password wrong",
-        });
-      }
-    } else {
-      res.status(400).json({
-        message: "user not found",
-      });
+          user
+        })
+      })
+
+      .catch((err)=>{
+        res.status(500).json(err)
+      })
     }
   }
 
   static async registeruser(req, res) {
+    
     const {
       name,
       email,

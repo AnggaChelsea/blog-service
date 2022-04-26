@@ -7,8 +7,8 @@ const mongooseConnection = require("./config/db");
 const multer = require("multer");
 var server   = require('http').Server(app);
 var io       = require('socket.io')(server);
-const nodemailer = require("nodemailer");
-const http = require('http').Server(app);
+const fileUpload = require('express-fileupload');
+var upload = multer();
 require('dotenv').config();
 
 const port = process.env.PORT ||8001;
@@ -36,30 +36,18 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "/assets/images");
-  },
-  filename: function (req, file, cb) {
-    const fileName = file.originalname.toLowerCase().split(" ").join("-");
-    cb(null,fileName + "-" + Date);
-  },
-});
-
 app.get("/", function(req,res){
   res.send("<h1>Hallo world w</h1>");
 })
 
 app.use(cors())
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 
-const upload = multer({ storage: storage });
-app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
+
+app.use(fileUpload());
 
 
 mongooseConnection();
@@ -67,7 +55,6 @@ mongooseConnection();
 require("dotenv").config();
 app.use(morgan("tiny"));
 
-app.use(bodyParser.json());
 
 //router
 const rolesRouter = require("./routes/roles");

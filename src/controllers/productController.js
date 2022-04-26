@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const jwt = require("../middleware/jwtAdmin");
 const messageModel = require("../models/message");
-
+const moment = require("moment");
+const userModel = require('../models/user')
 class ProductController {
   static async getAllProducts(req, res, next) {
     const product = await products.find().populate("category");
@@ -63,6 +64,7 @@ class ProductController {
     }
     res.status(200).json(discountProducts);
   }
+
 
   static updateProduct(req, res) {
     const category = categories.findById(req.body.category);
@@ -125,21 +127,12 @@ class ProductController {
     res.status(200).json(procat);
   }
 
+  
   static async newproduct(req, res) {
-    var storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, "assets/images");
-      },
-      filename: function (req, file, cb) {
-        const fileName = file.originalname.toLowerCase().split(" ").join("-");
-        const suffix = Date.now() +  "-" + Math.round(Math.random() * 1000)
-        cb(null, suffix, fileName);
-      }
-    })
-    const uploadOption = multer({ storage: storage }).single("image");
    
     const image = req.file;
-    const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
+    const host = 'https'
+    const prodUrl = 'obscure-ravine-40173.herokuapp.com'
     const {
       seller,
       name,
@@ -158,12 +151,12 @@ class ProductController {
       baru,
       isFeature,
     } = req.body;
+    const basePath = `${host}://${prodUrl}/assets/images/`;
     const changetolower = name.toLowerCase();
     const alamatTolower = alamat.toLowerCase();
     const changeToSPlitHargabeli = harga_beli.split(".").join("");
     const changeToSPlitHargajual = harga_jual.split(".").join("");
     console.log(req.body.hargaJual);
-    const linkButtonMessage = `http://localhost:8002/products/messages/${seller}`;
     const product = new products({
       seller,
       name: changetolower,
@@ -182,7 +175,6 @@ class ProductController {
       numReviews,
       baru,
       isFeature,
-      linkButtonMessage,
     });
     console.log("ini after", product.price);
     product
@@ -195,19 +187,26 @@ class ProductController {
         res.status(500).json(err);
       });
   }
+
   static async addLikeProduct(req, res) {
-    const product = await products.findById(req.params.id, {
-      like: +1
-    });
-    if (product) return res.status(201).json("success")
-      product.save()
-      .then((response) => {
-        res.status(200).json(response);
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      });
+    const likers = req.body;
+    const productId = req.params.id;
+      const product = await products.findByIdAndUpdate(
+        productId, 
+        {new: true}
+      );
+      if(product){
+        product.like.push(likers);
+       product.save()
+        .then((response) => {
+          res.status(200).json({message: "success add like",});
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+      }
   }
+
   static async deleteProduct(req, res) {
     const product = await products.findById(req.params.id);
     if (!product) return res.status(404).json("invalid product");
@@ -221,6 +220,20 @@ class ProductController {
       .catch((err) => {
         res.status(500).json(err);
       });
+  }
+
+  static async filterbyname(req, res){
+    const name = req.query.name;
+    const product = await products.find({
+      name: name
+    })
+    if (!product) {
+     return res.status(404).json({
+        status: 404,
+        message: "Products not found",
+      });
+    }
+    return res.status(200).json(product);
   }
 
   static async filterbyCategory(req, res) {
@@ -311,7 +324,7 @@ class ProductController {
     })
     const uploadOption = multer({ storage: storage }).single("image");
    
-    const image = req.file.filename;
+    const image = req.file;
     const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
     const {
       seller,

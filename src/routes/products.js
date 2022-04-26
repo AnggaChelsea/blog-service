@@ -3,6 +3,7 @@ const router = express.Router();
 const ProductController = require("../controllers/productController");
 const auth = require("../middleware/auth");
 const multer = require("multer");
+const moment = require("moment");
 const MIME_TYPE = {
   "image/png": "png",
   "image/jpg": "jpg",
@@ -23,13 +24,20 @@ var storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const fileName = file.originalname.toLowerCase().split(" ").join("-");
     const extension = MIME_TYPE[file.mimetype];
-    const suffix = Date.now() + "-" + Math.round(Math.random() * 1000 + '-' + extension)
+    const date = Date.now();
+    const daTime = new Date()
+    //format date
+    const getTime = daTime.getHours() + "-" + daTime.getMinutes() + "-" + daTime.getSeconds();
+    const formatdate = moment(date).format("DD-MM-YYYY");
+    const suffix = formatdate + '-' + getTime
     cb(null, suffix + "-" + fileName);
   }
 })
 const uploadOption = multer({
   storage: storage
 }).single("image");
+router.post("/addnewproduct", uploadOption, ProductController.newproduct);
+
 router.get("/productfind", ProductController.getAllProducts);
 router.put("/update-product/:id", ProductController.updateProduct);
 router.put('/update-product-image/:id', auth, uploadOption, ProductController.updateProductImage);
@@ -37,10 +45,11 @@ router.get("/count/product", ProductController.countProduct);
 router.get("/get-feature", ProductController.getFeature);
 router.get("/filtering-product-category", ProductController.findFilter);
 
-//without validate
-router.post("/addnewproduct", uploadOption, ProductController.newproduct);
 
-router.post("/like/:id", ProductController.addLikeProduct)
+//without validate
+router.post("/add-product-like/:id", ProductController.postAddLike);
+
+router.put("/like/:id", ProductController.addLikeProduct)
 
 router.delete("/product_delete/:id", ProductController.deleteProduct)
 
@@ -58,5 +67,7 @@ router.get('/productidby/:id', ProductController.getProductById)
 router.post('/cari-product', ProductController.filterProductNew)
 
 router.post('/filter-by-alamat', ProductController.filterByAlamat)
+
+router.get('/get-product/:name', ProductController.filterbyname)
 
 module.exports = router;
