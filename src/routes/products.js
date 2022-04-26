@@ -47,7 +47,6 @@ router.get("/filtering-product-category", ProductController.findFilter);
 
 
 //without validate
-router.post("/add-product-like/:id", ProductController.postAddLike);
 
 router.put("/like/:id", ProductController.addLikeProduct)
 
