@@ -127,9 +127,9 @@ class ProductController {
     res.status(200).json(procat);
   }
 
-  
+
   static async newproduct(req, res) {
-   
+
     const image = req.file;
     const host = 'https'
     const prodUrl = 'obscure-ravine-40173.herokuapp.com'
@@ -188,24 +188,72 @@ class ProductController {
       });
   }
 
-  static async addLikeProduct(req, res) {
-    const likers = req.body;
-    const productId = req.params.id;
-      const product = await products.findByIdAndUpdate(
-        productId, 
-        {new: true}
-      );
-      if(product){
-        product.like.push(likers);
-       product.save()
-        .then((response) => {
-          res.status(200).json({message: "success add like",});
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
+  static async commentProduct(req, res) {
+    const {
+      commentUser,
+      userId
+    } = req.body;
+    const findDuluProduct = await products.findByIdAndUpdate(req.params.id, {
+      $push: {
+        comment: {
+          commentUser,
+          userId
+        }
       }
+    }, {
+      new: true
+    })
+    if (!findDuluProduct) {
+      res.status(404).json({
+        status: 404,
+        message: "Product not found"
+      })
+    }
+    findDuluProduct.save()
+    res.status(200).json(findDuluProduct)
+
   }
+
+  static async addLikeProduct(req, res) {
+    const 
+      userLike = req.body;
+    const findDuluProduct = await products.findByIdAndUpdate(req.params.id, {
+      $push: {
+        like: 
+          userLike
+        
+      }
+    }, {
+      new: true
+    })
+    if (!findDuluProduct) {
+      res.status(404).json({
+        status: 404,
+        message: "Product not found"
+      })
+    }
+    findDuluProduct.save()
+    res.status(200).json(findDuluProduct)
+
+  }
+  // static async addLikeProduct(req, res) {
+  //   const likers = req.body;
+  //   const productId = req.params.id;
+  //     const product = await products.findByIdAndUpdate(
+  //       productId, 
+  //       {new: true}
+  //     );
+  //     if(product){
+  //       product.like.push(likers);
+  //      product.save()
+  //       .then((response) => {
+  //        return res.status(200).json({message: "success add like",});
+  //       })
+  //       .catch((err) => {
+  //        return res.status(500).json(err);
+  //       });
+  //     }
+  // } 
 
   static async deleteProduct(req, res) {
     const product = await products.findById(req.params.id);
@@ -222,13 +270,13 @@ class ProductController {
       });
   }
 
-  static async filterbyname(req, res){
+  static async filterbyname(req, res) {
     const name = req.query.name;
     const product = await products.find({
       name: name
     })
     if (!product) {
-     return res.status(404).json({
+      return res.status(404).json({
         status: 404,
         message: "Products not found",
       });
@@ -318,12 +366,14 @@ class ProductController {
       },
       filename: function (req, file, cb) {
         const fileName = file.originalname.toLowerCase().split(" ").join("-");
-        const suffix = Date.now() +  "-" + Math.round(Math.random() * 1000)
-        cb(null, suffix  + "-" + fileName);
+        const suffix = Date.now() + "-" + Math.round(Math.random() * 1000)
+        cb(null, suffix + "-" + fileName);
       }
     })
-    const uploadOption = multer({ storage: storage }).single("image");
-   
+    const uploadOption = multer({
+      storage: storage
+    }).single("image");
+
     const image = req.file;
     const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
     const {
@@ -346,8 +396,10 @@ class ProductController {
     } = req.body;
     const product = await products.findById(req.params.id);
     const categoryId = await categories.findById(req.body.category);
-    if(!categoryId){
-      return res.status(404).json({ message: "invalid category" })
+    if (!categoryId) {
+      return res.status(404).json({
+        message: "invalid category"
+      })
     }
     const changetolower = name.toLowerCase();
     const alamatTolower = alamat.toLowerCase();
@@ -355,23 +407,22 @@ class ProductController {
     const changeToSPlitHargajual = harga_jual.split(".").join("");
     const file = req.file;
     let imagePath;
-    if(file){
+    if (file) {
       const fileName = file.filename;
       const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
       const imagePath = `${basePath}${fileName}`;
-    }else{
+    } else {
       imagePath = product.image
     }
-    if(categoryId){
-      
+    if (categoryId) {
+
     }
     const productFindandUpdate = await products.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         // $set: req.body, //if dont want to write to all field
         seller,
         name: changetolower,
-        alamat:alamatTolower,
+        alamat: alamatTolower,
         description,
         richDecription,
         brand,
@@ -385,17 +436,16 @@ class ProductController {
         like,
         baru,
         isFeature,
-      },{
+      }, {
         new: true
       }
     )
-    if(productFindandUpdate){
+    if (productFindandUpdate) {
       res.status(200).json({
         message: "success update product",
         data: productFindandUpdate
       })
-    }
-    else{
+    } else {
       res.status(500).json({
         message: "server Error"
       })

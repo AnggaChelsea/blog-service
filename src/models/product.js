@@ -15,6 +15,7 @@ const productSchema = new schema({
         required: true,
     },
     like: [],
+    comment: [],
     personlike: [{
         type: schema.Types.ObjectId,
         ref: 'users'

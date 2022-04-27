@@ -50,6 +50,8 @@ router.get("/filtering-product-category", ProductController.findFilter);
 
 router.put("/like/:id", ProductController.addLikeProduct)
 
+router.put('/comment/:id', ProductController.commentProduct)
+
 router.delete("/product_delete/:id", ProductController.deleteProduct)
 
 router.get('/getproduct-by-category', ProductController.getProductbyCategory)
