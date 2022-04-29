@@ -28,7 +28,7 @@ const productSchema = new schema({
         type: String,
         default: ''
     },
-    ketentuan:{
+    net:{
         type: Boolean,
         required: true,
     },
