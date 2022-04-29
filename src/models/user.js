@@ -19,7 +19,7 @@ const UserSchema = mongoose.Schema({
   image: {
     type: String,
   },
-
+  followers: [],
   alamat: {
     type: String,
     default: "",
@@ -36,10 +36,7 @@ const UserSchema = mongoose.Schema({
     maxlength: 12,
     required: false,
   },
-  followers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
-  }],
+  followers: [],
   created_at: {
     type: Date,
     default: Date.now,

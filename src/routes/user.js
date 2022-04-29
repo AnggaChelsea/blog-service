@@ -50,7 +50,7 @@ router.put('/changepassword/:id', registerController.changePassword);
 router.get('/user/:id', profile.getProfile);
 
 router.patch('/user/follow/:id',  registerController.followeUser);
-router.post('/user/followers/:id',  registerController.follow);
+router.put('/user/followers/:id',  registerController.follow);
 
 router.post('/user/product', productNew.createNewProducts);
 router.get('/user/product', productNew.getproduct);

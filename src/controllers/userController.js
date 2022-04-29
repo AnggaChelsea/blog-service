@@ -7,10 +7,9 @@ const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
 class UserController {
 
-  static async followeUser(req, res){
-    const 
-      followers
-     = req.body;
+  static async followeUser(req, res) {
+    const
+      followers = req.body;
     const user = await userModel.findById(
       req.params.id
     );
@@ -31,11 +30,14 @@ class UserController {
         .catch((err) => {
           res.status(500).json(err);
         });
-      }
+    }
   }
 
-  static async getChatByBuyer(req, res){
-    const { buyerId, sellerId } = req.body;
+  static async getChatByBuyer(req, res) {
+    const {
+      buyerId,
+      sellerId
+    } = req.body;
     const chat = await messageModel.find({
       buyerId,
       sellerId
@@ -61,35 +63,32 @@ class UserController {
   }
 
   static async follow(req, res) {
-    const followersId = req.body;
-    const {
-      id
-    } = req.params;
-    const user = await userModel.findById(id);
-    if (user) {
-      const newFollow = await new userModel({
-        followers: followersId,
-      });
-      newFollow
-        .save()
-        .then((response) => {
-          return res.status(200).json({
-            response,
-            user: userid,
-            message: "followers bertambah",
-          });
-
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
+    const followers = req.body;
+    const findDuluUser = await userModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          followers: followers,
+        },
+      },
+      {
+        new: true,
       }
+    );
+    if (!findDuluUser) {
+      res.status(404).json({
+        status: 404,
+        message: "Product not found",
+      });
+    }
+    findDuluUser.save();
+    res.status(200).json(findDuluUser);
   }
 
-  
+
 
   static async register(req, res) {
-    
+
     const {
       name,
       email,
@@ -262,25 +261,25 @@ class UserController {
     } = req.body;
     const user = await userModel.findByIdAndUpdate(req.params.id, {
       password: newpassword,
-    },{
+    }, {
       new: true
     });
-    if(user){
-      user.save().then((user)=>{
-        res.status(200).json({
-          message: "success change password",
-          user
+    if (user) {
+      user.save().then((user) => {
+          res.status(200).json({
+            message: "success change password",
+            user
+          })
         })
-      })
 
-      .catch((err)=>{
-        res.status(500).json(err)
-      })
+        .catch((err) => {
+          res.status(500).json(err)
+        })
     }
   }
 
   static async registeruser(req, res) {
-    
+
     const {
       name,
       email,
@@ -341,7 +340,7 @@ class UserController {
       data: user,
     })
   }
-  
+
 
   static async getAllProducts(req, res, next) {
     const product = await allProduct
