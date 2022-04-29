@@ -238,24 +238,7 @@ class ProductController {
     findDuluProduct.save();
     res.status(200).json(findDuluProduct);
   }
-  // static async addLikeProduct(req, res) {
-  //   const likers = req.body;
-  //   const productId = req.params.id;
-  //     const product = await products.findByIdAndUpdate(
-  //       productId,
-  //       {new: true}
-  //     );
-  //     if(product){
-  //       product.like.push(likers);
-  //      product.save()
-  //       .then((response) => {
-  //        return res.status(200).json({message: "success add like",});
-  //       })
-  //       .catch((err) => {
-  //        return res.status(500).json(err);
-  //       });
-  //     }
-  // }
+ 
 
   static async deleteProduct(req, res) {
     const product = await products.findById(req.params.id);
