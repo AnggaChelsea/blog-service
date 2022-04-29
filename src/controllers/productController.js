@@ -16,9 +16,11 @@ class ProductController {
       });
       return;
     } else {
+      const countlike = product.length
       res.status(200).json({
         message: "success",
         data: product,
+        like: countlike,
       });
     }
   }
@@ -152,10 +154,11 @@ class ProductController {
       isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
-    const changetolower = name.toLowerCase();
-    const alamatTolower = alamat.toLowerCase();
-    const changeToSPlitHargabeli = harga_beli.split(".").join("");
-    const changeToSPlitHargajual = harga_jual.split(".").join("");
+    
+    const changetolower = typeof name === "STRING" ? name.toLowerCase() : "";
+    const alamatTolower = typeof alamat === "STRING" ? alamat.toLowerCase() : "";
+    // const changeToSPlitHargabeli = harga_beli.split(".").join("");
+    // const changeToSPlitHargajual = harga_jual.split(".").join("");
     console.log(req.body.hargaJual);
     const product = new products({
       seller,
@@ -166,8 +169,8 @@ class ProductController {
       image: `${basePath}${image}`,
       brand,
       like,
-      harga_jual: changeToSPlitHargajual,
-      harga_beli: changeToSPlitHargabeli,
+      harga_jual,
+      harga_beli,
       ketentuan,
       category,
       countInStock,
@@ -215,13 +218,12 @@ class ProductController {
   }
 
   static async addLikeProduct(req, res) {
-    const 
+    const
       userLike = req.body;
     const findDuluProduct = await products.findByIdAndUpdate(req.params.id, {
       $push: {
-        like: 
-          userLike
-        
+        like: userLike
+
       }
     }, {
       new: true

@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
+const { find } = require("../models/user");
 class UserController {
 
   static async followeUser(req, res){
@@ -60,31 +61,31 @@ class UserController {
     // }
   }
 
-  static async follow(req, res) {
-    const followersId = req.body;
-    const {
-      id
-    } = req.params;
-    const user = await userModel.findById(id);
-    if (user) {
-      const newFollow = await new userModel({
-        followers: followersId,
-      });
-      newFollow
-        .save()
-        .then((response) => {
-          return res.status(200).json({
-            response,
-            user: userid,
-            message: "followers bertambah",
-          });
+  // static async follow(req, res) {
+  //   const followersId = req.body;
+  //   const {
+  //     id
+  //   } = req.params;
+  //   const user = await userModel.findById(id);
+  //   if (user) {
+  //     const newFollow = await new userModel({
+  //       followers: followersId,
+  //     });
+  //     newFollow
+  //       .save()
+  //       .then((response) => {
+  //         return res.status(200).json({
+  //           response,
+  //           user: userid,
+  //           message: "followers bertambah",
+  //         });
 
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
-      }
-  }
+  //       })
+  //       .catch((err) => {
+  //         res.status(500).json(err);
+  //       });
+  //     }
+  // }
 
   
 
@@ -256,6 +257,30 @@ class UserController {
     }
   }
 
+  static async follow(req, res){
+    const {userFollow} = req.body;
+    const findUserDulu = await userModel.findByIdAndUpdate(req.params.id, {
+      $push: {
+        followers: userFollow
+      }
+    },
+    {
+      new: true
+    }
+    )
+    if(findUserDulu){
+      findUserDulu.save()
+      res.status(200).json({
+        message: "success follow"
+      })
+    }else{
+      res.status(500).json({
+        message: "failed follow"
+      })
+    
+  }
+}
+
   static async changePassword(req, res) {
     const {
       newpassword
@@ -290,16 +315,16 @@ class UserController {
       alamat,
       role,
     } = req.body;
-    const tolowcasename = name.toLowerCase();
-    const mailtolowecase = email.toLowerCase();
-    const alamatTolower = alamat.toLowerCase();
+    // const tolowcasename = name ? 'STRING' : name.toLowerCase();
+    // const mailtolowecase = email ? 'STRING' : email.toLowerCase();
+    // const alamatTolower = alamat ? 'STRING' : alamat.toLowerCase();
     const newUser = new userModel({
-      name: tolowcasename,
-      email: mailtolowecase,
+      name,
+      email,
       password: bcrypt.hashSync(password, 10),
       image,
       countInStock,
-      alamat: alamatTolower,
+      alamat,
       role,
     });
     newUser
