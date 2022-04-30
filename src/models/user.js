@@ -20,15 +20,19 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   followers: [],
-  alamat: {
-    type: String,
-    default: "",
-  },
+  alamat: [
+    {
+      kecamatan:{type: String, required: true},
+      kota:{type: String, required: true},
+      provinsi:{type: String, required: true},
+      kode_pos:{type: String, required: true},
+    }
+  ],
 
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "roles",
-    default: "User",
+    default: "626b9b71e64b96457ff05e96",
   },
 
   numberphone: {

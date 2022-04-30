@@ -7,13 +7,37 @@ const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
 const { find } = require("../models/user");
 class UserController {
+  static async updateUser(req, res) {
+    const { name, email, password, image, alamat, numberphone } = req.body;
+    const user = await userModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        email,
+        password,
+        image,
+        alamat,
+        numberphone,
+      },
+      {
+        new: true,
+      }
+    );
+    if (user) {
+      res.status(200).json({
+        message: "User updated successfully",
+        user,
+      });
+    } else {
+      res.status(404).json({
+        message: "User not found",
+      });
+    }
+  }
 
   static async followeUser(req, res) {
-    const
-      followers = req.body;
-    const user = await userModel.findById(
-      req.params.id
-    );
+    const followers = req.body;
+    const user = await userModel.findById(req.params.id);
     if (user) {
       const newFollow = await new userModel({
         followers,
@@ -26,7 +50,6 @@ class UserController {
             user: userid,
             message: "followers bertambah",
           });
-
         })
         .catch((err) => {
           res.status(500).json(err);
@@ -35,14 +58,14 @@ class UserController {
   }
 
   static async getChatByBuyer(req, res) {
-    const {
-      buyerId,
-      sellerId
-    } = req.body;
-    const chat = await messageModel.find({
-      buyerId,
-      sellerId
-    }).populate('buyerId', 'name').populate('sellerId', 'name');
+    const { buyerId, sellerId } = req.body;
+    const chat = await messageModel
+      .find({
+        buyerId,
+        sellerId,
+      })
+      .populate("buyerId", "name")
+      .populate("sellerId", "name");
     if (chat) {
       return res.status(200).json({
         chat,
@@ -86,86 +109,75 @@ class UserController {
     res.status(200).json(findDuluUser);
   }
 
-
-
-  static async register(req, res) {
-
-    const {
-      name,
-      email,
-      password,
-      image,
-      countInStock,
-      alamat,
-      role,
-    } = req.body;
-    const filee = req.file;
-    const tolowcasename = name.toLowerCase();
-    const mailtolowecase = email.toLowerCase();
-    const alamatTolower = alamat.toLowerCase();
-    const newUser = new userModel({
-      name: tolowcasename,
-      email: mailtolowecase,
-      password: bcrypt.hashSync(password, 10),
-      image: filee,
-      countInStock,
-      alamat: alamatTolower,
-      role,
-    });
-    newUser
-      .save()
-      .then((response) => {
-        res.status(200).json({
-          message: "success add user",
-          data: response,
-        });
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      });
-  }
-
   static async loginUser(req, res) {
-    const {
-      email,
-      password
-    } = req.body;
+    const { email, password } = req.body;
     const user = await userModel.findOne({
-      email
-    })
+      email,
+    });
+    if (user.verified === false) {
+      res.status(400).json({
+        code: 401,
+        message: "please verify your email",
+      });
+    }
     if (user) {
       if (bcrypt.compareSync(password, user.password)) {
-        const token = jwt.sign({
-          userId: user.id,
-          userRole: user.role
-        }, "sayangmamah", {
-          expiresIn: '1h'
-        })
+        const token = jwt.sign(
+          {
+            userId: user.id,
+            userRole: user.role,
+          },
+          "sayangmamah",
+          {
+            expiresIn: "1h",
+          }
+        );
         return res.status(200).json({
           success: true,
           id: user.id,
           name: user.name,
           image: user.image,
           alamat: user.alamat,
-          token
-        })
+          token,
+        });
       } else {
         res.status(404).json({
-          message: 'password or email wrong'
-        })
+          message: "password or email wrong",
+        });
       }
     } else {
       res.status(500).json({
         success: false,
-      })
+      });
     }
   }
 
+  static async registerNew(req, res) {
+    const { name, email, password, image, alamat, numberphone } = req.body;
+    const usernew = await new userModel({
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone,
+    });
+    usernew
+      .save()
+      .then((response) => {
+        sendVeryficationEmail(email, response.id);
+        res.status(200).json({
+          message: "success register",
+          response,
+        });
+      })
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+  }
+
   static async message(req, res) {
-    const {
-      message,
-      uploadfile
-    } = req.body;
+    const { message, uploadfile } = req.body;
     const userId = req.params.id;
 
     let userid = await userModel
@@ -209,17 +221,11 @@ class UserController {
   }
 
   static async verifyEmail(req, res) {
-    const {
-      email,
-    } = req.body;
-    const user = await userModel.findOne({
-      email
-    });
+    const userId = req.params;
+    const user = await userModel.findById(userId);
     if (user) {
       const emailVerify = await userModel.findOneAndUpdate(
-        {
-          email
-        },
+        userId,
         {
           $set: {
             verified: true,
@@ -241,36 +247,73 @@ class UserController {
     }
   }
 
-  static async changPasswordUser(req, res){
+  static async changPasswordUser(req, res) {
     const userId = req.params;
-    const {password} = req.body;
-    const findEmail = await userModel.findOneAndUpdate(userId, {password: bcrypt.hashSync(password, 10)}, {new: true});
-    if(findEmail){
+    const { password } = req.body;
+    const findEmail = await userModel.findOneAndUpdate(
+      userId,
+      {
+        password: bcrypt.hashSync(password, 10),
+      },
+      {
+        new: true,
+      }
+    );
+    if (findEmail) {
       res.status(200).json({
-        message: 'success change password'
-      })
-    }else{
+        message: "success change password",
+      });
+    } else {
       res.status(404).json({
-        message: 'email or password wrong'
-      })
-      
+        message: "email or password wrong",
+      });
     }
   }
 
-  static async confirmaitoncode(req, res) {
-    const {
-      email
-    } = req.body;
+  static async checkEmail(req, res) {
+    const { email } = req.body;
+    const findEmail = await userModel.findOne({
+      email,
+    });
+    if (findEmail) {
+      const token = jwt.sign(
+        {
+          userId: findEmail.id,
+          userRole: findEmail.role,
+        },
+        "sayangmamah",
+        {
+          expiresIn: "1h",
+        }
+      );
+      const linkTo = `http://localhost:8001/user/user/changePassword/${findEmail.id}`;
+      return res.status(200).json({
+        success: true,
+        name: findEmail.name,
+        message: `verify use this link ${linkTo}`,
+        token,
+      });
+    } else {
+      return res.status(404).json({
+        message: "email not found",
+      });
+    }
+  }
+
+  static async forgotPassword(req, res) {
+    const { email } = req.body;
     const userId = req.params.id;
     const user = await userModel.findOne({
       email,
     });
     if (user && userId === user.id) {
       const secret = process.env.SCRET_KEY;
-      const token = jwt.sign({
+      const token = jwt.sign(
+        {
           userId: user.id,
         },
-        secret, {
+        secret,
+        {
           expiresIn: "1h",
         }
       );
@@ -305,64 +348,61 @@ class UserController {
     }
   }
 
-  static async follow(req, res){
-    const {userFollow} = req.body;
-    const findUserDulu = await userModel.findByIdAndUpdate(req.params.id, {
-      $push: {
-        followers: userFollow
+  static async follow(req, res) {
+    const { userFollow } = req.body;
+    const findUserDulu = await userModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          followers: userFollow,
+        },
+      },
+      {
+        new: true,
       }
-    },
-    {
-      new: true
-    }
-    )
-    if(findUserDulu){
-      findUserDulu.save()
+    );
+    if (findUserDulu) {
+      findUserDulu.save();
       res.status(200).json({
-        message: "success follow"
-      })
-    }else{
+        message: "success follow",
+      });
+    } else {
       res.status(500).json({
-        message: "failed follow"
-      })
-    
+        message: "failed follow",
+      });
+    }
   }
-}
 
   static async changePassword(req, res) {
-    const {
-      newpassword
-    } = req.body;
-    const user = await userModel.findByIdAndUpdate(req.params.id, {
-      password: newpassword,
-    }, {
-      new: true
-    });
+    const { newpassword } = req.body;
+    const user = await userModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        password: newpassword,
+      },
+      {
+        new: true,
+      }
+    );
     if (user) {
-      user.save().then((user) => {
+      user
+        .save()
+        .then((user) => {
           res.status(200).json({
             message: "success change password",
-            user
-          })
+            user,
+          });
         })
 
         .catch((err) => {
-          res.status(500).json(err)
-        })
+          res.status(500).json(err);
+        });
     }
   }
 
   static async registeruser(req, res) {
-
-    const {
-      name,
-      email,
-      password,
-      image,
-      countInStock,
-      alamat,
-      role,
-    } = req.body;
+    const { name, email, password, image, countInStock, alamat, role } =
+      req.body;
     // const tolowcasename = name ? 'STRING' : name.toLowerCase();
     // const mailtolowecase = email ? 'STRING' : email.toLowerCase();
     // const alamatTolower = alamat ? 'STRING' : alamat.toLowerCase();
@@ -403,7 +443,7 @@ class UserController {
   static async getUserById(req, res) {
     const user = await userModel.findOne({
       id: req.params.id,
-    })
+    });
     if (!user) {
       res.status(400).json({
         message: "user not found",
@@ -412,25 +452,21 @@ class UserController {
     res.status(200).json({
       message: "success get user by id",
       data: user,
-    })
+    });
   }
 
-
   static async getAllProducts(req, res, next) {
-    const product = await allProduct
-      .find()
-      .populate("category");
+    const product = await allProduct.find().populate("category");
     if (!product) {
       await res.status(404).json({
         status: 404,
         message: "Products not found",
       });
-      return
-
+      return;
     } else {
       res.status(200).json({
         message: "success",
-        data: productgetProductbyCategory
+        data: productgetProductbyCategory,
       });
     }
   }
