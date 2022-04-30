@@ -5,7 +5,7 @@ const multer = require("multer");
 const jwt = require("../middleware/jwtAdmin");
 const messageModel = require("../models/message");
 const moment = require("moment");
-const userModel = require('../models/user')
+const userModel = require("../models/user");
 class ProductController {
   static async getAllProducts(req, res, next) {
     const product = await products.find().populate("category");
@@ -26,14 +26,12 @@ class ProductController {
   }
   static async filterByAlamat(req, res) {
     const alamat = req.body;
-    const product = await products.findOne(
-      alamat
-    )
+    const product = await products.findOne(alamat);
     if (product) {
       res.status(200).json(product);
     } else {
       res.status(404).json({
-        message: "Product not found"
+        message: "Product not found",
       });
     }
   }
@@ -66,7 +64,6 @@ class ProductController {
     }
     res.status(200).json(discountProducts);
   }
-
 
   static updateProduct(req, res) {
     const category = categories.findById(req.body.category);
@@ -129,12 +126,10 @@ class ProductController {
     res.status(200).json(procat);
   }
 
-
   static async newproduct(req, res) {
-
     const image = req.file;
-    const host = 'https'
-    const prodUrl = 'obscure-ravine-40173.herokuapp.com'
+    const host = "https";
+    const prodUrl = "obscure-ravine-40173.herokuapp.com";
     const {
       seller,
       name,
@@ -154,95 +149,100 @@ class ProductController {
       isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
-    
-    const changetolower = typeof name === "STRING" ? name.toLowerCase() : "";
-    const alamatTolower = typeof alamat === "STRING" ? alamat.toLowerCase() : "";
-    // const changeToSPlitHargabeli = harga_beli.split(".").join("");
-    // const changeToSPlitHargajual = harga_jual.split(".").join("");
-    console.log(req.body.hargaJual);
-    const product = new products({
-      seller,
-      name: changetolower,
-      alamat: alamatTolower,
-      description,
-      richDecription,
-      image: `${basePath}${image}`,
-      brand,
-      like,
-      harga_jual,
-      harga_beli,
-      ketentuan,
-      category,
-      countInStock,
-      rating,
-      numReviews,
-      baru,
-      isFeature,
-    });
-    console.log("ini after", product.price);
-    product
-      .save()
-      .then((response) => {
-        res.status(200).json(response);
-        console.log("ini response", response);
-      })
-      .catch((err) => {
-        res.status(500).json(err);
+    // const changetolower = name ? "STRING" : name.toLowerCase();
+    // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
+    if (name === "senjata" || name === "senjata api") {
+      return res.status(401).json({
+        status: 401,
+        message: "product ini berbahaya",
       });
+    } else {
+      console.log(req.body.hargaJual);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("alamat", alamat);
+      formData.append("description", description);
+      formData.append("richDecription", richDecription);
+      formData.append("brand", brand);
+      formData.append("harga_jual", harga_jual);
+      formData.append("harga_beli", harga_beli);
+      formData.append("category", category);
+      formData.append("countInStock", countInStock);
+      formData.append("rating", rating);
+      formData.append("ketentuan", ketentuan);
+      formData.append("numReviews", numReviews);
+      formData.append("like", like);
+      formData.append("baru", baru);
+      formData.append("isFeature", isFeature);
+      formData.append("image", image , basePath);
+      formData.append("seller", seller);
+      console.log("ini after", product.price);
+      const product = new products(formData);
+      product
+        .save()
+        .then((response) => {
+          res.status(200).json(response);
+          console.log("ini response", response);
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    }
   }
 
   static async commentProduct(req, res) {
-    const {
-      commentUser,
-      userId
-    } = req.body;
-    const findDuluProduct = await products.findByIdAndUpdate(req.params.id, {
-      $push: {
-        comment: {
-          commentUser,
-          userId
-        }
+    const { commentUser, userId } = req.body;
+    const findDuluProduct = await products.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          comment: {
+            commentUser,
+            userId,
+          },
+        },
+      },
+      {
+        new: true,
       }
-    }, {
-      new: true
-    })
+    );
     if (!findDuluProduct) {
       res.status(404).json({
         status: 404,
-        message: "Product not found"
-      })
+        message: "Product not found",
+      });
     }
-    findDuluProduct.save()
-    res.status(200).json(findDuluProduct)
-
+    findDuluProduct.save();
+    res.status(200).json(findDuluProduct);
   }
 
   static async addLikeProduct(req, res) {
-    const
-      userLike = req.body;
-    const findDuluProduct = await products.findByIdAndUpdate(req.params.id, {
-      $push: {
-        like: userLike
-
+    const userLike = req.body;
+    const findDuluProduct = await products.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          like: userLike,
+        },
+      },
+      {
+        new: true,
       }
-    }, {
-      new: true
-    })
+    );
     if (!findDuluProduct) {
       res.status(404).json({
         status: 404,
-        message: "Product not found"
-      })
+        message: "Product not found",
+      });
     }
-    findDuluProduct.save()
-    res.status(200).json(findDuluProduct)
-
+    findDuluProduct.save();
+    res.status(200).json(findDuluProduct);
   }
   // static async addLikeProduct(req, res) {
   //   const likers = req.body;
   //   const productId = req.params.id;
   //     const product = await products.findByIdAndUpdate(
-  //       productId, 
+  //       productId,
   //       {new: true}
   //     );
   //     if(product){
@@ -255,7 +255,7 @@ class ProductController {
   //        return res.status(500).json(err);
   //       });
   //     }
-  // } 
+  // }
 
   static async deleteProduct(req, res) {
     const product = await products.findById(req.params.id);
@@ -275,8 +275,8 @@ class ProductController {
   static async filterbyname(req, res) {
     const name = req.query.name;
     const product = await products.find({
-      name: name
-    })
+      name: name,
+    });
     if (!product) {
       return res.status(404).json({
         status: 404,
@@ -344,20 +344,18 @@ class ProductController {
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json({
       data: product,
-      seller: product.seller
+      seller: product.seller,
     });
   }
   static async filterProductNew(req, res) {
-    const nameProduct = req.body
-    const productfind = await products.findOne(
-      nameProduct
-    )
+    const nameProduct = req.body;
+    const productfind = await products.findOne(nameProduct);
     if (productfind) {
-      res.status(200).json(productfind)
+      res.status(200).json(productfind);
     } else {
       res.status(404).json({
-        message: "Product not found"
-      })
+        message: "Product not found",
+      });
     }
   }
 
@@ -368,12 +366,12 @@ class ProductController {
       },
       filename: function (req, file, cb) {
         const fileName = file.originalname.toLowerCase().split(" ").join("-");
-        const suffix = Date.now() + "-" + Math.round(Math.random() * 1000)
+        const suffix = Date.now() + "-" + Math.round(Math.random() * 1000);
         cb(null, suffix + "-" + fileName);
-      }
-    })
+      },
+    });
     const uploadOption = multer({
-      storage: storage
+      storage: storage,
     }).single("image");
 
     const image = req.file;
@@ -400,8 +398,8 @@ class ProductController {
     const categoryId = await categories.findById(req.body.category);
     if (!categoryId) {
       return res.status(404).json({
-        message: "invalid category"
-      })
+        message: "invalid category",
+      });
     }
     const changetolower = name.toLowerCase();
     const alamatTolower = alamat.toLowerCase();
@@ -414,13 +412,13 @@ class ProductController {
       const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
       const imagePath = `${basePath}${fileName}`;
     } else {
-      imagePath = product.image
+      imagePath = product.image;
     }
     if (categoryId) {
-
     }
     const productFindandUpdate = await products.findByIdAndUpdate(
-      req.params.id, {
+      req.params.id,
+      {
         // $set: req.body, //if dont want to write to all field
         seller,
         name: changetolower,
@@ -438,19 +436,20 @@ class ProductController {
         like,
         baru,
         isFeature,
-      }, {
-        new: true
+      },
+      {
+        new: true,
       }
-    )
+    );
     if (productFindandUpdate) {
       res.status(200).json({
         message: "success update product",
-        data: productFindandUpdate
-      })
+        data: productFindandUpdate,
+      });
     } else {
       res.status(500).json({
-        message: "server Error"
-      })
+        message: "server Error",
+      });
     }
   }
 }

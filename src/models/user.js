@@ -19,7 +19,7 @@ const UserSchema = mongoose.Schema({
   image: {
     type: String,
   },
-
+  followers: [],
   alamat: {
     type: String,
     default: "",

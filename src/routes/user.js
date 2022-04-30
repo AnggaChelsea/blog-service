@@ -42,6 +42,7 @@ router.post('/user/login', registerController.loginUser);
 router.post('/user/message/:id', registerController.message);
 router.post('/user/confirmationemail/:id', registerController.confirmaitoncode);
 router.post('/rere', registerController.registeruser)
+router.put('/user/changePassword/:id', registerController.changPasswordUser);
 router.get('/get-all-users', registerController.getAllUser);
 router.get('/get-user-by-id/:id', registerController.getUserById);
 
