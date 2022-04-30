@@ -208,6 +208,39 @@ class UserController {
       });
   }
 
+  static async verifyEmail(req, res) {
+    const {
+      email,
+    } = req.body;
+    const user = await userModel.findOne({
+      email
+    });
+    if (user) {
+      const emailVerify = await userModel.findOneAndUpdate(
+        {
+          email
+        },
+        {
+          $set: {
+            verified: true,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      if (emailVerify) {
+        res.status(200).json({
+          message: "success verified",
+        });
+      }
+    } else {
+      res.status(400).json({
+        message: "user not found",
+      });
+    }
+  }
+
   static async changPasswordUser(req, res){
     const userId = req.params;
     const {password} = req.body;
