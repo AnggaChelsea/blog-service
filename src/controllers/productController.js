@@ -274,16 +274,17 @@ class ProductController {
 
   static async filterbyname(req, res) {
     const name = req.query.name;
-    const product = await products.find({
-      name: name,
-    });
+    const product = await products.find(name === name);
+    console.log(req.query.name);
     if (!product) {
       return res.status(404).json({
         status: 404,
         message: "Products not found",
       });
+    }else{
+      return res.status(200).json(product);
     }
-    return res.status(200).json(product);
+    
   }
 
   static async filterbyCategory(req, res) {

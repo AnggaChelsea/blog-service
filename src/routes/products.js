@@ -69,6 +69,6 @@ router.post('/cari-product', ProductController.filterProductNew)
 
 router.post('/filter-by-alamat', ProductController.filterByAlamat)
 
-router.get('/get-product/:name', ProductController.filterbyname)
+router.get('/get-product/?name', ProductController.filterbyname)
 
 module.exports = router;
