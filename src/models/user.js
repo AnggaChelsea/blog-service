@@ -28,6 +28,14 @@ const UserSchema = mongoose.Schema({
       kode_pos:{type: String, required: true},
     }
   ],
+  pesan:[
+    {
+      senderId:{type: mongoose.Schema.Types.ObjectId, ref: "users"},
+      message:{type: String, required: true},
+      image:{type: String, required: true},
+      productId:{type: mongoose.Schema.Types.ObjectId, ref: "products"},
+    }
+  ],
 
   role: {
     type: mongoose.Schema.Types.ObjectId,

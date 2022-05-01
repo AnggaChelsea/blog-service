@@ -6,6 +6,7 @@ const sendVeryficationEmail = require("../helper/emailVerifycation");
 const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
 const { find } = require("../models/user");
+const productModel = require('../models/product');
 class UserController {
   static async updateUser(req, res) {
     const { name, email, password, image, alamat, numberphone } = req.body;
@@ -152,6 +153,32 @@ class UserController {
     }
   }
 
+  static async sendPesan(req,res){
+    const userparams = req.params;
+    const productparams = req.params;
+    const {message, file, senderId, productId} = req.body;
+    const findProduct = await productModel.findById(productparams)
+    if(productparams){
+      productId.push(productparams.id)
+      const findUserToChat = await userModel.findByIdAndUpdate(userparams, {
+        $push: {
+          pesan: {
+            message,
+            file,
+            senderId,
+            productId,
+          }
+        },      
+      },
+      {
+        new: true,
+      });
+    }else{
+      productId.push(null)
+    }
+    
+  }
+
   static async registerNew(req, res) {
     const { name, email, password, image, alamat, numberphone } = req.body;
     const usernew = await new userModel({
@@ -162,7 +189,12 @@ class UserController {
       alamat,
       numberphone,
     });
-    usernew
+    if(usernew.email === email && usernew.numberphone === numberphone){
+      res.status(400).json({
+        message: "email or numberphone already exist"
+      })
+    }else{
+      usernew
       .save()
       .then((response) => {
         sendVeryficationEmail(email, response.id);
@@ -174,6 +206,8 @@ class UserController {
       .catch((error) => {
         res.status(500).json(error);
       });
+    }
+    
   }
 
   static async message(req, res) {
