@@ -49,8 +49,8 @@ router.post('/user/checkEmail', registerController.checkEmail);
  
 router.put('/changepassword/:id', registerController.changePassword);
 router.get('/user/:id', profile.getProfile);
-
-router.put('/verify', registerController.verifyEmail);
+router.post('/user/regis', registerController.register)
+router.put('/verify/:id', registerController.verifyEmail);
 
 router.patch('/user/follow/:id',  registerController.followeUser);
 router.put('/user/followers/:id',  registerController.follow);

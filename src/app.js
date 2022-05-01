@@ -36,10 +36,10 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(function(req, res, next) {
-  res.setHeader("Content-Type", "application/json");
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.setHeader("Content-Type", "application/json");
+//   next();
+// });
 
 
 app.get("/", function(req,res){

@@ -72,22 +72,22 @@ const UserModel = mongoose.model("users", UserSchema);
 UserModel.schema.path("email").validate(function (value) {
   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
 });
-//validate email is exist
-// UserModel.schema.path("email").validate(function (value) {
-//   return UserModel.findOne({ email: value }).then(function (user) {
-//     if (user) {
-//       return false;
-//     }
-//     return true;
-//   });
-// }, "Email sudah terdaftar");
-//validate numberphone isexist
-// UserModel.schema.path("numberphone").validate(function (value) {
-//   return UserModel.findOne({ numberphone: value }).then((user) => {
-//     if (user) {
-//       return false;
-//     }
-//     return true;
-//   });
-// }, "Nomor telepon sudah terdaftar");
+// validate email is exist
+UserModel.schema.path("email").validate(function (value) {
+  return UserModel.findOne({ email: value }).then(function (user) {
+    if (user) {
+      return false;
+    }
+    return true;
+  });
+}, "Email sudah terdaftar");
+// validate numberphone isexist
+UserModel.schema.path("numberphone").validate(function (value) {
+  return UserModel.findOne({ numberphone: value }).then((user) => {
+    if (user) {
+      return false;
+    }
+    return true;
+  });
+}, "Nomor telepon sudah terdaftar");
 module.exports = UserModel;

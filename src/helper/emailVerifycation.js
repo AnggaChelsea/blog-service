@@ -1,9 +1,9 @@
 
 const transport = require('../config/nodemailer');
-const SendConfirmation = (name, email, confirmations) => {
+const SendConfirmation = (senderEmail, email, confirmations) => {
     console.log('check');
     transport.sendMail({
-        from: "user",
+        from: senderEmail,
         to: email,
         subject: "Confirmation Email",
         html: `<h1>Hello ${name}</h1>
