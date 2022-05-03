@@ -36,18 +36,26 @@ const uploadOption = multer({
   storage: storage
 }).single("image");
 
-
-router.post('/user/register', uploadOption, registerController.register);
+router.post('/register/user', registerController.registerNew);
+router.put('/user/update-profile/:id', registerController.updateUser);
 router.post('/user/login', registerController.loginUser);
 router.post('/user/message/:id', registerController.message);
-router.post('/user/confirmationemail/:id', registerController.confirmaitoncode);
+router.post('/user/confirmationemail/:id', registerController.forgotPassword);
 router.post('/rere', registerController.registeruser)
+router.put('/user/changePassword/:id', registerController.changPasswordUser);
 router.get('/get-all-users', registerController.getAllUser);
 router.get('/get-user-by-id/:id', registerController.getUserById);
+router.post('/user/checkEmail', registerController.checkEmail);
+
+//pesan
+router.put('/user/sendPesan/:id', registerController.sendpesan)
+router.get('/user/findPesan/:id', registerController.findPesan)
 
 
 router.put('/changepassword/:id', registerController.changePassword);
 router.get('/user/:id', profile.getProfile);
+router.post('/user/regis', registerController.register)
+router.put('/verify/:id', registerController.verifyEmail);
 
 router.patch('/user/follow/:id',  registerController.followeUser);
 router.put('/user/followers/:id',  registerController.follow);

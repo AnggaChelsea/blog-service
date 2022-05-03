@@ -14,6 +14,7 @@ const inboxSchema = new Schema({
         type: String,
         required: true,
     },
+    fileImage:String,
     lastMessage: {
         type: Date,
         default: Date.now,

@@ -16,9 +16,11 @@ class ProductController {
       });
       return;
     } else {
+      const countlike = product.length
       res.status(200).json({
         message: "success",
         data: product,
+        like: countlike,
       });
     }
   }
@@ -140,17 +142,15 @@ class ProductController {
       category,
       countInStock,
       rating,
-      net,
+      ketentuan,
       numReviews,
       like,
       baru,
       isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
-    const changetolower = name.toLowerCase();
-    const alamatTolower = alamat.toLowerCase();
-    const changeToSPlitHargabeli = harga_beli.split(".").join("");
-    const changeToSPlitHargajual = harga_jual.split(".").join("");
+    // const changetolower = name ? "STRING" : name.toLowerCase();
+    // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
     if (name === "senjata" || name === "senjata api") {
       return res.status(401).json({
         status: 401,
@@ -158,26 +158,26 @@ class ProductController {
       });
     } else {
       console.log(req.body.hargaJual);
-      const product = new products({
-        seller,
-        name: changetolower,
-        alamat: alamatTolower,
-        description,
-        richDecription,
-        image: `${basePath}${image}`,
-        brand,
-        like,
-        harga_jual: changeToSPlitHargajual,
-        harga_beli: changeToSPlitHargabeli,
-        net,
-        category,
-        countInStock,
-        rating,
-        numReviews,
-        baru,
-        isFeature,
-      });
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("alamat", alamat);
+      formData.append("description", description);
+      formData.append("richDecription", richDecription);
+      formData.append("brand", brand);
+      formData.append("harga_jual", harga_jual);
+      formData.append("harga_beli", harga_beli);
+      formData.append("category", category);
+      formData.append("countInStock", countInStock);
+      formData.append("rating", rating);
+      formData.append("ketentuan", ketentuan);
+      formData.append("numReviews", numReviews);
+      formData.append("like", like);
+      formData.append("baru", baru);
+      formData.append("isFeature", isFeature);
+      formData.append("image", image , basePath);
+      formData.append("seller", seller);
       console.log("ini after", product.price);
+      const product = new products(formData);
       product
         .save()
         .then((response) => {
@@ -238,7 +238,24 @@ class ProductController {
     findDuluProduct.save();
     res.status(200).json(findDuluProduct);
   }
- 
+  // static async addLikeProduct(req, res) {
+  //   const likers = req.body;
+  //   const productId = req.params.id;
+  //     const product = await products.findByIdAndUpdate(
+  //       productId,
+  //       {new: true}
+  //     );
+  //     if(product){
+  //       product.like.push(likers);
+  //      product.save()
+  //       .then((response) => {
+  //        return res.status(200).json({message: "success add like",});
+  //       })
+  //       .catch((err) => {
+  //        return res.status(500).json(err);
+  //       });
+  //     }
+  // }
 
   static async deleteProduct(req, res) {
     const product = await products.findById(req.params.id);
@@ -257,16 +274,17 @@ class ProductController {
 
   static async filterbyname(req, res) {
     const name = req.query.name;
-    const product = await products.find({
-      name: name,
-    });
+    const product = await products.find(name === name);
+    console.log(req.query.name);
     if (!product) {
       return res.status(404).json({
         status: 404,
         message: "Products not found",
       });
+    }else{
+      return res.status(200).json(product);
     }
-    return res.status(200).json(product);
+    
   }
 
   static async filterbyCategory(req, res) {

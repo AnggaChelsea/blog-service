@@ -5,14 +5,47 @@ const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
+const {
+  find
+} = require("../models/user");
+const productModel = require("../models/product");
 class UserController {
+  static async updateUser(req, res) {
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+    } = req.body;
+    const user = await userModel.findByIdAndUpdate(
+      req.params.id, {
+        name,
+        email,
+        password,
+        image,
+        alamat,
+        numberphone,
+      }, {
+        new: true,
+      }
+    );
+    if (user) {
+      res.status(200).json({
+        message: "User updated successfully",
+        user,
+      });
+    } else {
+      res.status(404).json({
+        message: "User not found",
+      });
+    }
+  }
 
   static async followeUser(req, res) {
-    const
-      followers = req.body;
-    const user = await userModel.findById(
-      req.params.id
-    );
+    const followers = req.body;
+    const user = await userModel.findById(req.params.id);
     if (user) {
       const newFollow = await new userModel({
         followers,
@@ -25,7 +58,6 @@ class UserController {
             user: userid,
             message: "followers bertambah",
           });
-
         })
         .catch((err) => {
           res.status(500).json(err);
@@ -38,10 +70,13 @@ class UserController {
       buyerId,
       sellerId
     } = req.body;
-    const chat = await messageModel.find({
-      buyerId,
-      sellerId
-    }).populate('buyerId', 'name').populate('sellerId', 'name');
+    const chat = await messageModel
+      .find({
+        buyerId,
+        sellerId,
+      })
+      .populate("buyerId", "name")
+      .populate("sellerId", "name");
     if (chat) {
       return res.status(200).json({
         chat,
@@ -65,13 +100,11 @@ class UserController {
   static async follow(req, res) {
     const followers = req.body;
     const findDuluUser = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           followers: followers,
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -85,79 +118,251 @@ class UserController {
     res.status(200).json(findDuluUser);
   }
 
-
-
-  static async register(req, res) {
-
-    const {
-      name,
-      email,
-      password,
-      image,
-      countInStock,
-      alamat,
-      role,
-    } = req.body;
-    const filee = req.file;
-    const tolowcasename = name.toLowerCase();
-    const mailtolowecase = email.toLowerCase();
-    const alamatTolower = alamat.toLowerCase();
-    const newUser = new userModel({
-      name: tolowcasename,
-      email: mailtolowecase,
-      password: bcrypt.hashSync(password, 10),
-      image: filee,
-      countInStock,
-      alamat: alamatTolower,
-      role,
-    });
-    newUser
-      .save()
-      .then((response) => {
-        res.status(200).json({
-          message: "success add user",
-          data: response,
-        });
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      });
-  }
-
   static async loginUser(req, res) {
     const {
       email,
       password
     } = req.body;
     const user = await userModel.findOne({
-      email
-    })
+      email,
+    });
+    if (user.verified === false) {
+      res.status(400).json({
+        code: 401,
+        message: "please verify your email",
+      });
+    }
     if (user) {
       if (bcrypt.compareSync(password, user.password)) {
         const token = jwt.sign({
-          userId: user.id,
-          userRole: user.role
-        }, "sayangmamah", {
-          expiresIn: '1h'
-        })
+            userId: user.id,
+            userRole: user.role,
+          },
+          "sayangmamah", {
+            expiresIn: "1h",
+          }
+        );
         return res.status(200).json({
           success: true,
           id: user.id,
           name: user.name,
           image: user.image,
           alamat: user.alamat,
-          token
-        })
+          token,
+        });
       } else {
         res.status(404).json({
-          message: 'password or email wrong'
-        })
+          message: "password or email salah",
+        });
       }
     } else {
       res.status(500).json({
         success: false,
-      })
+      });
     }
+  }
+
+  static async sendPesan(req, res) {
+    const userparams = req.params;
+    const productparams = req.params;
+    const {
+      message,
+      file,
+      senderId,
+      productId
+    } = req.body;
+    const findProduct = await productModel.findById(productparams);
+    if (productparams) {
+      productId.push(productparams.id);
+      const findUserToChat = await userModel.findByIdAndUpdate(
+        userparams, {
+          $push: {
+            pesan: {
+              message,
+              file,
+              senderId,
+              productId,
+            },
+          },
+        }, {
+          new: true,
+        }
+      );
+    } else {
+      productId.push(null);
+    }
+  }
+
+  static async findPesan(req, res) {
+    const pesanSenderId = req.params.id;
+    const findpesanFromUser = await userModel.find()
+      .populate("pesan", {
+        senderId: pesanSenderId,
+      })
+      .populate("pesan.productId", "name");
+    if (findpesanFromUser) {
+      res.status(200).json({
+        findpesanFromUser,
+        message: "pesan ditemukan",
+      });
+    } else {
+      res.status(404).json({
+        message: "pesan not found",
+      });
+    }
+  }
+
+  static async sendpesan(req, res) {
+    const userparams = req.params.id;
+    const {
+      senderId,
+      message,
+      file,
+      productId
+    } = req.body;
+    const findUserToChat = await userModel.findByIdAndUpdate(userparams, {
+      $push: {
+        pesan: {
+          message,
+          file,
+          senderId,
+          productId,
+        },
+      },
+    }, {
+      new: true,
+    })
+    if (findUserToChat) {
+      res.status(200).json({
+        message: "pesan berhasil dikirim",
+        findUserToChat,
+      });
+    } else {
+      res.status(404).json({
+        message: "pesan gagal dikirim",
+      });
+    }
+  }
+
+
+  static async register(req, res) {
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+    } = req.body;
+    const newUser = await new userModel({
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone,
+    })
+        const emailUser = usernew.email;
+        const from = "adeadeaja2121@gmail.com";
+        const userId = usernew.id;
+        const host = "http://localhost:8001";
+        const linkConfirm = `mohon klik link ini untuk verifikasi akunmu ${host}/user/verify/${userId}`;
+        let message = {
+          from: from,
+          to: emailUser,
+          subject: 'Verifikasi Email',
+          text: 'For clients with plaintext support only',
+          html: `<P>Hallo terimakasih sudah mendaftar, mohon konfirmasi akun anda dengan klik link di bawah ini</P>
+          <br><a href="http://localhost:8001/user/verify/${userId}">verify sekarang</a>
+          `,
+        }
+        nodemailer.sendMail(message, (err, info) => {
+          if (err) {
+            res.status(500).json(err);
+          } else {
+            usernew.save()
+            .then((response) => {
+              return res
+                .status(200)
+                .json({
+                  message: "success register",
+                  response,
+                })
+            })
+            
+          }
+        });
+  }
+
+  static async registerNew(req, res) {
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+    } = req.body;
+    const usernew = await new userModel({
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone,
+    });
+    // if(usernew.email === email && usernew.numberphone === numberphone) {
+    //   res.status(400).json({
+    //     message: "email or numberphone already exist",
+    //   });
+    // }else{
+    const emailUser = usernew.email;
+    const from = "freelacerw9@gmail.com";
+    const userId = usernew.id;
+    const host = "http://localhost:8001";
+    const linkConfirm = `mohon klik link ini untuk verifikasi akunmu ${host}/user/verify/${userId}`;
+    //transport
+    let message = {
+      from: from,
+      to: emailUser,
+      subject: 'Verifikasi Email',
+      text: 'For clients with plaintext support only',
+      html: '<p>For clients that do not support AMP4EMAIL or amp content is not valid</p>',
+      amp: `<!doctype html>
+      <html ⚡4email>
+        <head>
+          <meta charset="utf-8">
+          <style amp4email-boilerplate>body{visibility:hidden}</style>
+          <script async src="https://cdn.ampproject.org/v0.js"></script>
+          <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
+        </head>
+        <body>
+          <p>Image: <amp-img src="https://cldup.com/P0b1bUmEet.png" width="16" height="16"/></p>
+          <p>GIF (requires "amp-anim" script in header):<br/>
+            <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
+        </body>
+      </html>`
+    }
+    nodemailer.sendMail(message, (err, info) => {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        usernew.save().then((response) => {
+          sendVeryficationEmail(from, emailUser, linkConfirm);
+          res
+            .status(200)
+            .json({
+              message: "success register",
+              response,
+            })
+            .catch((error) => {
+              res.status(500).json(error);
+            });
+        });
+      }
+    });
+
+    // res.status(500).json({ message: "error" });
   }
 
   static async message(req, res) {
@@ -207,7 +412,72 @@ class UserController {
       });
   }
 
-  static async confirmaitoncode(req, res) {
+  static async verifyEmail(req, res) {
+    const userId = req.params.id;
+    const userFind = await userModel.findByIdAndUpdate(userId, {
+      verified: true,
+    });
+    res.status(200).json({
+      message: "success verify",
+      userFind,
+    });
+
+  }
+
+  static async changPasswordUser(req, res) {
+    const userId = req.params;
+    const {
+      password
+    } = req.body;
+    const findEmail = await userModel.findOneAndUpdate(
+      userId, {
+        password: bcrypt.hashSync(password, 10),
+      }, {
+        new: true,
+      }
+    );
+    if (findEmail) {
+      res.status(200).json({
+        message: "success change password",
+      });
+    } else {
+      res.status(404).json({
+        message: "email or password wrong",
+      });
+    }
+  }
+
+  static async checkEmail(req, res) {
+    const {
+      email
+    } = req.body;
+    const findEmail = await userModel.findOne({
+      email,
+    });
+    if (findEmail) {
+      const token = jwt.sign({
+          userId: findEmail.id,
+          userRole: findEmail.role,
+        },
+        "sayangmamah", {
+          expiresIn: "1h",
+        }
+      );
+      const linkTo = `http://localhost:8001/user/user/changePassword/${findEmail.id}`;
+      return res.status(200).json({
+        success: true,
+        name: findEmail.name,
+        message: `verify use this link ${linkTo}`,
+        token,
+      });
+    } else {
+      return res.status(404).json({
+        message: "email not found",
+      });
+    }
+  }
+
+  static async forgotPassword(req, res) {
     const {
       email
     } = req.body;
@@ -230,7 +500,7 @@ class UserController {
       const link = `${process.env.API_URL}/user/verify?token=${token}&code=${code}`;
 
       const mailOptions = {
-        from: "freelancer9@gmail.com",
+        from: "adeadeaja2121@gmail.com",
         to: emails,
         subject: "Verify your email",
         html: `<h1>Hello ${name}</h1>
@@ -255,31 +525,59 @@ class UserController {
     }
   }
 
+  static async follow(req, res) {
+    const {
+      userFollow
+    } = req.body;
+    const findUserDulu = await userModel.findByIdAndUpdate(
+      req.params.id, {
+        $push: {
+          followers: userFollow,
+        },
+      }, {
+        new: true,
+      }
+    );
+    if (findUserDulu) {
+      findUserDulu.save();
+      res.status(200).json({
+        message: "success follow",
+      });
+    } else {
+      res.status(500).json({
+        message: "failed follow",
+      });
+    }
+  }
+
   static async changePassword(req, res) {
     const {
       newpassword
     } = req.body;
-    const user = await userModel.findByIdAndUpdate(req.params.id, {
-      password: newpassword,
-    }, {
-      new: true
-    });
+    const user = await userModel.findByIdAndUpdate(
+      req.params.id, {
+        password: newpassword,
+      }, {
+        new: true,
+      }
+    );
     if (user) {
-      user.save().then((user) => {
+      user
+        .save()
+        .then((user) => {
           res.status(200).json({
             message: "success change password",
-            user
-          })
+            user,
+          });
         })
 
         .catch((err) => {
-          res.status(500).json(err)
-        })
+          res.status(500).json(err);
+        });
     }
   }
 
   static async registeruser(req, res) {
-
     const {
       name,
       email,
@@ -287,18 +585,19 @@ class UserController {
       image,
       countInStock,
       alamat,
-      role,
-    } = req.body;
-    const tolowcasename = name.toLowerCase();
-    const mailtolowecase = email.toLowerCase();
-    const alamatTolower = alamat.toLowerCase();
+      role
+    } =
+    req.body;
+    // const tolowcasename = name ? 'STRING' : name.toLowerCase();
+    // const mailtolowecase = email ? 'STRING' : email.toLowerCase();
+    // const alamatTolower = alamat ? 'STRING' : alamat.toLowerCase();
     const newUser = new userModel({
-      name: tolowcasename,
-      email: mailtolowecase,
+      name,
+      email,
       password: bcrypt.hashSync(password, 10),
       image,
       countInStock,
-      alamat: alamatTolower,
+      alamat,
       role,
     });
     newUser
@@ -329,7 +628,7 @@ class UserController {
   static async getUserById(req, res) {
     const user = await userModel.findOne({
       id: req.params.id,
-    })
+    });
     if (!user) {
       res.status(400).json({
         message: "user not found",
@@ -338,25 +637,21 @@ class UserController {
     res.status(200).json({
       message: "success get user by id",
       data: user,
-    })
+    });
   }
 
-
   static async getAllProducts(req, res, next) {
-    const product = await allProduct
-      .find()
-      .populate("category");
+    const product = await allProduct.find().populate("category");
     if (!product) {
       await res.status(404).json({
         status: 404,
         message: "Products not found",
       });
-      return
-
+      return;
     } else {
       res.status(200).json({
         message: "success",
-        data: productgetProductbyCategory
+        data: productgetProductbyCategory,
       });
     }
   }
