@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
+const env = require("../../.env")
 const {
   find
 } = require("../models/user");
@@ -270,12 +271,24 @@ class UserController {
         let message = {
           from: from,
           to: emailUser,
-          subject: 'Verifikasi Email',
-          text: `konfirmasi email <a href="http://localhost:8001/user/verify/${userId}">verify sekarang</a>`,
-          html: `<P>Terimakasih sudah mendaftar, mohon konfirmasi akun anda dengan klik link di bawah ini</P>
-          <br><a href="http://localhost:8001/user/verify/${userId}">http://localhost:8001/user/verify/${userId}</a>
-          `,
-        }
+          subject: 'AMP4EMAIL message',
+          text: 'OLX COMMERCE',
+          html: `<p>Terimakasih click link ini untuk verifikasi ${linkConfirm}</p>`,
+          amp: `<!doctype html>
+          <html ⚡4email>
+            <head>
+              <meta charset="utf-8">
+              <style amp4email-boilerplate>body{visibility:hidden}</style>
+              <script async src="https://cdn.ampproject.org/v0.js"></script>
+              <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
+            </head>
+            <body>
+              <p>Image: <amp-img src="https://cldup.com/P0b1bUmEet.png" width="16" height="16"/></p>
+              <p>GIF (requires "amp-anim" script in header):<br/>
+                <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
+            </body>
+          </html>`
+      }
         nodemailer.sendMail(message, (err, info) => {
           if (err) {
             res.status(500).json(err);
@@ -295,6 +308,7 @@ class UserController {
   }
 
   static async registerNew(req, res) {
+    const imagePhoto = req.file
     const {
       name,
       email,
@@ -303,6 +317,8 @@ class UserController {
       alamat,
       numberphone
     } = req.body;
+
+    const imageUrl = `${env.LOCAL_HOST}${env.URL_HOST}${env.PATH_PROFILE}`
     const usernew = await new userModel({
       name,
       email,
@@ -353,11 +369,8 @@ class UserController {
             .status(200)
             .json({
               message: "success register",
-              response,
+              
             })
-            .catch((error) => {
-              res.status(500).json(error);
-            });
         });
       }
     });
