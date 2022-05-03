@@ -1,24 +1,32 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const orderSchema = Schema({
-    orderItems: [{
-        type: mongoose.Schema.Types.ObjectId,
+    productOrder: [{
+        type: Schema.Types.ObjectId,
         ref:'orderitems',
         required:true,
     }],
-    shippingAddress: {
+    provinsi: {
         type: String,
         required: true
     },
-    shippingAddress2: {
+    kabupaten: {
         type: String,
         required: true
     },
-    city: {
+    kecamatan: {
         type: String,
         required: true
     },
-    zipCode: {
+    desa: {
+        type: String,
+        required: true
+    },
+    alamatSesuaiKTP: {
+        type: String,
+        required: true
+    },
+    kodePos: {
         type: String,
         required: true
     },
@@ -37,7 +45,7 @@ const orderSchema = Schema({
         default: 'Pending'
     },
     user: {
-        type: Schema.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'users',
         required: true,
     },

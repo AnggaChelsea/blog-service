@@ -152,7 +152,7 @@ class UserController {
         });
       } else {
         res.status(404).json({
-          message: "password or email wrong",
+          message: "password or email salah",
         });
       }
     } else {
@@ -193,8 +193,59 @@ class UserController {
     }
   }
 
+  static async findPesan(req, res) {
+    const pesanSenderId = req.params.id;
+    const findpesanFromUser = await userModel.find()
+      .populate("pesan", {
+        senderId: pesanSenderId,
+      })
+      .populate("pesan.productId", "name");
+    if (findpesanFromUser) {
+      res.status(200).json({
+        findpesanFromUser,
+        message: "pesan ditemukan",
+      });
+    } else {
+      res.status(404).json({
+        message: "pesan not found",
+      });
+    }
+  }
 
-  static async register(req, res){
+  static async sendpesan(req, res) {
+    const userparams = req.params.id;
+    const {
+      senderId,
+      message,
+      file,
+      productId
+    } = req.body;
+    const findUserToChat = await userModel.findByIdAndUpdate(userparams, {
+      $push: {
+        pesan: {
+          message,
+          file,
+          senderId,
+          productId,
+        },
+      },
+    }, {
+      new: true,
+    })
+    if (findUserToChat) {
+      res.status(200).json({
+        message: "pesan berhasil dikirim",
+        findUserToChat,
+      });
+    } else {
+      res.status(404).json({
+        message: "pesan gagal dikirim",
+      });
+    }
+  }
+
+
+  static async register(req, res) {
     const {
       name,
       email,
@@ -210,18 +261,37 @@ class UserController {
       image,
       alamat,
       numberphone,
-    });
-    newUser.save()
-      .then((response) => {
-        // sendVeryficationEmail(email, name);
-        return res.status(200).json({
-          message: "success register",
-          response,
+    })
+        const emailUser = usernew.email;
+        const from = "adeadeaja2121@gmail.com";
+        const userId = usernew.id;
+        const host = "http://localhost:8001";
+        const linkConfirm = `mohon klik link ini untuk verifikasi akunmu ${host}/user/verify/${userId}`;
+        let message = {
+          from: from,
+          to: emailUser,
+          subject: 'Verifikasi Email',
+          text: 'For clients with plaintext support only',
+          html: `<P>Hallo terimakasih sudah mendaftar, mohon konfirmasi akun anda dengan klik link di bawah ini</P>
+          <br><a href="http://localhost:8001/user/verify/${userId}">verify sekarang</a>
+          `,
+        }
+        nodemailer.sendMail(message, (err, info) => {
+          if (err) {
+            res.status(500).json(err);
+          } else {
+            usernew.save()
+            .then((response) => {
+              return res
+                .status(200)
+                .json({
+                  message: "success register",
+                  response,
+                })
+            })
+            
+          }
         });
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      });
   }
 
   static async registerNew(req, res) {
@@ -272,7 +342,7 @@ class UserController {
             <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
         </body>
       </html>`
-  }
+    }
     nodemailer.sendMail(message, (err, info) => {
       if (err) {
         res.status(500).json(err);
@@ -344,27 +414,14 @@ class UserController {
 
   static async verifyEmail(req, res) {
     const userId = req.params.id;
-    const user = await userModel.findById(userId);
-    if (user) {
-      const emailVerify = await userModel.findOneAndUpdate(
-        userId, {
-          $set: {
-            verified: true,
-          },
-        }, {
-          new: true,
-        }
-      );
-      if (emailVerify) {
-        res.status(200).json({
-          message: "success verified",
-        });
-      }
-    } else {
-      res.status(400).json({
-        message: "user not found",
-      });
-    }
+    const userFind = await userModel.findByIdAndUpdate(userId, {
+      verified: true,
+    });
+    res.status(200).json({
+      message: "success verify",
+      userFind,
+    });
+
   }
 
   static async changPasswordUser(req, res) {

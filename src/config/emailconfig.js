@@ -3,5 +3,5 @@ module.exports = {
     // user: "mediumtutorial2021@gmail.com", 
     // pass: "medium2021t", 
     user: "adeadeaja2121@gmail.com", 
-    pass: "Chlseajuara1",
+    pass: "dxwkmbltimasjuzy",
   };

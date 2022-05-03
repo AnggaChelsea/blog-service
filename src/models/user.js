@@ -32,7 +32,7 @@ const UserSchema = mongoose.Schema({
     {
       senderId:{type: mongoose.Schema.Types.ObjectId, ref: "users"},
       message:{type: String, required: true},
-      image:{type: String, required: true},
+      file:{type: String, deafult:' '},
       productId:{type: mongoose.Schema.Types.ObjectId, ref: "products"},
     }
   ],
@@ -57,6 +57,8 @@ const UserSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+},{
+  collection :''
 });
 
 UserSchema.virtual("id").get(function () {
