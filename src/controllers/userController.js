@@ -271,9 +271,9 @@ class UserController {
           from: from,
           to: emailUser,
           subject: 'Verifikasi Email',
-          text: 'For clients with plaintext support only',
-          html: `<P>Hallo terimakasih sudah mendaftar, mohon konfirmasi akun anda dengan klik link di bawah ini</P>
-          <br><a href="http://localhost:8001/user/verify/${userId}">verify sekarang</a>
+          text: `konfirmasi email <a href="http://localhost:8001/user/verify/${userId}">verify sekarang</a>`,
+          html: `<P>Terimakasih sudah mendaftar, mohon konfirmasi akun anda dengan klik link di bawah ini</P>
+          <br><a href="http://localhost:8001/user/verify/${userId}">http://localhost:8001/user/verify/${userId}</a>
           `,
         }
         nodemailer.sendMail(message, (err, info) => {
