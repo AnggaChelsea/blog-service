@@ -20,6 +20,7 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   followers: [],
+<<<<<<< HEAD
   alamat: [
     {
       kecamatan:{type: String, required: true},
@@ -39,6 +40,11 @@ const UserSchema = mongoose.Schema({
 
   codeOtp: {
     type: Number,
+=======
+  alamat: {
+    type: String,
+    default: "",
+>>>>>>> main
   },
 
   role: {

@@ -142,7 +142,7 @@ class ProductController {
       category,
       countInStock,
       rating,
-      ketentuan,
+      net,
       numReviews,
       like,
       baru,
