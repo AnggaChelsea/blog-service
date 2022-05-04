@@ -11,6 +11,14 @@ const transport = nodemailer.createTransport({
         pass
     }
 })
+transport.verify((err, success) => {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log('Server is ready to take our messages');
+    }
+}
+)
 
 // let transport = nodemailer.createTransport({
 //     host: "smtp.gmail.com",
@@ -25,5 +33,14 @@ const transport = nodemailer.createTransport({
 //       refreshToken: "4/0AX4XfWg8I86H0vaWobxot5WeEL1PGhspKQtplIXTSx1KuWmx9O73w5al9m0poOS-hQsX-A"
 //     }
 //   });
+
+// const transporter = nodemailer.createTransport({
+//     host: 'smtp.ethereal.email',
+//     port: 587,
+//     auth: {
+//         user: 'mia.gusikowski38@ethereal.email',
+//         pass: 'p9G3RwYqxQFvMWBhEt'
+//     }
+// });
 
 module.exports = transport

@@ -47,6 +47,8 @@ router.get('/get-all-users', registerController.getAllUser);
 router.get('/get-user-by-id/:id', registerController.getUserById);
 router.post('/user/checkEmail', registerController.checkEmail);
 
+router.post('/user/register-local', registerController.registerLocal);
+
 //pesan
 router.put('/user/sendPesan/:id', registerController.sendpesan)
 router.get('/user/findPesan/:id', registerController.findPesan)

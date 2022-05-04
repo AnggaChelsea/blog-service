@@ -5,12 +5,94 @@ const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
-const env = require("../../.env")
+const dotenv = require("dotenv")
+dotenv.config()
+
+console.log(process.env.URL_HOST)
 const {
   find
 } = require("../models/user");
 const productModel = require("../models/product");
 class UserController {
+  //for local
+  static async registerLocal(req, res) {
+    const { 
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+     } = req.body;
+     const hashPassword = crypto.createHash("sha256").update(password).digest("hex"); 
+    const user = await new userModel({
+      name,
+      email,
+      password:hashPassword,
+      image,
+      alamat,
+      numberphone
+    })
+    if(user){
+      return res.status(200).send({
+        message: "user berhasil registrasi",
+        user
+      })
+    }else{
+      return res.status(500).send({
+        message: "user gagal registrasi"
+      })
+    }
+  }
+
+  static async loginLocal(req, res){
+    const { email, password } = req.body;
+    const user = await userModel.findOne({
+      email,
+      password
+    })
+    if(user){
+      const token = jwt.sign({
+        email: user.email,
+        id: user._id
+      }, process.env.JWT_SECRET, {
+        expiresIn: "1h"
+      }
+      )
+      return res.status(200).send({
+        message: "login berhasil",
+        token
+      })
+    }else{
+      return res.status(500).send({
+        message: "login gagal"
+      })
+    }
+  }
+
+
+  ///
+
+
+  static async regisByPhone(req, res){
+    const code = Math.round(Math.random() * 100000);
+    const {
+      name,
+      phone,
+    } = req.body;
+    const user = await new userModel({
+      name,
+      phone,
+    })
+    if(user){
+      
+      return res.status(200).send({
+        message: "user berhasil registrasi",
+        user
+      })
+    }
+  }
+
   static async updateUser(req, res) {
     const {
       name,
@@ -295,6 +377,7 @@ class UserController {
           } else {
             usernew.save()
             .then((response) => {
+              sendVeryficationEmail(from, emailUser, linkConfirm);
               return res
                 .status(200)
                 .json({
@@ -305,6 +388,12 @@ class UserController {
             
           }
         });
+  }
+
+  static async registerGoogle(req, res){
+    //register by google 
+   const tokenGoogle = req.body;
+
   }
 
   static async registerNew(req, res) {
@@ -318,7 +407,7 @@ class UserController {
       numberphone
     } = req.body;
 
-    const imageUrl = `${env.LOCAL_HOST}${env.URL_HOST}${env.PATH_PROFILE}`
+    const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`
     const usernew = await new userModel({
       name,
       email,
@@ -337,34 +426,12 @@ class UserController {
     const userId = usernew.id;
     const host = "http://localhost:8001";
     const linkConfirm = `mohon klik link ini untuk verifikasi akunmu ${host}/user/verify/${userId}`;
-    //transport
-    let message = {
-      from: from,
-      to: emailUser,
-      subject: 'Verifikasi Email',
-      text: 'For clients with plaintext support only',
-      html: '<p>For clients that do not support AMP4EMAIL or amp content is not valid</p>',
-      amp: `<!doctype html>
-      <html ⚡4email>
-        <head>
-          <meta charset="utf-8">
-          <style amp4email-boilerplate>body{visibility:hidden}</style>
-          <script async src="https://cdn.ampproject.org/v0.js"></script>
-          <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
-        </head>
-        <body>
-          <p>Image: <amp-img src="https://cldup.com/P0b1bUmEet.png" width="16" height="16"/></p>
-          <p>GIF (requires "amp-anim" script in header):<br/>
-            <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
-        </body>
-      </html>`
-    }
-    nodemailer.sendMail(message, (err, info) => {
-      if (err) {
+    
+      if (!usernew) {
         res.status(500).json(err);
       } else {
         usernew.save().then((response) => {
-          sendVeryficationEmail(from, emailUser, linkConfirm);
+          sendVeryficationEmail(from, name, emailUser, linkConfirm);
           res
             .status(200)
             .json({
@@ -373,7 +440,6 @@ class UserController {
             })
         });
       }
-    });
 
     // res.status(500).json({ message: "error" });
   }
