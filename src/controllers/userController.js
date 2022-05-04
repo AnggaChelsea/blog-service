@@ -397,6 +397,8 @@ class UserController {
   }
 
   static async registerNew(req, res) {
+    const codeOtpConfirm = Math.floor(Math.random() * 1000000);
+    console.log(codeOtpConfirm)
     const imagePhoto = req.file
     const {
       name,
@@ -404,9 +406,10 @@ class UserController {
       password,
       image,
       alamat,
-      numberphone
+      numberphone,
+      codeOtp
     } = req.body;
-
+   
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`
     const usernew = await new userModel({
       name,
@@ -415,17 +418,13 @@ class UserController {
       image,
       alamat,
       numberphone,
+      codeOtp:codeOtpConfirm,
     });
-    // if(usernew.email === email && usernew.numberphone === numberphone) {
-    //   res.status(400).json({
-    //     message: "email or numberphone already exist",
-    //   });
-    // }else{
     const emailUser = usernew.email;
     const from = "freelacerw9@gmail.com";
     const userId = usernew.id;
     const host = "http://localhost:8001";
-    const linkConfirm = `mohon klik link ini untuk verifikasi akunmu ${host}/user/verify/${userId}`;
+    const linkConfirm = `mohon masukan code otp ${codeOtpConfirm} link ini untuk verifikasi akunmu `;
     
       if (!usernew) {
         res.status(500).json(err);
@@ -435,13 +434,35 @@ class UserController {
           res
             .status(200)
             .json({
-              message: "success register",
-              
+              message: "success register", 
             })
         });
       }
+  }
 
-    // res.status(500).json({ message: "error" });
+  static async verifyOtp(req, res){
+    const {
+      codeOtp
+    } = req.body;
+    const findOtp = await userModel.findOneAndUpdate({
+      codeOtp:codeOtp
+    },{
+      $set:{
+        verified:true
+      }
+    },{
+      new:true
+    })
+    if(findOtp){
+      res.status(200).json({
+        message:"success verify otp"
+      })
+    }
+    else{
+      res.status(500).json({
+        message:"failed verify otp"
+      })
+    }
   }
 
   static async message(req, res) {
@@ -542,12 +563,13 @@ class UserController {
           expiresIn: "1h",
         }
       );
-      const linkTo = `http://localhost:8001/user/user/changePassword/${findEmail.id}`;
+      const from = "adeadeaja2121@gmail.com"
+      const linkTo = `http://localhost:8001/user/user/changePassword/${token}`;
+      passwordVerification(from, email, linkTo);
       return res.status(200).json({
         success: true,
         name: findEmail.name,
-        message: `verify use this link ${linkTo}`,
-        token,
+        message: `verifikasi password terkirim ke email ${email}`,
       });
     } else {
       return res.status(404).json({

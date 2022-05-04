@@ -67,4 +67,6 @@ router.get('/user/product', productNew.getproduct);
 router.get('/user/product', registerController.getAllProducts)
 router.post('/user/chat/buyyerseller', registerController.getChatByBuyer);
 
+router.put('/verify-code-otp', registerController.verifyOtp);
+
 module.exports = router;

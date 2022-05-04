@@ -41,7 +41,8 @@ app.use(function (req, res, next) {
 //   next();
 // });
 
-
+const codeOtpConfirm = Math.floor(Math.random() * 1000000);
+console.log(codeOtpConfirm)
 app.get("/", function(req,res){
   res.send("<h1>Hallo world w</h1>");
 })
