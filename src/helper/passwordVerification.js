@@ -1,6 +1,6 @@
 
 const transport = require('../config/nodemailer');
-const SendConfirmationPassword = (senderEmail, email, confirmations) => {
+const sendVeryficationPassword = (senderEmail, email, confirmations) => {
     console.log('check');
     transport.sendMail({
         from: senderEmail,
@@ -13,4 +13,4 @@ const SendConfirmationPassword = (senderEmail, email, confirmations) => {
     });
 }
 
-module.exports = SendConfirmationPassword; 
+module.exports = sendVeryficationPassword; 

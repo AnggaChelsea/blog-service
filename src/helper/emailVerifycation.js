@@ -8,7 +8,7 @@ const SendConfirmation = (senderEmail, name, email, confirmations) => {
         subject: "Confirmation Email",
         html: `
         <strong style="color:blue">Hi ${name}!</strong> <br />terimakasih sudah mendaftar di ourCommerce. <br />
-        mohon klik link konfirmasi berikut ini untuk mengaktifkan akun anda: <br />
+        
         <p>${confirmations}</p>`
        
     });

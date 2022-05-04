@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -7,9 +8,12 @@ const mongooseConnection = require("./config/db");
 const multer = require("multer");
 var server   = require('http').Server(app);
 var io       = require('socket.io')(server);
+const sha256 = require("crypto-js/sha256");
+// var crypto = require('crypto');
 const fileUpload = require('express-fileupload');
 var upload = multer();
 require('dotenv').config();
+const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
 
 const port = process.env.PORT ||8001;
 
@@ -36,17 +40,38 @@ app.use(function (req, res, next) {
   next();
 });
 
+//for send sms use messagebird
+// const code = 1234
+// messagebird.messages.create({
+//   originator : '6285161291334',
+//   recipient : '625724248746',
+//   body : `Hello World, I am a text message and I was hatched by Javascript ${code}!`
+// },
+// function (err, response) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(response);
+//   }
+// }
+// );
+
 // app.use(function(req, res, next) {
 //   res.setHeader("Content-Type", "application/json");
 //   next();
 // });
-
-const codeOtpConfirm = Math.floor(Math.random() * 1000000);
-console.log(codeOtpConfirm)
+//hashing password use crypto
+// const password = "angga"
+// const salt = crypto.randomBytes(1664).toString('hex');
+// const hash = crypto.pbkdf2Sync(password, salt, 
+//   1000, 64, `sha512`).toString(`hex`);
+// console.log(hash)
+const password = "angga"
+const bcy =  bcrypt.hash(password,10)
+console.log(bcy)
 app.get("/", function(req,res){
   res.send("<h1>Hallo world w</h1>");
 })
-
 app.use(cors())
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
