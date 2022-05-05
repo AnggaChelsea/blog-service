@@ -12,18 +12,14 @@ const productSchema = new schema({
     },
     alamat: [
         {
-          kecamatan:{type: String, required: true},
-          kota:{type: String, required: true},
-          provinsi:{type: String, required: true},
-          kode_pos:{type: String, required: true},
+          kecamatan:{type: String},
+          kota:{type: String},
+          provinsi:{type: String},
+          kode_pos:{type: String},
         }
       ],
     like: [],
     comment: [],
-    personlike: [{
-        type: schema.Types.ObjectId,
-        ref: 'users'
-    }],
     description: {
         type: String,
         required: true,
@@ -57,10 +53,12 @@ const productSchema = new schema({
     },
     harga_beli:{
         type:String,
-        default:''
+        required: true,
     },
     category:{
-        type: String,
+        type: schema.Types.ObjectId,
+        ref: 'category',
+        required: true,
     },
     countInStock:{
         type:String,

@@ -633,6 +633,23 @@ class UserController {
     }
   }
 
+  static async checkCodeOtpPassword(req, res){
+    const { code } = req.body;
+    const findCode = await passwordSchema.findOne({
+      code: code,
+    });
+    if (findCode) {
+      res.status(200).json({
+        message: "success verify otp",
+      });
+    }
+    else{
+      res.status(404).json({
+        message: "failed verify otp",
+      });
+    }
+  }
+
   static async changePassword(req, res) {
     const { newpassword } = req.body;
     const user = await userModel.findByIdAndUpdate(

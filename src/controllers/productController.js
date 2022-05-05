@@ -127,7 +127,7 @@ class ProductController {
   }
 
   static async newproduct(req, res) {
-    const image = req.file;
+    // const image = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
     const {
@@ -140,6 +140,7 @@ class ProductController {
       harga_jual,
       harga_beli,
       category,
+      image,
       countInStock,
       rating,
       net,
@@ -166,12 +167,13 @@ class ProductController {
         description,
         richDecription,
         brand,
+        image,
         harga_jual,
         harga_beli,
         category,
         countInStock,
         rating,
-        ketentuan,
+        net,
         numReviews,
         like,
         baru,
