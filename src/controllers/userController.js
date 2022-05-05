@@ -348,11 +348,9 @@ class UserController {
 
   static async registerNew(req, res) {
     const codeOtpConfirm = Math.floor(Math.random() * 1000000);
-    console.log(codeOtpConfirm);
     const imagePhoto = req.file;
     const namingFile = `Math.floor(Math.random() * 1000000) "-" ${imagePhoto}`;
-    const { name, email, password, image, alamat, numberphone, codeOtp } =
-      req.body;
+    const { name, email, password, image, alamat, numberphone, codeOtp } = req.body;
     // const salt = crypto.randomBytes(1664).toString("hex");
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
@@ -367,8 +365,6 @@ class UserController {
     });
     const emailUser = usernew.email;
     const from = "freelacerw9@gmail.com";
-    const userId = usernew.id;
-    const host = "http://localhost:8001";
     const linkConfirm = `mohon masukan code otp ${codeOtpConfirm} ini untuk verifikasi akunmu `;
 
     if (!usernew) {
@@ -379,51 +375,6 @@ class UserController {
         res.status(200).json({
           message: "success register",
         });
-      });
-    }
-  }
-
-  static async loginUser(req, res) {
-    const { email, password } = req.body;
-    const salt = crypto.randomBytes(1664).toString("hex");
-    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
-    const user = await userModel.findOne({
-      email,
-    });
-    if (user.verified === false) {
-      res.status(400).json({
-        code: 401,
-        message: "please verify your email",
-      });
-    }
-    else if (user.verified === true) {
-      if (user.password === hash) {
-        const token = jwt.sign(
-          {
-            userId: user.id,
-            userRole: user.role,
-          },
-          "sayangmamah",
-          {
-            expiresIn: "1h",
-          }
-        );
-        return res.status(200).json({
-          success: true,
-          id: user.id,
-          name: user.name,
-          image: user.image,
-          alamat: user.alamat,
-          token,
-        });
-      } else {
-        res.status(404).json({
-          message: "password or email salah",
-        });
-      }
-    } else {
-      res.status(500).json({
-        success: false,
       });
     }
   }
@@ -450,7 +401,6 @@ class UserController {
           message: "success login",
           id: user.id,
           name: user.name,
-          image: user.image,
           token,
         });
       } else {
