@@ -10,6 +10,7 @@ const sha256 = require("crypto-js/sha256");
 var crypto = require('crypto');
 const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
 const dotenv = require("dotenv");
+const passwordSchema = require('../models/codePassword');
 dotenv.config();
 
 console.log(process.env.URL_HOST);
@@ -396,7 +397,7 @@ class UserController {
       });
     }
     else if (user.verified === true) {
-      if (user && user.password === hash) {
+      if (user.password === hash) {
         const token = jwt.sign(
           {
             userId: user.id,
@@ -433,20 +434,13 @@ class UserController {
       email,
     });
     if (findEmail) {
-      const token = jwt.sign(
-        {
-          userId: findEmail.id,
-          userRole: findEmail.role,
-        },
-        "sayangmamah",
-        {
-          expiresIn: "1h",
-        }
-      );
       const kodeMath = Math.floor(Math.random() * 1000000);
-      kode.push(kodeMath);
+      const codeToDatabase = await new passwordSchema({
+        code:kodeMath
+      })
       const from = "adeadeaja2121@gmail.com";
-      const linkto = `code verifikasi anda ${kode}`
+      const linkto = `code verifikasi anda ${kodeMath}`
+      codeToDatabase.save()
       sendVeryficationPassword(from, email, linkto);
       return res.status(200).json({
         success: true,
