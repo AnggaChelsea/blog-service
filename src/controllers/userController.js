@@ -353,13 +353,13 @@ class UserController {
     const namingFile = `Math.floor(Math.random() * 1000000) "-" ${imagePhoto}`;
     const { name, email, password, image, alamat, numberphone, codeOtp } =
       req.body;
-    const salt = crypto.randomBytes(1664).toString("hex");
-    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
+    // const salt = crypto.randomBytes(1664).toString("hex");
+    // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
     const usernew = await new userModel({
       name,
       email,
-      password:hash,
+      password: bcrypt.hashSync(password, 10),
       image:namingFile,
       alamat,
       numberphone,
@@ -426,6 +426,50 @@ class UserController {
         success: false,
       });
     }
+  }
+
+  static async logins(req, res) {
+    const { email, password } = req.body;
+    const user = await userModel.findOne({
+      email,
+    });
+    if (user) {
+      if (user.verified === true) {
+      if (bcrypt.compareSync(password, user.password)) {
+        const token = jwt.sign(
+          {
+            userId: user.id,
+            userRole: user.role,
+          },
+          "sayangmamah",
+          {
+            expiresIn: "1h",
+          }
+        );
+        return res.status(200).json({
+          message: "success login",
+          id: user.id,
+          name: user.name,
+          image: user.image,
+          token,
+        });
+      } else {
+        res.status(400).json({
+          message: "password or email wrong",
+        });
+      }
+    } 
+    else if(user.verified === false) {
+      res.status(400).json({
+        code: 401,
+        message: "please verify your email",
+      });
+    }
+  }else {
+    res.status(400).json({
+      message: "email not found",
+    });
+  }
   }
 
   static async checkEmail(req, res) {

@@ -8,6 +8,7 @@ const mongooseConnection = require("./config/db");
 const multer = require("multer");
 var server   = require('http').Server(app);
 var io       = require('socket.io')(server);
+var helmet = require('helmet');
 const sha256 = require("crypto-js/sha256");
 // var crypto = require('crypto');
 const fileUpload = require('express-fileupload');
@@ -16,6 +17,8 @@ require('dotenv').config();
 const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
 
 const port = process.env.PORT ||8001;
+
+app.use(helmet());
 
 //cors
 app.all('*', function(req, res, next) {

@@ -57,7 +57,7 @@ const productSchema = new schema({
     },
     category:{
         type: schema.Types.ObjectId,
-        ref: 'category',
+        ref: 'categories',
         required: true,
     },
     countInStock:{

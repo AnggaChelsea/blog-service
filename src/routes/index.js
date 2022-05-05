@@ -9,8 +9,6 @@ const jwta = require("../middleware/jwtAdmin")
 const api = process.env.API_URL;
 const followers = require("./followers")
 const productR = require("./products/getproducts")
-
-
 router.use(`/user`, userRouter);
 router.use(`/`, home)
 
