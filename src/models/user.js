@@ -37,6 +37,10 @@ const UserSchema = mongoose.Schema({
     }
   ],
 
+  codeOtp: {
+    type: Number,
+  },
+
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "roles",

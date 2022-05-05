@@ -142,11 +142,11 @@ class ProductController {
       category,
       countInStock,
       rating,
-      ketentuan,
+      net,
       numReviews,
       like,
       baru,
-      isFeature,
+      isFeature,                    
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
@@ -158,26 +158,26 @@ class ProductController {
       });
     } else {
       console.log(req.body.hargaJual);
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("alamat", alamat);
-      formData.append("description", description);
-      formData.append("richDecription", richDecription);
-      formData.append("brand", brand);
-      formData.append("harga_jual", harga_jual);
-      formData.append("harga_beli", harga_beli);
-      formData.append("category", category);
-      formData.append("countInStock", countInStock);
-      formData.append("rating", rating);
-      formData.append("ketentuan", ketentuan);
-      formData.append("numReviews", numReviews);
-      formData.append("like", like);
-      formData.append("baru", baru);
-      formData.append("isFeature", isFeature);
-      formData.append("image", image , basePath);
-      formData.append("seller", seller);
-      console.log("ini after", product.price);
-      const product = new products(formData);
+     
+      const product = new products({
+        seller,
+        name,
+        alamat,
+        description,
+        richDecription,
+        brand,
+        harga_jual,
+        harga_beli,
+        category,
+        countInStock,
+        rating,
+        ketentuan,
+        numReviews,
+        like,
+        baru,
+        isFeature,
+        alamat
+      });
       product
         .save()
         .then((response) => {
@@ -238,24 +238,6 @@ class ProductController {
     findDuluProduct.save();
     res.status(200).json(findDuluProduct);
   }
-  // static async addLikeProduct(req, res) {
-  //   const likers = req.body;
-  //   const productId = req.params.id;
-  //     const product = await products.findByIdAndUpdate(
-  //       productId,
-  //       {new: true}
-  //     );
-  //     if(product){
-  //       product.like.push(likers);
-  //      product.save()
-  //       .then((response) => {
-  //        return res.status(200).json({message: "success add like",});
-  //       })
-  //       .catch((err) => {
-  //        return res.status(500).json(err);
-  //       });
-  //     }
-  // }
 
   static async deleteProduct(req, res) {
     const product = await products.findById(req.params.id);
@@ -361,19 +343,6 @@ class ProductController {
   }
 
   static async updateProductImage(req, res) {
-    var storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, "assets/images");
-      },
-      filename: function (req, file, cb) {
-        const fileName = file.originalname.toLowerCase().split(" ").join("-");
-        const suffix = Date.now() + "-" + Math.round(Math.random() * 1000);
-        cb(null, suffix + "-" + fileName);
-      },
-    });
-    const uploadOption = multer({
-      storage: storage,
-    }).single("image");
 
     const image = req.file;
     const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
