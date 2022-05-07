@@ -10,14 +10,10 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
-    alamat: [
-        {
-          kecamatan:{type: String},
-          kota:{type: String},
-          provinsi:{type: String},
-          kode_pos:{type: String},
-        }
-      ],
+    alamat: {
+        type: String,
+        required: true,
+    },
     like: [],
     comment: [],
     description: {

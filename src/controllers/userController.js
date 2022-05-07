@@ -10,8 +10,8 @@ const sha256 = require("crypto-js/sha256");
 var crypto = require('crypto');
 const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
 const dotenv = require("dotenv");
-const passwordSchema = require('../models/codePassword');
 dotenv.config();
+const passwordSchema = require('../models/codePassword');
 
 console.log(process.env.URL_HOST);
 const { find } = require("../models/user");
@@ -19,60 +19,7 @@ const productModel = require("../models/product");
 var kode = null;
 class UserController {
  
-  //for local
-  static async registerLocal(req, res) {
-    const { name, email, password, image, alamat, numberphone } = req.body;
-    console.log(kode)
-    const user = await new userModel({
-      name,
-      email,
-      password,
-      image,
-      alamat,
-      numberphone,
-    });
-    if (user) {
-      return res.status(200).send({
-        message: "user berhasil registrasi",
-        user,
-      });
-    } else {
-      return res.status(500).send({
-        message: "user gagal registrasi",
-      });
-    }
-  }
-
-  static async loginLocal(req, res) {
-    const { email, password } = req.body;
-    const user = await userModel.findOne({
-      email,
-      password,
-    });
-    if (user) {
-      const token = jwt.sign(
-        {
-          email: user.email,
-          id: user._id,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
-      return res.status(200).send({
-        message: "login berhasil",
-        token,
-      });
-    } else {
-      return res.status(500).send({
-        message: "login gagal",
-      });
-    }
-  }
-
-  ///
-
+ 
   static async regisByPhone(req, res) {
     const code = Math.round(Math.random() * 100000);
     const { name, phone, email, password } = req.body;

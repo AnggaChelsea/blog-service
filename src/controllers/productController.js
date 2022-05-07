@@ -6,6 +6,7 @@ const jwt = require("../middleware/jwtAdmin");
 const messageModel = require("../models/message");
 const moment = require("moment");
 const userModel = require("../models/user");
+const { followeUser } = require("./userController");
 class ProductController {
   static async getAllProducts(req, res, next) {
     const product = await products.find().populate("category");
@@ -286,7 +287,18 @@ class ProductController {
       .populate("seller").populate("category");
     if (!product) return res.status(404).json("invalid product");
     if (product.length === 0) return res.status(404).json("kosong product");
-    res.status(200).json(product);
+    let lengthlike = 0;
+    let lengthcomment = 0;
+    let lengthfolloweUser = 0;
+    for(let i = 0; i < product.like.length; i++){
+      if(product.like[i].userId === '0') lengthlike++;
+
+    }
+    res.status(200).json({
+      message: "success get product",
+      product,
+      lengthlike
+    });
   }
   static async sendMessageToBuy(req, res) {
     const product = await products.findById(req.params.id);
