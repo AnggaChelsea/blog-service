@@ -57,6 +57,9 @@ var allowCrossDomain = function(req, res, next) {
   }
 };
 app.use(allowCrossDomain);
+app.use(cors({
+  origin: '*'
+}));
 
 //for send sms use messagebird
 // const code = 1234
