@@ -7,6 +7,7 @@ class ChartItems {
             userId,
             quantity
         } = req.body;
+       
         const find = await chartModel.findOne({
             userId,
             productId
@@ -51,24 +52,17 @@ class ChartItems {
         const cart = await chartModel.find({
             userId
         }).populate('productId')
-        // let countProduct = 0;
-        // for(let i = 0; i < cart.productId.length; i++) {
-        //     if(cart.productId[i] === '0') countProduct++;
-        // }
+        const total = cart.reduce((acc, curr) => {
+            return acc + curr.quantity * curr.productId.harga_jual;
+        }, 0);
         res.status(200).json({
             message: 'Successfully get cart',
             data: cart,
-            // totalCart: countProduct
+            total
         });
     }
     static async checkout(req, res) {
-        const {
-            chartId
-        } = req.params;
-        const cart = await chartModel.findById(chartId);
-        const checkout = await new checkoutModel()
-        await cart.remove();
-
+       const cartId = req.params.cartId;
     }
 }
 module.exports = ChartItems;
