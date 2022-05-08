@@ -102,5 +102,35 @@ class ChartItems {
             data: newTransaction
         });
     }
+    static async getOrder(req, res) {
+        const orderId = req.params.userId;
+        const order = await orderModel.findById(orderId).populate('productOrder').populate('user');
+        if (order) {
+            res.status(200).json({
+                message: 'Successfully get order',
+                data: order
+            });
+        } else {
+            res.status(500).json({
+                message: 'Something went wrong'
+            });
+        }
+    }
+
+    static async getOrderByUser(req, res) {
+        const userId = req.params.userId;
+        const order = await orderModel.findOne(userId).populate('productOrder').populate('user');
+        if (order) {
+            res.status(200).json({
+                message: 'Successfully get order',
+                data: order,
+            });
+        } else {
+            res.status(500).json({
+                message: 'Something went wrong'
+            });
+        }
+        
+    }
 }
 module.exports = ChartItems;

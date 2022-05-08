@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const orderSchema = Schema({
     productOrder: [{
         type: Schema.Types.ObjectId,
-        ref:'orderitems',
+        ref:'products',
         required:true,
     }],
     provinsi: {
