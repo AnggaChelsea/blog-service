@@ -53,13 +53,18 @@ class ChartItems {
         const cart = await chartModel.find({
             userId
         }).populate('productId')
+       
+        const totalAllQty = cart.reduce((acc, curr) => {
+            return acc + curr.quantity;
+        }, 0);
         const total = cart.reduce((acc, curr) => {
-            return acc + curr.quantity * curr.productId.harga_jual;
+            return acc + curr.totalAllQty * curr.productId.harga_jual;
         }, 0);
         res.status(200).json({
             message: 'Successfully get cart',
             data: cart,
-            total
+            total,
+            totalAllQty
         });
     }
     static async checkout(req, res) {
@@ -86,12 +91,13 @@ class ChartItems {
             alamatSesuaiKTP,
             kodePos,
             phone,
-            user: cart.userId
+            user: cart.userId,
         });
         const newTransaction = await new transactionModel({
             userId: cart.userId,
             productId: cart.productId,
             quantity: cart.quantity,
+            status: false,
             total
         });
         await newTransaction.save();
