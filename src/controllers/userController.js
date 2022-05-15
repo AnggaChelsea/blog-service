@@ -14,15 +14,22 @@ dotenv.config();
 const passwordSchema = require('../models/codePassword');
 
 console.log(process.env.URL_HOST);
-const { find } = require("../models/user");
+const {
+  find
+} = require("../models/user");
 const productModel = require("../models/product");
 var kode = null;
 class UserController {
- 
- 
+
+
   static async regisByPhone(req, res) {
     const code = Math.round(Math.random() * 100000);
-    const { name, phone, email, password } = req.body;
+    const {
+      name,
+      phone,
+      email,
+      password
+    } = req.body;
     const user = await new userModel({
       name,
       phone,
@@ -36,18 +43,25 @@ class UserController {
   }
 
   static async updateUser(req, res) {
-    const { name, email, password, image, alamat, numberphone } = req.body;
+    const filename = req.file.originalname
+    const nameFileImage = Math.round(Math.random() * 100000) + filename
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+    } = req.body;
     const user = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         name,
         email,
         password,
-        image,
+        image: nameFileImage,
         alamat,
         numberphone,
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -86,7 +100,10 @@ class UserController {
   }
 
   static async getChatByBuyer(req, res) {
-    const { buyerId, sellerId } = req.body;
+    const {
+      buyerId,
+      sellerId
+    } = req.body;
     const chat = await messageModel
       .find({
         buyerId,
@@ -117,13 +134,11 @@ class UserController {
   static async follow(req, res) {
     const followers = req.body;
     const findDuluUser = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           followers: followers,
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -137,17 +152,21 @@ class UserController {
     res.status(200).json(findDuluUser);
   }
 
-  
+
   static async sendPesan(req, res) {
     const userparams = req.params;
     const productparams = req.params;
-    const { message, file, senderId, productId } = req.body;
+    const {
+      message,
+      file,
+      senderId,
+      productId
+    } = req.body;
     const findProduct = await productModel.findById(productparams);
     if (productparams) {
       productId.push(productparams.id);
       const findUserToChat = await userModel.findByIdAndUpdate(
-        userparams,
-        {
+        userparams, {
           $push: {
             pesan: {
               message,
@@ -156,8 +175,7 @@ class UserController {
               productId,
             },
           },
-        },
-        {
+        }, {
           new: true,
         }
       );
@@ -188,10 +206,14 @@ class UserController {
 
   static async sendpesan(req, res) {
     const userparams = req.params.id;
-    const { senderId, message, file, productId } = req.body;
+    const {
+      senderId,
+      message,
+      file,
+      productId
+    } = req.body;
     const findUserToChat = await userModel.findByIdAndUpdate(
-      userparams,
-      {
+      userparams, {
         $push: {
           pesan: {
             message,
@@ -200,8 +222,7 @@ class UserController {
             productId,
           },
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -218,7 +239,14 @@ class UserController {
   }
 
   static async register(req, res) {
-    const { name, email, password, image, alamat, numberphone } = req.body;
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+    } = req.body;
     const newUser = await new userModel({
       name,
       email,
@@ -273,31 +301,43 @@ class UserController {
     const tokenGoogle = req.body;
   }
 
-  static async registerByPhone(req, res){
+  static async registerByPhone(req, res) {
     const phoneNumber = req.body;
     const code = Math.floor(Math.random() * 10000)
     // Make request to Verify API
     messagebird.verify.create(number, {
-        originator : 'Code',
-        template : `ini kode konfirmasinya ${code}`
+      originator: 'Code',
+      template: `ini kode konfirmasinya ${code}`
     }, function (err, response) {
-        if (err) {
-            // Request has failed
-            console.log(err);
-            res.response(500).json({message:'error'});
-        } else {
-            // Request was successful
-            console.log(response);
-            res.response(200).json({message:'success'});
-        }
-    })    
+      if (err) {
+        // Request has failed
+        console.log(err);
+        res.response(500).json({
+          message: 'error'
+        });
+      } else {
+        // Request was successful
+        console.log(response);
+        res.response(200).json({
+          message: 'success'
+        });
+      }
+    })
   }
 
   static async registerNew(req, res) {
     const codeOtpConfirm = Math.floor(Math.random() * 1000000);
     const imagePhoto = req.file;
     const namingFile = `Math.floor(Math.random() * 1000000) "-" ${imagePhoto}`;
-    const { name, email, password, image, alamat, numberphone, codeOtp } = req.body;
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone,
+      codeOtp
+    } = req.body;
     // const salt = crypto.randomBytes(1664).toString("hex");
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
@@ -305,7 +345,7 @@ class UserController {
       name,
       email,
       password: bcrypt.hashSync(password, 10),
-      image:namingFile,
+      image: namingFile,
       alamat,
       numberphone,
       codeOtp: codeOtpConfirm,
@@ -327,61 +367,62 @@ class UserController {
   }
 
   static async logins(req, res) {
-    const { email, password } = req.body;
+    const {
+      email,
+      password
+    } = req.body;
     const user = await userModel.findOne({
       email,
     });
     if (user) {
       if (user.verified === true) {
-      if (bcrypt.compareSync(password, user.password)) {
-        const token = jwt.sign(
-          {
-            userId: user.id,
-            userRole: user.role,
-          },
-          "sayangmamah",
-          {
-            expiresIn: "1h",
-          }
-        );
-        return res.status(200).json({
-          message: "success login",
-          id: user.id,
-          name: user.name,
-          token,
-        });
-      } else {
+        if (bcrypt.compareSync(password, user.password)) {
+          const token = jwt.sign({
+              userId: user.id,
+              userRole: user.role,
+            },
+            "sayangmamah", {
+              expiresIn: "1h",
+            }
+          );
+          return res.status(200).json({
+            message: "success login",
+            id: user.id,
+            name: user.name,
+            inbox: user.inbox,
+            token,
+          });
+        } else {
+          res.status(400).json({
+            message: "password or email wrong",
+          });
+        }
+      } else if (user.verified === false) {
         res.status(400).json({
-          message: "password or email wrong",
+          code: 401,
+          message: "please verify your email",
         });
       }
-    } 
-    else if(user.verified === false) {
+    } else {
       res.status(400).json({
-        code: 401,
-        message: "please verify your email",
+        message: "email not found",
       });
     }
-  }else {
-    res.status(400).json({
-      message: "email not found",
-    });
-  }
   }
 
   static async checkEmail(req, res) {
-    const { email } = req.body;
-    const findEmail = await userModel.findOne({
-      email,
+    const {
+      email
+    } = req.body;
+    const otpPassword = Math.floor(Math.random() * 1000000);
+    const findEmail = await userModel.findOneAndUpdate(email, {
+      codeOtp: otpPassword,
+    }, {
+      new: true,
     });
     if (findEmail) {
-      const kodeMath = Math.floor(Math.random() * 1000000);
-      const codeToDatabase = await new passwordSchema({
-        code:kodeMath
-      })
       const from = "adeadeaja2121@gmail.com";
-      const linkto = `code verifikasi anda ${kodeMath}`
-      codeToDatabase.save()
+      const linkto = `code verifikasi anda ${otpPassword}`
       sendVeryficationPassword(from, email, linkto);
       return res.status(200).json({
         success: true,
@@ -395,21 +436,35 @@ class UserController {
     }
   }
 
+ static async checkCodeOtpPassword(req, res) {
+   const codeOtp = req.body.codeOtp;
+   const findCode = await userModel.findOne({
+      codeOtp, 
+    });
+    if (findCode) {
+      return res.status(200).json({
+        success: true,
+        message: "success",
+      });
+    }
+    return res.status(404).json({
+      message: "code otp not found",
+    });
+ }
+
   static async verifyOtp(req, res) {
-    const { codeOtp } = req.body;
-    const findOtp = await userModel.findOneAndUpdate(
-      {
-        codeOtp: codeOtp,
+    const {
+      codeOtp
+    } = req.body;
+    const findOtp = await userModel.findOneAndUpdate({
+      codeOtp: codeOtp,
+    }, {
+      $set: {
+        verified: true,
       },
-      {
-        $set: {
-          verified: true,
-        },
-      },
-      {
-        new: true,
-      }
-    );
+    }, {
+      new: true,
+    });
     if (findOtp) {
       res.status(200).json({
         message: "success verify otp",
@@ -422,7 +477,10 @@ class UserController {
   }
 
   static async message(req, res) {
-    const { message, uploadfile } = req.body;
+    const {
+      message,
+      uploadfile
+    } = req.body;
     const userId = req.params.id;
 
     let userid = await userModel
@@ -478,13 +536,13 @@ class UserController {
 
   static async changPasswordUser(req, res) {
     const userId = req.params;
-    const { password } = req.body;
+    const {
+      password
+    } = req.body;
     const findEmail = await userModel.findOneAndUpdate(
-      userId,
-      {
+      userId, {
         password: bcrypt.hashSync(password, 10),
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -499,22 +557,22 @@ class UserController {
     }
   }
 
-  
+
 
   static async forgotPassword(req, res) {
-    const { email } = req.body;
+    const {
+      email
+    } = req.body;
     const userId = req.params.id;
     const user = await userModel.findOne({
       email,
     });
     if (user && userId === user.id) {
       const secret = process.env.SCRET_KEY;
-      const token = jwt.sign(
-        {
+      const token = jwt.sign({
           userId: user.id,
         },
-        secret,
-        {
+        secret, {
           expiresIn: "1h",
         }
       );
@@ -550,15 +608,15 @@ class UserController {
   }
 
   static async follow(req, res) {
-    const { userFollow } = req.body;
+    const {
+      userFollow
+    } = req.body;
     const findUserDulu = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           followers: userFollow,
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -574,31 +632,32 @@ class UserController {
     }
   }
 
-  static async checkCodeOtpPassword(req, res){
-    const { code } = req.body;
-    const findCode = await passwordSchema.findOne({
-      code: code,
-    });
-    if (findCode) {
-      res.status(200).json({
-        message: "success verify otp",
-      });
-    }
-    else{
-      res.status(404).json({
-        message: "failed verify otp",
-      });
-    }
-  }
+  // static async checkCodeOtpPassword(req, res) {
+  //   const {
+  //     code
+  //   } = req.body;
+  //   const findCode = await passwordSchema.findOne({
+  //     code: code,
+  //   });
+  //   if (findCode) {
+  //     res.status(200).json({
+  //       message: "success verify otp",
+  //     });
+  //   } else {
+  //     res.status(404).json({
+  //       message: "failed verify otp",
+  //     });
+  //   }
+  // }
 
   static async changePassword(req, res) {
-    const { newpassword } = req.body;
+    const {
+      newpassword
+    } = req.body;
     const user = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         password: newpassword,
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -618,7 +677,7 @@ class UserController {
     }
   }
 
-  
+
   static async getAllUser(req, res) {
     const user = await userModel.find();
     if (user) {

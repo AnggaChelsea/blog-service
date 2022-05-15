@@ -20,25 +20,57 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   followers: [],
-  alamat: [
-    {
-      kecamatan:{type: String, required: true},
-      kota:{type: String, required: true},
-      provinsi:{type: String, required: true},
-      kode_pos:{type: String, required: true},
-    }
-  ],
-  pesan:[
-    {
-      senderId:{type: mongoose.Schema.Types.ObjectId, ref: "users"},
-      message:{type: String, required: true},
-      file:{type: String, deafult:' '},
-      productId:{type: mongoose.Schema.Types.ObjectId, ref: "products"},
-    }
-  ],
-
+  alamat: [{
+    kecamatan: {
+      type: String,
+      required: true
+    },
+    kota: {
+      type: String,
+      required: true
+    },
+    provinsi: {
+      type: String,
+      required: true
+    },
+    kode_pos: {
+      type: String,
+      required: true
+    },
+  }],
+  pesan: [{
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users"
+    },
+    message: {
+      type: String,
+      required: true
+    },
+    file: {
+      type: String,
+      deafult: ' '
+    },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "products"
+    },
+  }],
+  notification:[],
   codeOtp: {
     type: Number,
+  },
+  inbox:{
+    type: [{
+      senderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
+      },
+      message: {
+        type: String,
+        required: true
+      }
+    }],
   },
 
   role: {
@@ -61,8 +93,8 @@ const UserSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-},{
-  collection :''
+}, {
+  collection: ''
 });
 
 UserSchema.virtual("id").get(function () {
@@ -80,7 +112,9 @@ UserModel.schema.path("email").validate(function (value) {
 });
 // validate email is exist
 UserModel.schema.path("email").validate(function (value) {
-  return UserModel.findOne({ email: value }).then(function (user) {
+  return UserModel.findOne({
+    email: value
+  }).then(function (user) {
     if (user) {
       return false;
     }
@@ -89,7 +123,9 @@ UserModel.schema.path("email").validate(function (value) {
 }, "Email sudah terdaftar");
 // validate numberphone isexist
 UserModel.schema.path("numberphone").validate(function (value) {
-  return UserModel.findOne({ numberphone: value }).then((user) => {
+  return UserModel.findOne({
+    numberphone: value
+  }).then((user) => {
     if (user) {
       return false;
     }

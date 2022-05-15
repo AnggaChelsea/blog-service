@@ -1,6 +1,8 @@
 const inboxModel = require("../../models/inbox")
 const productModel = require("../../models/product")
 const messageModel = require("../../models/message")
+const userModel =   require("../../models/user")
+const { findByIdAndUpdate } = require("../../models/user")
 class InboxController {
     static async sendMessage(req, res) {
         try {
@@ -49,6 +51,13 @@ class InboxController {
             seen,
             deleted,
             inboxHash
+        })
+      await userModel.findByIdAndUpdate(reciveId,{
+            $set: {
+                inbox: newInbox._id
+            }
+        },{
+            new: true
         })
         newInbox.save()
             .then((inbox) => {

@@ -13,6 +13,7 @@ const chartSchema = new schema({
     ref: "users",
   },
   quantity: { type: Number },
+  totalHarga:{type:Number},
   createdAt: {
     type: Date,
     default: Date.now(),

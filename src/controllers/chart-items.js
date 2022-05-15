@@ -1,6 +1,8 @@
 const chartModel = require('../models/chart');
 const transactionModel = require('../models/transaction');
 const orderModel = require('../models/order');
+const userModel = require('../models/user');
+const productModel = require('../models/product');
 class ChartItems {
     static async addCart(req, res) {
         const {
@@ -8,11 +10,11 @@ class ChartItems {
             userId,
             quantity
         } = req.body;
-
         const find = await chartModel.findOne({
             userId,
             productId
         });
+        const findProduct = await productModel.findById(productId);
         if (find !== null) {
             const findupdate = await chartModel.findOneAndUpdate({
                 userId,
@@ -22,17 +24,23 @@ class ChartItems {
                     quantity: +quantity
                 }
             });
+            
             findupdate.save();
             res.status(200).json({
                 message: 'Successfully add cart',
                 data: findupdate
             });
-
-        } else if (find === null) {
+        }else if(findProduct.countInStock < 0){
+            res.status(500).json({
+                message: 'Product sudah habis'
+            });
+        }
+        else if (find === null) {
             const newChart = await new chartModel({
                 productId,
                 userId,
-                quantity
+                quantity,
+                totalHarga: quantity * findProduct.harga_jual
             });
             await newChart.save();
             res.status(201).json({
@@ -70,7 +78,6 @@ class ChartItems {
     static async checkout(req, res) {
         const cartId = req.params.cartId;
         const cart = await chartModel.findById(cartId).populate('productId');
-        const total = cart.quantity * cart.productId.harga_jual;
         const {
             productOrder,
             provinsi,
@@ -81,6 +88,7 @@ class ChartItems {
             kodePos,
             phone,
             user
+            
         } = req.body;
         const savetoOrder = await new orderModel({
             productOrder: [cartId],
@@ -93,12 +101,21 @@ class ChartItems {
             phone,
             user: cart.userId,
         });
+        const notification = await userModel.findByIdAndUpdate(cart.productId.seller,{
+            $set: {
+                notification: [{
+                    user: cart.userId,
+                    message: `${cart.productId} telah dipesan`,
+                    status: 'unread'
+                }]
+            }
+        });
         const newTransaction = await new transactionModel({
             userId: cart.userId,
             productId: cart.productId,
             quantity: cart.quantity,
             status: false,
-            total
+            productSeller: notification
         });
         await newTransaction.save();
         await savetoOrder.save();
@@ -137,6 +154,20 @@ class ChartItems {
             });
         }
         
+    }
+    static async getTransactionById(req, res){
+        const transactionUserId = req.params.transactionUserId;
+        const transaction = await transactionModel.findOne(transactionUserId).populate('productId').populate('userId');
+        if (transaction) {
+            res.status(200).json({
+                message: 'Successfully get transaction',
+                data: transaction
+            });
+        } else {
+            res.status(500).json({
+                message: 'Something went wrong'
+            });
+        }
     }
 }
 module.exports = ChartItems;

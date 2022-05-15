@@ -219,6 +219,28 @@ class ProductController {
     res.status(200).json(findDuluProduct);
   }
 
+  
+  static async getComment(req, res){
+    const idProduct = req.params;
+    let comment = [];
+    const getComment = products.findById(idProduct)
+    if(getComment){
+      for(let i = 0; i < getComment.length; i++){
+        const comments = getComment[i].comment;
+        comment.push(comments)
+        console.log(comment);
+      }
+      res.status(200).json({
+        message: "success get comment",
+        comment: getComment.comment
+      })
+    }
+    else{
+      res.status(404).json({messageM : 'tidak ada comment'})
+    }
+  }
+
+
   static async addLikeProduct(req, res) {
     const userLike = req.body;
     const findDuluProduct = await products.findByIdAndUpdate(
@@ -357,7 +379,6 @@ class ProductController {
   }
 
   static async updateProductImage(req, res) {
-
     const image = req.file;
     const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
     const {
