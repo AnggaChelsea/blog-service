@@ -215,26 +215,53 @@ class UserController {
     const findUserToChat = await userModel.findByIdAndUpdate(
       userparams, {
         $push: {
-          pesan: {
-            message,
-            file,
-            senderId,
-            productId,
-          },
+          pesan: [{
+            masuk: [{
+              dari,
+              message,
+              file,
+              productId,
+            }]
+          }],
         },
       }, {
         new: true,
       }
     );
     if (findUserToChat) {
+      await userModel.findOneAndUpdate(
+        senderId, {
+          $push: {
+            pesan: [{
+              terkirim: [{
+                kirimke: userparams,
+                file: findUserToChat.file,
+                message: findUserToChat.mesage,
+                productId: findUserToChat.productId
+              }]
+            }]
+          }
+        }
+      )
       res.status(200).json({
         message: "pesan berhasil dikirim",
         findUserToChat,
       });
+
     } else {
       res.status(404).json({
         message: "pesan gagal dikirim",
       });
+    }
+  }
+
+  static async getPesan(req, res) {
+    const userId = req.params.userId
+    const findUser = await userModel.findById(userId)
+    if(findUser != null){
+      res.response(200).json({message: 'success'})
+    }else{
+      res.response(404).json({message: 'kosong'})
     }
   }
 
@@ -436,10 +463,10 @@ class UserController {
     }
   }
 
- static async checkCodeOtpPassword(req, res) {
-   const codeOtp = req.body.codeOtp;
-   const findCode = await userModel.findOne({
-      codeOtp, 
+  static async checkCodeOtpPassword(req, res) {
+    const codeOtp = req.body.codeOtp;
+    const findCode = await userModel.findOne({
+      codeOtp,
     });
     if (findCode) {
       return res.status(200).json({
@@ -450,7 +477,7 @@ class UserController {
     return res.status(404).json({
       message: "code otp not found",
     });
- }
+  }
 
   static async verifyOtp(req, res) {
     const {

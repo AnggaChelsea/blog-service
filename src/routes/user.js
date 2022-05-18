@@ -51,7 +51,7 @@ router.post('/user/check-kode-otp-password', registerController.checkCodeOtpPass
 //pesan
 router.put('/user/sendPesan/:id', registerController.sendpesan)
 router.get('/user/findPesan/:id', registerController.findPesan)
-
+router.get('/get-pesan/:id', registerController.getPesan)
 
 router.put('/changepassword/:id', registerController.changePassword);
 router.get('/user/:id', profile.getProfile);

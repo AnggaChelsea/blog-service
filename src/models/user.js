@@ -1,101 +1,121 @@
 const mongoose = require("mongoose");
-const UserSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  verified: {
-    type: Boolean,
-    default: false,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-  },
-  followers: [],
-  alamat: [{
-    kecamatan: {
+const UserSchema = mongoose.Schema(
+  {
+    name: {
       type: String,
-      required: true
+      required: true,
     },
-    kota: {
+    email: {
       type: String,
-      required: true
+      required: true,
     },
-    provinsi: {
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    password: {
       type: String,
-      required: true
+      required: true,
     },
-    kode_pos: {
+    image: {
       type: String,
-      required: true
     },
-  }],
-  pesan: [{
-    senderId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users"
-    },
-    message: {
-      type: String,
-      required: true
-    },
-    file: {
-      type: String,
-      deafult: ' '
-    },
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "products"
-    },
-  }],
-  notification:[],
-  codeOtp: {
-    type: Number,
-  },
-  inbox:{
-    type: [{
-      senderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users"
+    followers: [],
+    alamat: [
+      {
+        kecamatan: {
+          type: String,
+          required: true,
+        },
+        kota: {
+          type: String,
+          required: true,
+        },
+        provinsi: {
+          type: String,
+          required: true,
+        },
+        kode_pos: {
+          type: String,
+          required: true,
+        },
       },
-      message: {
-        type: String,
-        required: true
-      }
-    }],
-  },
+    ],
 
-  role: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "roles",
-    default: "626b9b71e64b96457ff05e96",
-  },
+    pesan: [
+      {
+        terkirim: [
+          {
+            kirimke: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "users",
+            },
+            message: {
+              type: String,
+              required: true,
+            },
+            file: {
+              type: String,
+              deafult: " ",
+            },
+            productId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "products",
+            },
+          },
+        ],
+        masuk: [
+          {
+            dari: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "users",
+            },
+            message: {
+              type: String,
+              required: true,
+            },
+            file: {
+              type: String,
+              deafult: " ",
+            },
+            productId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "products",
+            },
+          },
+        ],
+      },
+    ],
+    notification: [],
+    codeOtp: {
+      type: Number,
+    },
 
-  numberphone: {
-    type: String,
-    maxlength: 12,
-    required: false,
+    role: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "roles",
+      default: "626b9b71e64b96457ff05e96",
+    },
+
+    numberphone: {
+      type: String,
+      maxlength: 12,
+      required: false,
+    },
+    followers: [],
+    created_at: {
+      type: Date,
+      default: Date.now,
+    },
+    updated_at: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  followers: [],
-  created_at: {
-    type: Date,
-    default: Date.now,
-  },
-  updated_at: {
-    type: Date,
-    default: Date.now,
-  },
-}, {
-  collection: ''
-});
+  {
+    collection: "",
+  }
+);
 
 UserSchema.virtual("id").get(function () {
   return this._id.toHexString();
@@ -113,7 +133,7 @@ UserModel.schema.path("email").validate(function (value) {
 // validate email is exist
 UserModel.schema.path("email").validate(function (value) {
   return UserModel.findOne({
-    email: value
+    email: value,
   }).then(function (user) {
     if (user) {
       return false;
@@ -124,7 +144,7 @@ UserModel.schema.path("email").validate(function (value) {
 // validate numberphone isexist
 UserModel.schema.path("numberphone").validate(function (value) {
   return UserModel.findOne({
-    numberphone: value
+    numberphone: value,
   }).then((user) => {
     if (user) {
       return false;

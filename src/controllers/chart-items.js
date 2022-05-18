@@ -125,6 +125,10 @@ class ChartItems {
             data: newTransaction
         });
     }
+
+    static async removeCart(req, res){
+        
+    }
     static async getOrder(req, res) {
         const orderId = req.params.userId;
         const order = await orderModel.findById(orderId).populate('productOrder').populate('user');
