@@ -34,7 +34,6 @@ const productSchema = new schema({
     },
     image:{
         type:String,
-        required: true,
     },
     images : [{
         type:String,

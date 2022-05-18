@@ -133,7 +133,7 @@ class ProductController {
     res.status(200).json(procat);
   }
 
-  static async newproduct(req, res) {
+  static async newproductwe(req, res) {
     const image = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
@@ -174,6 +174,70 @@ class ProductController {
         richDecription,
         brand,
         image,
+        harga_jual,
+        harga_beli,
+        category,
+        countInStock,
+        rating,
+        net,
+        numReviews,
+        like,
+        baru,
+        isFeature,
+        alamat
+      });
+      product
+        .save()
+        .then((response) => {
+          res.status(200).json(response);
+          console.log("ini response", response);
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    }
+  }
+  static async newproduct(req, res) {
+    const imageFile = req.file;
+    const host = "https";
+    const prodUrl = "obscure-ravine-40173.herokuapp.com";
+    const {
+      seller,
+      name,
+      alamat,
+      description,
+      richDecription,
+      brand,
+      harga_jual,
+      harga_beli,
+      category,
+      countInStock,
+      rating,
+      net,
+      numReviews,
+      like,
+      baru,
+      isFeature,                    
+    } = req.body;
+    const basePath = `${host}://${prodUrl}/assets/images/`;
+    // const changetolower = name ? "STRING" : name.toLowerCase();
+    // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
+    if (name === "senjata" || name === "senjata api") {
+      return res.status(401).json({
+        status: 401,
+        message: "product ini berbahaya",
+      });
+    } else {
+      console.log(req.body.hargaJual);
+     
+      const product = new products({
+        seller,
+        name,
+        alamat,
+        description,
+        richDecription,
+        brand,
+        image: imageFile,
         harga_jual,
         harga_beli,
         category,
