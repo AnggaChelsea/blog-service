@@ -46,7 +46,7 @@ router.get('/get-user-by-id/:id', registerController.getUserById);
 router.post('/user/checkEmail', registerController.checkEmail);
 // router.post('/user/checkPassword', registerController.checkCodeOtpPassword);
 router.post('/user/check-kode-otp-password', registerController.checkCodeOtpPassword);
-
+router.get('/user/get-user-pesan/:userid', registerController.getPesan);
 
 //pesan
 router.put('/user/sendPesan/:id', registerController.sendpesan)

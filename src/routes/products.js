@@ -65,7 +65,7 @@ router.get('/getProductByUser/:id', ProductController.getProductByUser)
 router.post('/sendMessageToBuy/:id', auth, ProductController.sendMessageToBuy)
 router.get('/getMessageToBuy/:id', auth, ProductController.getMessageToBuy)
 
-router.get('/productidby/:id', ProductController.getProductById)
+router.put('/productidby/:id', ProductController.getProductById)
 // router.post('/createnewproducts', ProductController.updateProductById)
 router.post('/cari-product', ProductController.filterProductNew)
 
