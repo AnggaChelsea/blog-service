@@ -19,5 +19,5 @@ const chartSchema = new schema({
     default: Date.now(),
   },
 });
-const exportSchema = mongoose.model("Chart", chartSchema);
+const exportSchema = mongoose.model("Cart", chartSchema);
 module.exports = exportSchema;

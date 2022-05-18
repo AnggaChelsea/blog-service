@@ -7,6 +7,12 @@ const messageModel = require("../models/message");
 const moment = require("moment");
 const userModel = require("../models/user");
 const { followeUser } = require("./userController");
+const express = require("express");
+const app = express();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 class ProductController {
   static async getAllProducts(req, res, next) {
     const product = await products.find().populate("category");
@@ -128,7 +134,7 @@ class ProductController {
   }
 
   static async newproduct(req, res) {
-    // const image = req.file;
+    const image = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
     const {
@@ -141,7 +147,6 @@ class ProductController {
       harga_jual,
       harga_beli,
       category,
-      image,
       countInStock,
       rating,
       net,
@@ -309,17 +314,10 @@ class ProductController {
       .populate("seller").populate("category");
     if (!product) return res.status(404).json("invalid product");
     if (product.length === 0) return res.status(404).json("kosong product");
-    let lengthlike = 0;
-    let lengthcomment = 0;
-    let lengthfolloweUser = 0;
-    for(let i = 0; i < product.like.length; i++){
-      if(product.like[i].userId === '0') lengthlike++;
-
-    }
+   
     res.status(200).json({
       message: "success get product",
       product,
-      lengthlike
     });
   }
   static async sendMessageToBuy(req, res) {
@@ -359,7 +357,13 @@ class ProductController {
     res.status(200).json(product);
   }
   static async getProductById(req, res) {
-    const product = await products.findById(req.params.id).populate("seller");
+    const product = await products.findByIdAndUpdate(req.params.id, {
+      $set: {
+        numReviews : numReviews + 1,
+      }
+    }, {
+      new: true,
+    }).populate("seller");
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json({
       data: product,

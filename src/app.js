@@ -6,8 +6,11 @@ const morgan = require("morgan");
 const cors = require("cors");
 const mongooseConnection = require("./config/db");
 const multer = require("multer");
-var server   = require('http').Server(app);
-var io       = require('socket.io')(server);
+
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
+
 var helmet = require('helmet');
 const sha256 = require("crypto-js/sha256");
 // var crypto = require('crypto');
@@ -15,7 +18,6 @@ const fileUpload = require('express-fileupload');
 var upload = multer();
 require('dotenv').config();
 const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
-
 const port = process.env.PORT ||8001;
 
 app.use(helmet());
@@ -43,20 +45,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-// var allowCrossDomain = function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
-
-//   // intercept OPTIONS method
-//   if ('OPTIONS' == req.method) {
-//     res.send(200);
-//   }
-//   else {
-//     next();
-//   }
-// // };
-// app.use(allowCrossDomain);
 app.use(cors({
   origin: '*'
 }));
@@ -90,14 +78,16 @@ app.use(cors({
 const password = "angga"
 const bcy =  bcrypt.hash(password,10)
 console.log(bcy)
-app.get("/", function(req,res){
-  res.send("<h1>Hallo world w</h1>");
-})
+// app.get("/", function(req,res){
+//   res.send("<h1>Hallo world w</h1>");
+// })
 app.use(cors())
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.use(fileUpload());
@@ -117,13 +107,19 @@ app.use((err, req, res, next) => {
     res.status(401).json({ message: err });
   }
 });
-io.on("connection", function (socket) {
-  console.log("User connected", socket.id);
-
+io.on("connection", (socket) => {
+  console.log("User connected");
+  socket.on("disconnect", ()=>{
+  console.log("Disconnected")
+});
+socket.on("getDoc", docId => {
+  safeJoin(docId);
+  socket.emit("document", documents[docId]);
+});
 });
 
 app.use(routes);
 
-server.listen(port, () => {
+http.listen(port, () => {
   console.log("listening on port " + port);
 });

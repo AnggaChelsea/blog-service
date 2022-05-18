@@ -155,14 +155,13 @@ class UserController {
 
   static async sendPesan(req, res) {
     const userparams = req.params;
-    const productparams = req.params;
     const {
       message,
       file,
       senderId,
       productId
     } = req.body;
-    const findProduct = await productModel.findById(productparams);
+    const findProduct = await productModel.findOne(productId);
     if (productparams) {
       productId.push(productparams.id);
       const findUserToChat = await userModel.findByIdAndUpdate(
@@ -179,7 +178,27 @@ class UserController {
           new: true,
         }
       );
-    } else {
+      console.log(findUserToChat.pesan);
+      const terkirim = await userModel.findOneAndUpdate(findUserToChat.pesan.senderId, {
+        $push: {
+          pesan: {
+            message: findUserToChat.pesan.message,
+            file: findUserToChat.pesan.file,
+            senderId: findUserToChat.pesan.userparams,
+            productId: findUserToChat.pesan.productId,
+          },
+        },
+      }, {
+        new: true,
+      });
+      res.status(200).json({
+        message: 'pesan terkirim',
+        terkirim,
+        findUserToChat,
+      });
+      terkirim.save();
+      findUserToChat.save();
+    }else {
       productId.push(null);
     }
   }
@@ -350,6 +369,40 @@ class UserController {
         });
       }
     })
+  }
+
+  static async getPesan(req, res){
+    const userId = req.params.id;
+    const findPesan = await userModel.findById(userId).populate("pesan", {
+      senderId: userId,
+    });
+    if (findPesan) {
+      res.status(200).json({
+        findPesan,
+        message: "pesan ditemukan",
+      });
+    }else{
+      res.status(404).json({
+        message: "pesan not found",
+      });
+    }
+  }
+
+  static async Chatting(req, res){
+    const userId = req.params.id;
+    const findPesan = await userModel.findById(userId).populate("pesan", {
+      senderId: userId,
+    });
+    if (findPesan) {
+      res.status(200).json({
+        findPesan,
+        message: "pesan ditemukan",
+      });
+    }else{
+      res.status(404).json({
+        message: "pesan not found",
+      });
+    }
   }
 
   static async registerNew(req, res) {
