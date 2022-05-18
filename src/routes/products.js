@@ -47,7 +47,7 @@ router.get("/get-feature", ProductController.getFeature);
 router.get("/filtering-product-category", ProductController.findFilter);
 
 router.get('/get-coment-byid/:id', ProductController.getComment);
-
+router.get('/productid/:id', ProductController.getProductByIdx)
 
 //without validate
 

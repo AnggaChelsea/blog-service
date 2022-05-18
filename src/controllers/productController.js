@@ -363,6 +363,15 @@ class ProductController {
     
   }
 
+  static async getProductByIdx(req,res){
+      const find = await products.findById(req.params.id).populate('seller').populate('category')
+      if(find){
+        res.status(200).json(find)
+      }else{
+        res.status(404).json(err)
+      }
+  }
+
   static async filterbyCategory(req, res) {
     const product = await products.find({
       category: req.params.id,
@@ -370,6 +379,7 @@ class ProductController {
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json(product);
   }
+
   static async getProductByUser(req, res) {
     const product = await products
       .find({
@@ -384,6 +394,7 @@ class ProductController {
       product,
     });
   }
+
   static async sendMessageToBuy(req, res) {
     const product = await products.findById(req.params.id);
     if (!product) return res.status(404).json("invalid product");
