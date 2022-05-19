@@ -469,7 +469,7 @@ class UserController {
             message: "success login",
             id: user.id,
             name: user.name,
-            inbox: user.inbox,
+            pesan: user.pesan,
             token,
           });
         } else {

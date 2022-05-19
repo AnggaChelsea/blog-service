@@ -18,6 +18,9 @@ const MessageSChema = Schema({
         type: String,
         required: true
     },
+    image:{
+        type: String,
+    },
     seen: {
         type: Boolean,
         default: false

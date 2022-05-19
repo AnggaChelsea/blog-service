@@ -41,50 +41,11 @@ const UserSchema = mongoose.Schema(
         },
       },
     ],
-
     pesan: [
       {
-        terkirim: [
-          {
-            kirimke: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "users",
-            },
-            message: {
-              type: String,
-              required: true,
-            },
-            file: {
-              type: String,
-              deafult: " ",
-            },
-            productId: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "products",
-            },
-          },
-        ],
-        masuk: [
-          {
-            dari: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "users",
-            },
-            message: {
-              type: String,
-              required: true,
-            },
-            file: {
-              type: String,
-              deafult: " ",
-            },
-            productId: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "products",
-            },
-          },
-        ],
-      },
+        masuk: [],
+        terkirim: []
+      }
     ],
     notification: [],
     codeOtp: {
