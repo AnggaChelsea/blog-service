@@ -3,6 +3,7 @@ const transactionModel = require('../models/transaction');
 const orderModel = require('../models/order');
 const userModel = require('../models/user');
 const productModel = require('../models/product');
+const checkoutlistModel = require('../models/checkout')
 class ChartItems {
     static async addCart(req, res) {
         const {
@@ -24,18 +25,17 @@ class ChartItems {
                     quantity: +quantity
                 }
             });
-            
+
             findupdate.save();
             res.status(200).json({
                 message: 'Successfully add cart',
                 data: findupdate
             });
-        }else if(findProduct.countInStock < 0){
+        } else if (findProduct.countInStock < 0) {
             res.status(500).json({
                 message: 'Product sudah habis'
             });
-        }
-        else if (find === null) {
+        } else if (find === null) {
             const newChart = await new chartModel({
                 productId,
                 userId,
@@ -61,19 +61,72 @@ class ChartItems {
         const cart = await chartModel.find({
             userId
         }).populate('productId')
-       
+
         const totalAllQty = cart.reduce((acc, curr) => {
             return acc + curr.quantity;
         }, 0);
+        let hasilT = 0
+        console.log(hasilT)
+        for (let i = 0; i < cart.length; i++) {
+            const haillop = (cart[i].totalHarga)
+            console.log(haillop * totalAllQty)
+            // hasilT.push(haillop)
+            hasilT = (haillop * totalAllQty)
+
+        }
+        console.log(hasilT)
+        const totalprice = cart.totalHarga * totalAllQty;
         const total = cart.reduce((acc, curr) => {
             return acc + curr.totalAllQty * curr.productId.harga_jual;
         }, 0);
         res.status(200).json({
             message: 'Successfully get cart',
             data: cart,
-            total,
+            total: totalAllQty,
             totalAllQty
         });
+    }
+    static async chooseToCheckout(req, res) {
+        const {
+            cartid,
+            userId
+        } = req.body;
+        const createCheckoutList = await new checkoutlistModel({
+            cartid,
+            userId
+        })
+        if (createCheckoutList) {
+            createCheckoutList.save();
+            res.status(201).json({
+                message: 'success add to checkout list',
+                data: createCheckoutList
+            })
+        } else {
+            res.status(400).json({
+                message: 'error system'
+            })
+        }
+    }
+    static async getCheckList(req, res) {
+        const userId = req.params;
+        const findList = await checkoutlistModel.findOne(userId).populate('cartid.cartid').populate('cartid.cartid.productId')
+        const totalShouldPay = findList.cartid
+        for(let i = 0; i < totalShouldPay.length; i++){
+            console.log(totalShouldPay[i].cartid.totalHarga)
+        }
+        console.log(totalShouldPay)
+        const findProduct = await productModel.findOne(findList.cartid.productId)
+        if (findList != null) {
+            res.status(200).json({
+                message: 'get success',
+                data: findList,
+                findProduct
+            })
+        } else {
+            res.status(404).json({
+                message: 'data kosong'
+            })
+        }
     }
     static async checkout(req, res) {
         const cartId = req.params.cartId;
@@ -88,7 +141,7 @@ class ChartItems {
             kodePos,
             phone,
             user
-            
+
         } = req.body;
         const savetoOrder = await new orderModel({
             productOrder: [cartId],
@@ -101,7 +154,7 @@ class ChartItems {
             phone,
             user: cart.userId,
         });
-        const notification = await userModel.findByIdAndUpdate(cart.productId.seller,{
+        const notification = await userModel.findByIdAndUpdate(cart.productId.seller, {
             $set: {
                 notification: [{
                     user: cart.userId,
@@ -127,8 +180,8 @@ class ChartItems {
         });
     }
 
-    static async removeCart(req, res){
-        
+    static async removeCart(req, res) {
+
     }
     static async getOrder(req, res) {
         const orderId = req.params.userId;
@@ -158,9 +211,9 @@ class ChartItems {
                 message: 'Something went wrong'
             });
         }
-        
+
     }
-    static async getTransactionById(req, res){
+    static async getTransactionById(req, res) {
         const transactionUserId = req.params.transactionUserId;
         const transaction = await transactionModel.findOne(transactionUserId).populate('productId').populate('userId');
         if (transaction) {
@@ -174,5 +227,6 @@ class ChartItems {
             });
         }
     }
+
 }
 module.exports = ChartItems;
