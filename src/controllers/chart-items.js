@@ -115,7 +115,8 @@ class ChartItems {
             productId: cart.productId,
             quantity: cart.quantity,
             status: false,
-            productSeller: notification
+            productSeller: notification,
+            message: 'Pesanan akan diproses, mohon lakukan pembayaran ke system kami, agar pesanan bisa di kirim'
         });
         await newTransaction.save();
         await savetoOrder.save();

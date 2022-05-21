@@ -19,6 +19,9 @@ const transactionSchema = new Schema({
     status: {
         type:Boolean,
         default: false
+    },
+    message:{
+        type: String,
     }
 }, {
     timestamps: true
