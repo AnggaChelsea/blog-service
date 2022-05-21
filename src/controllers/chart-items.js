@@ -108,11 +108,15 @@ class ChartItems {
         }
     }
     static async getCheckList(req, res) {
+        let reciveTotal;
+        console.log(reciveTotal)
         const userId = req.params;
         const findList = await checkoutlistModel.findOne(userId).populate('cartid.cartid').populate('cartid.cartid.productId')
         const totalShouldPay = findList.cartid
         for(let i = 0; i < totalShouldPay.length; i++){
             console.log(totalShouldPay[i].cartid.totalHarga)
+            const hasiltotalCheckout = totalShouldPay[i].cartId
+            // reciveTotal.push(hasiltotalCheckout.totalHarga)
         }
         console.log(totalShouldPay)
         const findProduct = await productModel.findOne(findList.cartid.productId)
