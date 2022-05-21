@@ -2,7 +2,7 @@ const router = require('express').Router();
 const cartController = require('../controllers/chart-items');
 const auth = require('../middleware/auth')
 
-router.post('/add-cart', auth, cartController.addCart);
+router.post('/add-cart', cartController.addCart);
 router.get('/get-cart/:userId', cartController.getCartByUser);
 router.patch('/checkout-cart/:cartId', cartController.checkout);
 router.get('/get-order-id/:orderId', cartController.getOrderByUser);
