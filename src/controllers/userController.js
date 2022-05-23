@@ -43,7 +43,7 @@ class UserController {
   }
 
   static async updateUser(req, res) {
-    const filename = req.file.originalname
+    const filename = req.file
     const nameFileImage = Math.round(Math.random() * 100000) + filename
     const {
       name,
