@@ -21,26 +21,9 @@ const UserSchema = mongoose.Schema(
       type: String,
     },
     followers: [],
-    alamat: [
-      {
-        kecamatan: {
-          type: String,
-          required: true,
-        },
-        kota: {
-          type: String,
-          required: true,
-        },
-        provinsi: {
-          type: String,
-          required: true,
-        },
-        kode_pos: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    alamat: {
+      type: String,
+    },
     pesan: [
       {
         masuk: [],
