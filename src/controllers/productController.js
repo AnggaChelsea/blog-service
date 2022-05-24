@@ -104,22 +104,37 @@ class ProductController {
     res.send(productcount);
   }
 
-  static findFilter(req, res) {
-    const filtering = {};
-    if (req.query.categories) {
-      let filteringbe = {
-        category: req.query.categories.split(","),
-      };
-      filtering.push(filteringbe);
+  // static findFilter(req, res) {
+  //   const filtering = {};
+  //   if (req.query.categories) {
+  //     let filteringbe = {
+  //       category: req.query.categories.split(","),
+  //     };
+  //     filtering.push(filteringbe);
+  //   }
+  //   const filtered = products.find(filtering);
+  //   if (!filtered) {
+  //     res.status(404).json({
+  //       status: 404,
+  //       message: "Products not found",
+  //     });
+  //   }
+  //   res.status(200).json(filtered);
+  // }
+
+  static async findDuluProduct(req,res){
+    const name  = req.params.query
+    const query = {$text: {$search: name}}
+    const result = await products.find(query)
+    if(result){ 
+      res.status(200).json(result)
     }
-    const filtered = products.find(filtering);
-    if (!filtered) {
+    else{
       res.status(404).json({
         status: 404,
         message: "Products not found",
       });
     }
-    res.status(200).json(filtered);
   }
 
   static async getProductbyCategory(req, res) {
@@ -263,13 +278,13 @@ class ProductController {
   }
 
   static async commentProduct(req, res) {
-    const { commentUser, userId } = req.body;
+    const { comment, userId } = req.body;
     const findDuluProduct = await products.findByIdAndUpdate(
       req.params.id,
       {
         $push: {
           comment: {
-            commentUser,
+            comment,
             userId,
           },
         },

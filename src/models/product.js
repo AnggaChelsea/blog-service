@@ -15,7 +15,16 @@ const productSchema = new schema({
         required: true,
     },
     like: [],
-    comment: [],
+    comment: [{
+        userId: {
+            type: schema.Types.ObjectId,
+            ref: 'users'
+        },
+        comment: {
+            type: String,
+            required: true,
+        },
+    }],
     description: {
         type: String,
         required: true,
@@ -84,7 +93,8 @@ const productSchema = new schema({
     updatedAt:{
         type:Date,
         default:Date.now,
-    }
+    },
+    pesan: []
 })
 productSchema.virtual('id').get(function(){
     return this._id.toHexString();

@@ -44,7 +44,6 @@ router.put("/update-product/:id", ProductController.updateProduct);
 router.put('/update-product-image/:id', auth, uploadOption, ProductController.updateProductImage);
 router.get("/count/product", ProductController.countProduct);
 router.get("/get-feature", ProductController.getFeature);
-router.get("/filtering-product-category", ProductController.findFilter);
 
 router.get('/get-coment-byid/:id', ProductController.getComment);
 router.get('/productid/:id', ProductController.getProductByIdx)
@@ -73,5 +72,7 @@ router.post('/cari-product', ProductController.filterProductNew)
 router.post('/filter-by-alamat', ProductController.filterByAlamat)
 
 router.get('/get-product/?name', ProductController.filterbyname)
+
+router.get('/get-product-by-filter/:query', ProductController.findDuluProduct)
 
 module.exports = router;
