@@ -14,7 +14,10 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
-    like: [],
+    like: [{
+        userLike: {type: schema.Types.ObjectId, ref: 'users'},
+        createdAt: {type: Date, default: Date.now}
+    }],
     comment: [{
         userId: {
             type: schema.Types.ObjectId,

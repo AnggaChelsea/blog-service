@@ -379,7 +379,7 @@ class ProductController {
   }
 
   static async getProductByIdx(req,res){
-      const find = await products.findById(req.params.id).populate('seller').populate('category')
+      const find = await products.findById(req.params.id).populate('seller', {name: 1}).populate('category').populate('like.userLike', {name: 1}).populate('comment.userId', {name: 1});
       if(find){
         res.status(200).json(find)
       }else{
