@@ -2,10 +2,10 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 // mongoose schema
 const productSchema = new schema({
-    seller:{
+    seller: {
         type: schema.Types.ObjectId,
         ref: 'users'
-    },  
+    },
     name: {
         type: String,
         required: true,
@@ -15,8 +15,14 @@ const productSchema = new schema({
         required: true,
     },
     like: [{
-        userLike: {type: schema.Types.ObjectId, ref: 'users'},
-        createdAt: {type: Date, default: Date.now}
+        userLike: {
+            type: schema.Types.ObjectId,
+            ref: 'users'
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
     }],
     comment: [{
         userId: {
@@ -36,7 +42,7 @@ const productSchema = new schema({
         type: String,
         default: ''
     },
-    net:{
+    net: {
         type: Boolean,
         required: true,
     },
@@ -44,62 +50,62 @@ const productSchema = new schema({
         type: Boolean,
         required: true,
     },
-    image:{
-        type:String,
+    image: {
+        type: String,
     },
-    images : [{
-        type:String,
+    images: [{
+        type: String,
     }],
     brand: {
         type: String,
-        default:''
+        default: ''
     },
     harga_jual: {
-        type:String,
+        type: String,
         required: true,
     },
-    harga_beli:{
-        type:String,
+    harga_beli: {
+        type: String,
         required: true,
     },
-    category:{
+    category: {
         type: schema.Types.ObjectId,
         ref: 'categories',
         required: true,
     },
-    countInStock:{
-        type:String,
-        required:true,
-        min:0,
-        max:255
+    countInStock: {
+        type: String,
+        required: true,
+        min: 0,
+        max: 255
     },
     rating: {
-        type:Number,
-        default:0,
+        type: Number,
+        default: 0,
     },
-    numReviews:{
-        type:Number,
-        default:0,
-    },
-    isFeature:{
-        type:Boolean,
-        default:false,
+    view: [{
+        type: schema.Types.ObjectId,
+        ref: 'users'
+    }],
+    isFeature: {
+        type: Boolean,
+        default: false,
     },
     linkButtonMessage: {
         type: String,
-        default:''
+        default: ''
     },
-    dateCreated:{
-        type:Date,
-        default:Date.now,
+    dateCreated: {
+        type: Date,
+        default: Date.now,
     },
-    updatedAt:{
-        type:Date,
-        default:Date.now,
+    updatedAt: {
+        type: Date,
+        default: Date.now,
     },
     pesan: []
 })
-productSchema.virtual('id').get(function(){
+productSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
