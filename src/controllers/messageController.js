@@ -1,4 +1,6 @@
 const messagemodel = require('../models/message');
+const userModel = require('../models/user');
+const productModel = require('../models/product');
 class MessageController {
   static async getMessage(req, res) {
     const message = await messagemodel.find({});
@@ -30,7 +32,7 @@ class MessageController {
     const messageUpdate = await messagemodel.findByIdAndUpdate(
       id, {
         message,
-        uploadfile,
+        image,
         from,
       }, {
         new: true
@@ -42,31 +44,78 @@ class MessageController {
     });
   }
 
-  static sendMessage(req, res) {
+  static async sendMessage(req, res) {
     const sellerId = req.params;
     const {
       buyyerId,
-      messages
-    } = req.body;
-    const message = new messagemodel({
-      sellerId,
-      buyyerId,
       messages,
+      image,
+      productId
+    } = req.body;
+    const notifPesanKirim = await userModel.findByIdAndUpdate(buyyerId, {
+      $push: {
+        PesanKirim: {
+          sellerId,
+          messages,
+          image,
+          productId
+        }
+      }
+    }, {
+      new: true
     });
-    message.save()
-      .then(() => {
-        res.status(201).json({
-          message: "success send message",
-          data: message,
-        });
-      })
-      .catch(err => {
-        res.status(500).json({
-          message: "failed send message",
-          data: err,
-        });
+    const notifPesanTerima = await userModel.findByIdAndUpdate(
+      sellerId, {
+        $push: {
+         PesanTerima: {
+            buyyerId: buyyerId,
+            messages: messages,
+            image: image,
+            productId: productId
+          }
+        }
+      }, {
+        new: true
+      }
+    );
+    if(notifPesanKirim && notifPesanTerima){
+      const message = new messagemodel({
+        sellerId,
+        buyyerId,
+        messages,
+        productId,
+        image
       });
-
+      const pushNotifProduct = await productModel.findByIdAndUpdate(productId, {
+        $push: {
+          pesan: {
+            buyyerId: buyyerId,
+          }
+        }
+      }, {
+        new: true
+      });
+      message.save()
+        .then(() => {
+          res.status(201).json({
+            message: "success send message",
+            data: message,
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            message: "failed send message",
+            data: err,
+          });
+        });
+  
+      res.status(200).json({
+        message: "success send message",
+        data: notifPesanKirim,
+      });
+      
+    }
+   
   }
 
   static getInox(req, res) {
@@ -93,3 +142,5 @@ class MessageController {
   }
 
 }
+
+module.exports = MessageController;

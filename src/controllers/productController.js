@@ -23,7 +23,7 @@ class ProductController {
       });
       return;
     } else {
-      const countlike = product.length
+      const countlike = product.length;
       res.status(200).json({
         message: "success",
         data: product,
@@ -122,14 +122,13 @@ class ProductController {
   //   res.status(200).json(filtered);
   // }
 
-  static async findDuluProduct(req,res){
-    const name  = req.params.query
-    const query = {$text: {$search: name}}
-    const result = await products.find(query)
-    if(result){ 
-      res.status(200).json(result)
-    }
-    else{
+  static async findDuluProduct(req, res) {
+    const name = req.params.query;
+    const query = { $text: { $search: name } };
+    const result = await products.find(query);
+    if (result) {
+      res.status(200).json(result);
+    } else {
       res.status(404).json({
         status: 404,
         message: "Products not found",
@@ -168,7 +167,7 @@ class ProductController {
       numReviews,
       like,
       baru,
-      isFeature,                    
+      isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
@@ -180,7 +179,7 @@ class ProductController {
       });
     } else {
       console.log(req.body.hargaJual);
-     
+
       const product = new products({
         seller,
         name,
@@ -199,7 +198,7 @@ class ProductController {
         like,
         baru,
         isFeature,
-        alamat
+        alamat,
       });
       product
         .save()
@@ -232,7 +231,7 @@ class ProductController {
       numReviews,
       like,
       baru,
-      isFeature,                    
+      isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
@@ -244,7 +243,7 @@ class ProductController {
       });
     } else {
       console.log(req.body.hargaJual);
-     
+
       const product = new products({
         seller,
         name,
@@ -263,7 +262,7 @@ class ProductController {
         like,
         baru,
         isFeature,
-        alamat
+        alamat,
       });
       product
         .save()
@@ -303,55 +302,94 @@ class ProductController {
     res.status(200).json(findDuluProduct);
   }
 
-  
-  static async getComment(req, res){
+  static async getComment(req, res) {
     const idProduct = req.params;
     let comment = [];
-    const getComment = products.findById(idProduct)
-    if(getComment){
-      for(let i = 0; i < getComment.length; i++){
+    const getComment = products.findById(idProduct);
+    if (getComment) {
+      for (let i = 0; i < getComment.length; i++) {
         const comments = getComment[i].comment;
-        comment.push(comments)
+        comment.push(comments);
         console.log(comment);
       }
       res.status(200).json({
         message: "success get comment",
-        comment: getComment.comment
-      })
-    }
-    else{
-      res.status(404).json({messageM : 'tidak ada comment'})
+        comment: getComment.comment,
+      });
+    } else {
+      res.status(404).json({ messageM: "tidak ada comment" });
     }
   }
 
-  static async feedProduct(req, res){
-    const product = await products.find()
+  static async replyComment(req, res) {
+    const findComment = req.params;
+    const { reply, userId } = req.body;
+    const findDuluProduct = await products.find();
+    const findId = findDuluProduct.find(
+      (comment) => comment.comment._id === findComment
+    );
+    if (findId) {
+    }
+  }
+
+  static async reply(req, res) {
+    const findComment = req.params;
+    const { reply, userId } = req.body;
+    const findDuluProduct = await products.find();
+    if(findDuluProduct){
+      
+    }
+    const findId = findDuluProduct.findByIdAndUpdate(
+      (comment) => comment.comment._id === findComment,
+      {
+        $push: {
+          replyComment: {
+            reply,
+            userId,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    if (!findId) {
+      res.status(404).json({
+        status: 404,
+        message: "Product not found",
+      });
+    }
+    findId.save();
+    res.status(200).json(findId);
+  }
+
+  static async feedProduct(req, res) {
+    const product = await products.find();
     const banyakLike = 0;
-    for(let i = 0; i < product.length; i++){
-      const feed = product[i].like
-      for(let j = 0; j < feed.length; j++){
-        const obj = Object.keys(feed[j]).length
-        banyakLike = obj
-        if(obj >= 3){
+    for (let i = 0; i < product.length; i++) {
+      const feed = product[i].like;
+      for (let j = 0; j < feed.length; j++) {
+        const obj = Object.keys(feed[j]).length;
+        banyakLike = obj;
+        if (obj >= 3) {
           res.status(200).json({
             message: "success get feed",
-            product: product
-          })
+            product: product,
+          });
         }
       }
     }
   }
 
-  static async viewFeedProduct(req, res){
+  static async viewFeedProduct(req, res) {
     const userId = req.body;
     const product = await products.findByIdAndUpdate(req.params.id, {
       $push: {
         view: {
           userId: userId,
-        }
+        },
       },
-    })
-   
+    });
   }
 
   static async addLikeProduct(req, res) {
@@ -401,19 +439,23 @@ class ProductController {
         status: 404,
         message: "Products not found",
       });
-    }else{
+    } else {
       return res.status(200).json(product);
     }
-    
   }
 
-  static async getProductByIdx(req,res){
-      const find = await products.findById(req.params.id).populate('seller', {name: 1}).populate('category').populate('like.userLike', {name: 1}).populate('comment.userId', {name: 1});
-      if(find){
-        res.status(200).json(find)
-      }else{
-        res.status(404).json(err)
-      }
+  static async getProductByIdx(req, res) {
+    const find = await products
+      .findById(req.params.id)
+      .populate("seller", { name: 1 })
+      .populate("category")
+      .populate("like.userLike", { name: 1 })
+      .populate("comment.userId", { name: 1 });
+    if (find) {
+      res.status(200).json(find);
+    } else {
+      res.status(404).json(err);
+    }
   }
 
   static async filterbyCategory(req, res) {
@@ -429,10 +471,17 @@ class ProductController {
       .find({
         seller: req.params.id,
       })
-      .populate("seller", {name: 1, image: 1,  alamat: 1, email: 1, created_at:  1}).populate("category");
+      .populate("seller", {
+        name: 1,
+        image: 1,
+        alamat: 1,
+        email: 1,
+        created_at: 1,
+      })
+      .populate("category");
     if (!product) return res.status(404).json("invalid product");
     if (product.length === 0) return res.status(404).json("kosong product");
-   
+
     res.status(200).json({
       message: "success get product",
       product,
@@ -476,13 +525,19 @@ class ProductController {
     res.status(200).json(product);
   }
   static async getProductById(req, res) {
-    const product = await products.findByIdAndUpdate(req.params.id, {
-      $set: {
-        numReviews : numReviews + 1,
-      }
-    }, {
-      new: true,
-    }).populate("seller");
+    const product = await products
+      .findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            numReviews: numReviews + 1,
+          },
+        },
+        {
+          new: true,
+        }
+      )
+      .populate("seller");
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json({
       data: product,

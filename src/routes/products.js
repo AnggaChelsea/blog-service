@@ -76,4 +76,6 @@ router.get('/get-product/?name', ProductController.filterbyname)
 
 router.get('/get-product-by-filter/:query', ProductController.findDuluProduct)
 
+router.put('/reply-comment/:id', ProductController.reply)
+
 module.exports = router;

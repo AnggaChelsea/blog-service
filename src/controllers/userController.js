@@ -234,14 +234,12 @@ class UserController {
     const findUserToChat = await userModel.findByIdAndUpdate(
       userparams, {
         $push: {
-          pesan: [{
-            masuk: [{
-              dari,
+            pesanmasuk: [{
+              senderId,
               message,
               file,
               productId,
             }]
-          }],
         },
       }, {
         new: true,
@@ -251,17 +249,41 @@ class UserController {
       await userModel.findOneAndUpdate(
         senderId, {
           $push: {
-            pesan: [{
-              terkirim: [{
+              pesanterkirim: [{
                 kirimke: userparams,
                 file: findUserToChat.file,
                 message: findUserToChat.mesage,
                 productId: findUserToChat.productId
-              }]
             }]
           }
         }
       )
+      const masukpesan = await messageModel.find(senderId);
+      if(masukpesan.senderId != null){
+        const insertPesan = await new messageModel({
+          productId: findUserToChat.productId,
+          message: findUserToChat.message,
+          file: findUserToChat.file,
+          senderId: findUserToChat.senderId,
+          buyerId: findUserToChat.buyerId,
+        })
+      }else{
+        await messageModel.findOneAndUpdate(
+          {
+            senderId: senderId,
+            productId: findUserToChat.productId,
+          }, {
+            $push: {
+              message: findUserToChat.message,
+              file: findUserToChat.file,
+              senderId: findUserToChat.senderId,
+              buyerId: findUserToChat.buyerId,
+            },
+          }, {
+            new: true,
+          }
+        )
+      }
       res.status(200).json({
         message: "pesan berhasil dikirim",
         findUserToChat,
@@ -410,6 +432,7 @@ class UserController {
     const imagePhoto = req.file;
     const namingFile = `Math.floor(Math.random() * 1000000) "-" ${imagePhoto}`;
     const {
+      username,
       name,
       email,
       password,
@@ -422,6 +445,7 @@ class UserController {
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
     const usernew = await new userModel({
+      username,
       name,
       email,
       password: bcrypt.hashSync(password, 10),
@@ -448,11 +472,11 @@ class UserController {
 
   static async logins(req, res) {
     const {
-      email,
-      password
+      password,
+      username
     } = req.body;
     const user = await userModel.findOne({
-      email,
+      username,
     });
     if (user) {
       if (user.verified === true) {

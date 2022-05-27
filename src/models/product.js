@@ -38,6 +38,20 @@ const productSchema = new schema({
             type: Date,
             default: Date.now
         },
+        replyComment: [{
+            reply: {
+                type: String,
+                required: true,
+            },
+            userId: {
+                type: schema.Types.ObjectId,
+                ref: 'users'
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            },
+        }],
 
     }],
     description: {
@@ -49,11 +63,11 @@ const productSchema = new schema({
         default: ''
     },
     net: {
-        type: Boolean,
+        type: String,
         required: true,
     },
     baru: {
-        type: Boolean,
+        type: String,
         required: true,
     },
     image: {
