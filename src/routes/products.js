@@ -61,6 +61,7 @@ router.get('/getproduct-by-category', ProductController.getProductbyCategory)
 router.get("/filterbyCategory/:id", ProductController.filterbyCategory)
 
 router.get('/getProductByUser/:id', ProductController.getProductByUser)
+router.get('/feed-product', ProductController.feedProduct)
 
 router.post('/sendMessageToBuy/:id', auth, ProductController.sendMessageToBuy)
 router.get('/getMessageToBuy/:id', auth, ProductController.getMessageToBuy)

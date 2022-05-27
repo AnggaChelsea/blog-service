@@ -324,6 +324,35 @@ class ProductController {
     }
   }
 
+  static async feedProduct(req, res){
+    const product = await products.find()
+    const banyakLike = 0;
+    for(let i = 0; i < product.length; i++){
+      const feed = product[i].like
+      for(let j = 0; j < feed.length; j++){
+        const obj = Object.keys(feed[j]).length
+        banyakLike = obj
+        if(obj >= 3){
+          res.status(200).json({
+            message: "success get feed",
+            product: product
+          })
+        }
+      }
+    }
+  }
+
+  static async viewFeedProduct(req, res){
+    const userId = req.body;
+    const product = await products.findByIdAndUpdate(req.params.id, {
+      $push: {
+        view: {
+          userId: userId,
+        }
+      },
+    })
+   
+  }
 
   static async addLikeProduct(req, res) {
     const userLike = req.body;
@@ -400,7 +429,7 @@ class ProductController {
       .find({
         seller: req.params.id,
       })
-      .populate("seller").populate("category");
+      .populate("seller", {name: 1, image: 1,  alamat: 1, email: 1, created_at:  1}).populate("category");
     if (!product) return res.status(404).json("invalid product");
     if (product.length === 0) return res.status(404).json("kosong product");
    
