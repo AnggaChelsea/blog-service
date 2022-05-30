@@ -68,21 +68,22 @@ class ChartItems {
         let hasilT = 0
         console.log(hasilT)
         for (let i = 0; i < cart.length; i++) {
-            const haillop = (cart[i].totalHarga)
+            const haillop = (cart[i].totalHarga * cart[i].quantity)
             console.log(haillop * totalAllQty)
             // hasilT.push(haillop)
             hasilT = (haillop * totalAllQty)
 
         }
-        console.log(hasilT)
+        // console.log(hasilT)
         const totalprice = cart.totalHarga * totalAllQty;
-        const total = cart.reduce((acc, curr) => {
-            return acc + curr.totalAllQty * curr.productId.harga_jual;
-        }, 0);
+        // const total = cart.reduce((acc, curr) => {
+        //     return acc + curr.totalAllQty * curr.productId.harga_jual;
+        // }, 0);
+        
         res.status(200).json({
             message: 'Successfully get cart',
             data: cart,
-            total: totalAllQty,
+            total: hasilT,
             totalAllQty
         });
     }
