@@ -153,53 +153,55 @@ class UserController {
   }
 
 
-  static async sendPesan(req, res) {
-    const userparams = req.params;
+  static async sendPesan(req, res) {;
     const {
+      sellerId, // sellerid yang nerima pesan / yang punya barang
       message,
       file,
-      senderId,
-      productId
+      buyerId, //sender id ini yang diisi oleh user untuk tanya
+      productId, //product yang di pesan
     } = req.body;
-    const findProduct = await productModel.findOne(productId);
-    if (productparams) {
-      productId.push(productparams.id);
-      const findUserToChat = await userModel.findByIdAndUpdate(
-        userparams, {
-          $push: {
-            pesan: {
-              message,
-              file,
-              senderId,
-              productId,
-            },
-          },
-        }, {
-          new: true,
-        }
-      );
-      console.log(findUserToChat.pesan);
-      const terkirim = await userModel.findOneAndUpdate(findUserToChat.pesan.senderId, {
-        $push: {
-          pesan: {
-            message: findUserToChat.pesan.message,
-            file: findUserToChat.pesan.file,
-            senderId: findUserToChat.pesan.userparams,
-            productId: findUserToChat.pesan.productId,
-          },
-        },
-      }, {
+    const date = new Date();
+    const sendTerima = await userModel.findByIdAndUpdate(sellerId, {
+      $push: {
+        pesanTerima: [{
+          buyerId,
+          createdAt: date,
+        }],
+      },
+    }, 
+      {
         new: true,
+      }
+    );
+    const sendTerkirim = await userModel.findByIdAndUpdate(buyerId, {
+      $push: {
+        pesanKirim: [{
+          buyerId,
+          createdAt: date,
+        }]
+      }
+    }, {
+      new: true,
+    })
+    if(sendTerima && sendTerkirim){
+      const pesan = await new messageModel({
+        sellerId,
+        message,
+        file,
+        buyerId,
+        productId,
+        createdAt,
       });
-      res.status(200).json({
-        message: 'pesan terkirim',
-        terkirim,
-        findUserToChat,
+      pesan.save();
+      return res.status(200).json({
+        pesan,
+        message: "pesan dikirim",
       });
-      terkirim.save();
-      findUserToChat.save();
-    }else {
-      productId.push(null);
+    }else{
+      return res.status(404).json({
+        message: "pesan gagal dikirim",
+      });
     }
   }
 
@@ -432,7 +434,6 @@ class UserController {
     const imagePhoto = req.file;
     const namingFile = `Math.floor(Math.random() * 1000000) "-" ${imagePhoto}`;
     const {
-      username,
       name,
       email,
       password,
@@ -444,8 +445,7 @@ class UserController {
     // const salt = crypto.randomBytes(1664).toString("hex");
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
-    const usernew = await new userModel({
-      username,
+    const usernew = await new userModel({ 
       name,
       email,
       password: bcrypt.hashSync(password, 10),
@@ -473,10 +473,10 @@ class UserController {
   static async logins(req, res) {
     const {
       password,
-      username
+      email
     } = req.body;
     const user = await userModel.findOne({
-      username,
+      email,
     });
     if (user) {
       if (user.verified === true) {

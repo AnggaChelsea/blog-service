@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
 const UserSchema = mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
     required: true,
@@ -27,8 +23,34 @@ const UserSchema = mongoose.Schema({
   alamat: {
     type: String,
   },
-  PesanKirim: [],
-  pesanTerima: [],
+  PesanKirim: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      }
+    }
+  ],
+  pesanTerima: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "products",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      }
+    }
+  ],
   notification: [],
   codeOtp: {
     type: Number,
@@ -83,19 +105,7 @@ UserModel.schema.path("email").validate(function (value) {
   });
 }, "Email sudah terdaftar");
 
-UserModel.schema.path('username').validate(function (value) {
-  return /^[a-zA-Z ]*$/.test(value);
-}, 'username must be letters only');
-UserModel.schema.path('username').validate(function (value) {
-  return UserModel.findOne({
-    username: value,
-  }).then(function (user) {
-    if (user) {
-      return false;
-    }
-    return true;
-  });
-}, 'username sudah terdaftar');
+
 // validate numberphone isexist
 UserModel.schema.path("numberphone").validate(function (value) {
   return UserModel.findOne({
