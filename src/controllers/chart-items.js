@@ -60,7 +60,7 @@ class ChartItems {
         } = req.params;
         const cart = await chartModel.find({
             userId
-        }).populate('productId')
+        }).populate('productId', { name: 1 }).populate('userId', { name: 1 });
 
         const totalAllQty = cart.reduce((acc, curr) => {
             return acc + curr.quantity;
