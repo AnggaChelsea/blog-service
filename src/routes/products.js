@@ -37,7 +37,7 @@ const uploadOption = multer({
   storage: storage
 }).single("image");
 router.post("/addnewproduct", ProductController.newproduct);
-router.post('/add-new', ProductController.newproductwe)
+router.post('/add-new', uploadOption, ProductController.newproductwe)
 
 router.get("/productfind", ProductController.getAllProducts);
 router.put("/update-product/:id", ProductController.updateProduct);
@@ -77,5 +77,7 @@ router.get('/get-product/?name', ProductController.filterbyname)
 router.get('/get-product-by-filter/:query', ProductController.findDuluProduct)
 
 router.put('/reply-comment/:id', ProductController.reply)
+
+router.get('/product-by-location', ProductController.findProductByNearLocation)
 
 module.exports = router;

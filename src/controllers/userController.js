@@ -440,7 +440,8 @@ class UserController {
       image,
       alamat,
       numberphone,
-      codeOtp
+      codeOtp,
+      coordinateLocation,
     } = req.body;
     // const salt = crypto.randomBytes(1664).toString("hex");
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
@@ -453,6 +454,7 @@ class UserController {
       alamat,
       numberphone,
       codeOtp: codeOtpConfirm,
+      coordinateLocation,
     });
     const emailUser = usernew.email;
     const from = "freelacerw9@gmail.com";
@@ -720,7 +722,7 @@ class UserController {
         $push: {
           followers: userFollow,
         },
-      }, {
+      },{
         new: true,
       }
     );

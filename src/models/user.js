@@ -23,34 +23,38 @@ const UserSchema = mongoose.Schema({
   alamat: {
     type: String,
   },
-  PesanKirim: [
-    {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      }
+  PesanKirim: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     }
-  ],
-  pesanTerima: [
-    {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-      },
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "products",
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      }
+  }],
+  pesanTerima: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "products",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     }
-  ],
+  }],
+  coordinateLocation: [{
+    latitude: {
+      type: String,
+    },
+    longitude: {
+      type: String,
+    }
+  }],
   notification: [],
   codeOtp: {
     type: Number,

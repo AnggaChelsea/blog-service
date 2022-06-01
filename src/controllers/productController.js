@@ -6,13 +6,17 @@ const jwt = require("../middleware/jwtAdmin");
 const messageModel = require("../models/message");
 const moment = require("moment");
 const userModel = require("../models/user");
-const { followeUser } = require("./userController");
+const {
+  followeUser
+} = require("./userController");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 class ProductController {
   static async getAllProducts(req, res, next) {
     const product = await products.find().populate("category");
@@ -124,7 +128,11 @@ class ProductController {
 
   static async findDuluProduct(req, res) {
     const name = req.params.query;
-    const query = { $text: { $search: name } };
+    const query = {
+      $text: {
+        $search: name
+      }
+    };
     const result = await products.find(query);
     if (result) {
       res.status(200).json(result);
@@ -147,10 +155,32 @@ class ProductController {
     res.status(200).json(procat);
   }
 
+  static async findProductByNearLocation(req, res){
+    // const {
+    //   latitude,
+    //   longitude
+    // } = req.body;
+    const find = await products.find()
+    const findUser = await userModel.find()
+    if(find.coordinateLocation.latitude === findUser.coordinateLocation.latitude && find.coordinateLocation.longitude === userModle.coordinateLocation.longitude){
+      return res.status(200).json({message: 'get it',  data: find })
+    }else{
+      return res.status(404)
+    }
+  }
+
   static async newproductwe(req, res) {
     const image = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
+    // navigator.geolocation.getCurrentPosition(getLatLon);
+
+    // function getLatLon(position) {
+    //   var latitude = position.coords.latitude;
+    //   var longitude = position.coords.longitude;
+    //   console.log("latitude is " + latitude);
+    //   console.log("Longitude is " + longitude);
+    // }
     const {
       seller,
       name,
@@ -168,6 +198,7 @@ class ProductController {
       like,
       baru,
       isFeature,
+      coordinateLocation,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
@@ -199,6 +230,7 @@ class ProductController {
         baru,
         isFeature,
         alamat,
+        coordinateLocation
       });
       product
         .save()
@@ -277,29 +309,18 @@ class ProductController {
   }
 
   static async commentProduct(req, res) {
-    const { comment, userId } = req.body;
-    const findDuluProduct = await products.findByIdAndUpdate(
-      req.params.id,
-      {
-        $push: {
-          comment: {
-            comment,
-            userId,
-          },
-        },
-      },
-      {
-        new: true,
+    const {
+      comment,
+      userId
+    } = req.body;
+    const commentId = req.params.id;
+    const findComment = await products.find();
+    for (let i = 0; i < findComment.length; i++) {
+      if (findComment[i].comment._id == productId) {
+
       }
-    );
-    if (!findDuluProduct) {
-      res.status(404).json({
-        status: 404,
-        message: "Product not found",
-      });
     }
-    findDuluProduct.save();
-    res.status(200).json(findDuluProduct);
+
   }
 
   static async getComment(req, res) {
@@ -317,50 +338,55 @@ class ProductController {
         comment: getComment.comment,
       });
     } else {
-      res.status(404).json({ messageM: "tidak ada comment" });
+      res.status(404).json({
+        messageM: "tidak ada comment"
+      });
     }
   }
 
   static async replyComment(req, res) {
     const findComment = req.params;
-    const { reply, userId } = req.body;
+    const {
+      reply,
+      userId
+    } = req.body;
     const findDuluProduct = await products.find();
     const findId = findDuluProduct.find(
       (comment) => comment.comment._id === findComment
     );
-    if (findId) {
-    }
+    if (findId) {}
   }
 
   static async reply(req, res) {
     const findComment = req.params;
-    const { reply, userId } = req.body;
+    const {
+      reply,
+      userId
+    } = req.body;
     const findDuluProduct = await products.find();
-    if(findDuluProduct){
-      
-    }
-    const findId = findDuluProduct.findByIdAndUpdate(
-      (comment) => comment.comment._id === findComment,
-      {
-        $push: {
-          replyComment: {
-            reply,
-            userId,
+    for (let i = 0; i < findDuluProduct.length; i++) {
+      if (findDuluProduct[i].comment._id === findComment) {
+        await products.findOneAndUpdate(findComment, {
+          $push: {
+            comment: [{
+              replyComment: [{
+                reply,
+                userId,
+              }]
+            }],
           },
-        },
-      },
-      {
-        new: true,
+        }, {
+          new: true,
+        });
       }
-    );
-    if (!findId) {
-      res.status(404).json({
-        status: 404,
-        message: "Product not found",
-      });
     }
-    findId.save();
-    res.status(200).json(findId);
+    if (findDuluProduct) {
+      res.status(200).json(findDuluProduct);
+    } else {
+      res.status(404).json({
+        message: "tidak ada comment"
+      })
+    }
   }
 
   static async feedProduct(req, res) {
@@ -395,13 +421,11 @@ class ProductController {
   static async addLikeProduct(req, res) {
     const userLike = req.body;
     const findDuluProduct = await products.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           like: userLike,
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -447,10 +471,16 @@ class ProductController {
   static async getProductByIdx(req, res) {
     const find = await products
       .findById(req.params.id)
-      .populate("seller", { name: 1 })
+      .populate("seller", {
+        name: 1
+      })
       .populate("category")
-      .populate("like.userLike", { name: 1 })
-      .populate("comment.userId", { name: 1 });
+      .populate("like.userLike", {
+        name: 1
+      })
+      .populate("comment.userId", {
+        name: 1
+      });
     if (find) {
       res.status(200).json(find);
     } else {
@@ -527,13 +557,11 @@ class ProductController {
   static async getProductById(req, res) {
     const product = await products
       .findByIdAndUpdate(
-        req.params.id,
-        {
+        req.params.id, {
           $set: {
             numReviews: numReviews + 1,
           },
-        },
-        {
+        }, {
           new: true,
         }
       )
@@ -597,11 +625,9 @@ class ProductController {
     } else {
       imagePath = product.image;
     }
-    if (categoryId) {
-    }
+    if (categoryId) {}
     const productFindandUpdate = await products.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         // $set: req.body, //if dont want to write to all field
         seller,
         name: changetolower,
@@ -619,8 +645,7 @@ class ProductController {
         like,
         baru,
         isFeature,
-      },
-      {
+      }, {
         new: true,
       }
     );

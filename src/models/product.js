@@ -14,6 +14,14 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
+    coordinateLocation: [{
+        latitude: {
+          type: String,
+        },
+        longitude: {
+          type: String,
+        }
+      }],
     like: [{
         userLike: {
             type: schema.Types.ObjectId,
