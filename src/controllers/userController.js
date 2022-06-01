@@ -724,8 +724,7 @@ class UserController {
         new: true,
       }
     );
-    if (findUserDulu) {
-      findUserDulu.save();
+    if (findUserDulu){
       res.status(200).json({
         message: "success follow",
       });

@@ -62,7 +62,6 @@ class ChartItems {
             userId
         }).populate('productId', { name: 1 }).populate('productId', {harga_jual:1})
         .populate('userId', { name: 1 });
-        // const totalReal = cart.productId.harga_jual * cart.quantity
         const totalAllQty = cart.reduce((acc, curr) => {
             return acc + curr.quantity;
         }, 0);
@@ -71,14 +70,10 @@ class ChartItems {
         for (let i = 0; i < cart.length; i++) {
             const haillop = (cart[i].productId.harga_jual * cart[i].quantity)
             console.log(haillop)
-            // hasilT.push(haillop)
             hasilT = haillop
         }
-        // console.log(hasilT)
         const totalprice = cart.totalHarga * totalAllQty;
-        // const total = cart.reduce((acc, curr) => {
-        //     return acc + curr.totalAllQty * curr.productId.harga_jual;
-        // }, 0);
+
         
         res.status(200).json({
             message: 'Successfully get cart',
@@ -126,7 +121,6 @@ class ChartItems {
             message: 'Successfully get checkout list',
             data: findList
         });
-        // console.log(totalShouldPay)
     }
     static async checkout(req, res) {
         const cartId = req.body;

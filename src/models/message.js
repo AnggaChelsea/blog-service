@@ -10,7 +10,7 @@ const MessageSChema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    buyerId:{
+    buyyerId:{
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
