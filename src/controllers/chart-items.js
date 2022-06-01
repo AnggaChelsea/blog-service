@@ -60,19 +60,19 @@ class ChartItems {
         } = req.params;
         const cart = await chartModel.find({
             userId
-        }).populate('productId', { name: 1 }).populate('userId', { name: 1 });
-
+        }).populate('productId', { name: 1 }).populate('productId', {harga_jual:1})
+        .populate('userId', { name: 1 });
+        // const totalReal = cart.productId.harga_jual * cart.quantity
         const totalAllQty = cart.reduce((acc, curr) => {
             return acc + curr.quantity;
         }, 0);
         let hasilT = 0
         console.log(hasilT)
         for (let i = 0; i < cart.length; i++) {
-            const haillop = (cart[i].totalHarga * cart[i].quantity)
-            console.log(haillop * totalAllQty)
+            const haillop = (cart[i].productId.harga_jual * cart[i].quantity)
+            console.log(haillop)
             // hasilT.push(haillop)
-            hasilT = (haillop * totalAllQty)
-
+            hasilT = haillop
         }
         // console.log(hasilT)
         const totalprice = cart.totalHarga * totalAllQty;
@@ -112,29 +112,24 @@ class ChartItems {
         let reciveTotal;
         console.log(reciveTotal)
         const userId = req.params;
-        const findList = await checkoutlistModel.findOne(userId).populate('cartid.cartid').populate('cartid.cartid.productId')
-        const totalShouldPay = findList.cartid
-        for(let i = 0; i < totalShouldPay.length; i++){
-            console.log(totalShouldPay[i].cartid.totalHarga)
-            const hasiltotalCheckout = totalShouldPay[i].cartId
-            // reciveTotal.push(hasiltotalCheckout.totalHarga)
-        }
-        console.log(totalShouldPay)
-        const findProduct = await productModel.findOne(findList.cartid.productId)
-        if (findList != null) {
-            res.status(200).json({
-                message: 'get success',
-                data: findList,
-                findProduct
-            })
-        } else {
-            res.status(404).json({
-                message: 'data kosong'
-            })
-        }
+        const findList = await checkoutlistModel.findOne(userId).populate('cartid._id')
+        const result = findList.cartid.map(item => {
+            return item.totalHarga * item.quantity
+        })
+        reciveTotal = result.reduce((acc, curr) => {
+            return acc + curr
+        }, 0)
+        console.log(reciveTotal)
+        console.log(result)
+    
+        res.status(200).json({
+            message: 'Successfully get checkout list',
+            data: findList
+        });
+        // console.log(totalShouldPay)
     }
     static async checkout(req, res) {
-        const cartId = req.params.cartId;
+        const cartId = req.body;
         const cart = await chartModel.findById(cartId).populate('productId');
         const {
             productOrder,
@@ -146,7 +141,6 @@ class ChartItems {
             kodePos,
             phone,
             user
-
         } = req.body;
         const savetoOrder = await new orderModel({
             productOrder: [cartId],
@@ -160,7 +154,7 @@ class ChartItems {
             user: cart.userId,
         });
         const notification = await userModel.findByIdAndUpdate(cart.productId.seller, {
-            $set: {
+            $push: {
                 notification: [{
                     user: cart.userId,
                     message: `${cart.productId} telah dipesan`,
@@ -176,8 +170,13 @@ class ChartItems {
             productSeller: notification,
             message: 'Pesanan akan diproses, mohon lakukan pembayaran ke system kami, agar pesanan bisa di kirim'
         });
-        await newTransaction.save();
         await savetoOrder.save();
+        await newTransaction.save();
+        const checkCart = await chartModel.find();
+        checkCart.map(item => (item._id = cartId) && item.remove());
+        await chartModel.deleteMany({
+            _id: cartId            
+        });
         await chartModel.findByIdAndDelete(cartId);
         res.status(200).json({
             message: 'Successfully checkout',
