@@ -461,7 +461,7 @@ class UserController {
     const linkConfirm = `mohon masukan code otp ${codeOtpConfirm} ini untuk verifikasi akunmu `;
 
     if (!usernew) {
-      res.status(500).json(err);
+      res.status(500).json(err); 
     } else {
       usernew.save().then((response) => {
         sendVeryficationEmail(from, name, emailUser, linkConfirm);
