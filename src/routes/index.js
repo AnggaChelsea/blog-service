@@ -18,6 +18,7 @@ router.use(`/roles`, require("./roles"));
 router.use(`/orders`, order);
 router.use(`/chat`, require("./chat"));
 router.use(`/inbox`, require("./inbox"));
+router.use(`/cart`, require("./cart"));
 router.use(`/followers`, followers);
 router.use(`/product`, productR);
 

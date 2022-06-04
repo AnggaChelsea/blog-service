@@ -6,6 +6,17 @@ const jwt = require("../middleware/jwtAdmin");
 const messageModel = require("../models/message");
 const moment = require("moment");
 const userModel = require("../models/user");
+const {
+  followeUser
+} = require("./userController");
+const express = require("express");
+const app = express();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 class ProductController {
   static async getAllProducts(req, res, next) {
     const product = await products.find().populate("category");
@@ -16,7 +27,7 @@ class ProductController {
       });
       return;
     } else {
-      const countlike = product.length
+      const countlike = product.length;
       res.status(200).json({
         message: "success",
         data: product,
@@ -97,22 +108,40 @@ class ProductController {
     res.send(productcount);
   }
 
-  static findFilter(req, res) {
-    const filtering = {};
-    if (req.query.categories) {
-      let filteringbe = {
-        category: req.query.categories.split(","),
-      };
-      filtering.push(filteringbe);
-    }
-    const filtered = products.find(filtering);
-    if (!filtered) {
+  // static findFilter(req, res) {
+  //   const filtering = {};
+  //   if (req.query.categories) {
+  //     let filteringbe = {
+  //       category: req.query.categories.split(","),
+  //     };
+  //     filtering.push(filteringbe);
+  //   }
+  //   const filtered = products.find(filtering);
+  //   if (!filtered) {
+  //     res.status(404).json({
+  //       status: 404,
+  //       message: "Products not found",
+  //     });
+  //   }
+  //   res.status(200).json(filtered);
+  // }
+
+  static async findDuluProduct(req, res) {
+    const name = req.params.query;
+    const query = {
+      $text: {
+        $search: name
+      }
+    };
+    const result = await products.find(query);
+    if (result) {
+      res.status(200).json(result);
+    } else {
       res.status(404).json({
         status: 404,
         message: "Products not found",
       });
     }
-    res.status(200).json(filtered);
   }
 
   static async getProductbyCategory(req, res) {
@@ -126,10 +155,32 @@ class ProductController {
     res.status(200).json(procat);
   }
 
-  static async newproduct(req, res) {
-    // const image = req.file;
+  static async findProductByNearLocation(req, res){
+    // const {
+    //   latitude,
+    //   longitude
+    // } = req.body;
+    const find = await products.find()
+    const findUser = await userModel.find()
+    if(find.coordinateLocation.latitude === findUser.coordinateLocation.latitude && find.coordinateLocation.longitude === userModle.coordinateLocation.longitude){
+      return res.status(200).json({message: 'get it',  data: find })
+    }else{
+      return res.status(404)
+    }
+  }
+
+  static async newproductwe(req, res) {
+    const image = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
+    // navigator.geolocation.getCurrentPosition(getLatLon);
+
+    // function getLatLon(position) {
+    //   var latitude = position.coords.latitude;
+    //   var longitude = position.coords.longitude;
+    //   console.log("latitude is " + latitude);
+    //   console.log("Longitude is " + longitude);
+    // }
     const {
       seller,
       name,
@@ -140,14 +191,14 @@ class ProductController {
       harga_jual,
       harga_beli,
       category,
-      image,
       countInStock,
       rating,
       net,
       numReviews,
       like,
       baru,
-      isFeature,                    
+      isFeature,
+      coordinateLocation,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
@@ -159,7 +210,7 @@ class ProductController {
       });
     } else {
       console.log(req.body.hargaJual);
-     
+
       const product = new products({
         seller,
         name,
@@ -178,7 +229,72 @@ class ProductController {
         like,
         baru,
         isFeature,
-        alamat
+        alamat,
+        coordinateLocation
+      });
+      product
+        .save()
+        .then((response) => {
+          res.status(200).json(response);
+          console.log("ini response", response);
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    }
+  }
+  static async newproduct(req, res) {
+    const imageFile = req.file;
+    const host = "https";
+    const prodUrl = "obscure-ravine-40173.herokuapp.com";
+    const {
+      seller,
+      name,
+      alamat,
+      description,
+      richDecription,
+      brand,
+      harga_jual,
+      harga_beli,
+      category,
+      countInStock,
+      rating,
+      net,
+      numReviews,
+      like,
+      baru,
+      isFeature,
+    } = req.body;
+    const basePath = `${host}://${prodUrl}/assets/images/`;
+    // const changetolower = name ? "STRING" : name.toLowerCase();
+    // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
+    if (name === "senjata" || name === "senjata api") {
+      return res.status(401).json({
+        status: 401,
+        message: "product ini berbahaya",
+      });
+    } else {
+      console.log(req.body.hargaJual);
+
+      const product = new products({
+        seller,
+        name,
+        alamat,
+        description,
+        richDecription,
+        brand,
+        image: imageFile,
+        harga_jual,
+        harga_beli,
+        category,
+        countInStock,
+        rating,
+        net,
+        numReviews,
+        like,
+        baru,
+        isFeature,
+        alamat,
       });
       product
         .save()
@@ -193,41 +309,123 @@ class ProductController {
   }
 
   static async commentProduct(req, res) {
-    const { commentUser, userId } = req.body;
-    const findDuluProduct = await products.findByIdAndUpdate(
-      req.params.id,
-      {
-        $push: {
-          comment: {
-            commentUser,
-            userId,
-          },
-        },
-      },
-      {
-        new: true,
+    const {
+      comment,
+      userId
+    } = req.body;
+    const commentId = req.params.id;
+    const findComment = await products.find();
+    for (let i = 0; i < findComment.length; i++) {
+      if (findComment[i].comment._id == productId) {
+
       }
-    );
-    if (!findDuluProduct) {
+    }
+
+  }
+
+  static async getComment(req, res) {
+    const idProduct = req.params;
+    let comment = [];
+    const getComment = products.findById(idProduct);
+    if (getComment) {
+      for (let i = 0; i < getComment.length; i++) {
+        const comments = getComment[i].comment;
+        comment.push(comments);
+        console.log(comment);
+      }
+      res.status(200).json({
+        message: "success get comment",
+        comment: getComment.comment,
+      });
+    } else {
       res.status(404).json({
-        status: 404,
-        message: "Product not found",
+        messageM: "tidak ada comment"
       });
     }
-    findDuluProduct.save();
-    res.status(200).json(findDuluProduct);
+  }
+
+  static async replyComment(req, res) {
+    const findComment = req.params;
+    const {
+      reply,
+      userId
+    } = req.body;
+    const findDuluProduct = await products.find();
+    const findId = findDuluProduct.find(
+      (comment) => comment.comment._id === findComment
+    );
+    if (findId) {}
+  }
+
+  static async reply(req, res) {
+    const findComment = req.params;
+    const {
+      reply,
+      userId
+    } = req.body;
+    const findDuluProduct = await products.find();
+    for (let i = 0; i < findDuluProduct.length; i++) {
+      if (findDuluProduct[i].comment._id === findComment) {
+        await products.findOneAndUpdate(findComment, {
+          $push: {
+            comment: [{
+              replyComment: [{
+                reply,
+                userId,
+              }]
+            }],
+          },
+        }, {
+          new: true,
+        });
+      }
+    }
+    if (findDuluProduct) {
+      res.status(200).json(findDuluProduct);
+    } else {
+      res.status(404).json({
+        message: "tidak ada comment"
+      })
+    }
+  }
+
+  static async feedProduct(req, res) {
+    const product = await products.find();
+    const banyakLike = 0;
+    for (let i = 0; i < product.length; i++) {
+      const feed = product[i].like;
+      for (let j = 0; j < feed.length; j++) {
+        const obj = Object.keys(feed[j]).length;
+        banyakLike = obj;
+        if (obj >= 3) {
+          res.status(200).json({
+            message: "success get feed",
+            product: product,
+          });
+        }
+      }
+    }
+  }
+
+  static async viewFeedProduct(req, res) {
+    const userId = req.body;
+    const product = await products.findByIdAndUpdate(req.params.id, {
+      $push: {
+        view: {
+          userId: userId,
+        },
+      },
+    });
   }
 
   static async addLikeProduct(req, res) {
     const userLike = req.body;
     const findDuluProduct = await products.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           like: userLike,
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -265,10 +463,29 @@ class ProductController {
         status: 404,
         message: "Products not found",
       });
-    }else{
+    } else {
       return res.status(200).json(product);
     }
-    
+  }
+
+  static async getProductByIdx(req, res) {
+    const find = await products
+      .findById(req.params.id)
+      .populate("seller", {
+        name: 1
+      })
+      .populate("category")
+      .populate("like.userLike", {
+        name: 1
+      })
+      .populate("comment.userId", {
+        name: 1
+      });
+    if (find) {
+      res.status(200).json(find);
+    } else {
+      res.status(404).json(err);
+    }
   }
 
   static async filterbyCategory(req, res) {
@@ -278,16 +495,29 @@ class ProductController {
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json(product);
   }
+
   static async getProductByUser(req, res) {
     const product = await products
       .find({
         seller: req.params.id,
       })
-      .populate("seller").populate("category");
+      .populate("seller", {
+        name: 1,
+        image: 1,
+        alamat: 1,
+        email: 1,
+        created_at: 1,
+      })
+      .populate("category");
     if (!product) return res.status(404).json("invalid product");
     if (product.length === 0) return res.status(404).json("kosong product");
-    res.status(200).json(product);
+
+    res.status(200).json({
+      message: "success get product",
+      product,
+    });
   }
+
   static async sendMessageToBuy(req, res) {
     const product = await products.findById(req.params.id);
     if (!product) return res.status(404).json("invalid product");
@@ -325,7 +555,17 @@ class ProductController {
     res.status(200).json(product);
   }
   static async getProductById(req, res) {
-    const product = await products.findById(req.params.id).populate("seller");
+    const product = await products
+      .findByIdAndUpdate(
+        req.params.id, {
+          $set: {
+            numReviews: numReviews + 1,
+          },
+        }, {
+          new: true,
+        }
+      )
+      .populate("seller");
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json({
       data: product,
@@ -345,7 +585,6 @@ class ProductController {
   }
 
   static async updateProductImage(req, res) {
-
     const image = req.file;
     const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
     const {
@@ -386,11 +625,9 @@ class ProductController {
     } else {
       imagePath = product.image;
     }
-    if (categoryId) {
-    }
+    if (categoryId) {}
     const productFindandUpdate = await products.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         // $set: req.body, //if dont want to write to all field
         seller,
         name: changetolower,
@@ -408,8 +645,7 @@ class ProductController {
         like,
         baru,
         isFeature,
-      },
-      {
+      }, {
         new: true,
       }
     );

@@ -20,23 +20,42 @@ const UserSchema = mongoose.Schema({
     type: String,
   },
   followers: [],
-  alamat: [
-    {
-      kecamatan:{type: String, required: true},
-      kota:{type: String, required: true},
-      provinsi:{type: String, required: true},
-      kode_pos:{type: String, required: true},
+  alamat: {
+    type: String,
+  },
+  PesanKirim: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     }
-  ],
-  pesan:[
-    {
-      senderId:{type: mongoose.Schema.Types.ObjectId, ref: "users"},
-      message:{type: String, required: true},
-      file:{type: String, deafult:' '},
-      productId:{type: mongoose.Schema.Types.ObjectId, ref: "products"},
+  }],
+  pesanTerima: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "products",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     }
-  ],
-
+  }],
+  coordinateLocation: [{
+    latitude: {
+      type: String,
+    },
+    longitude: {
+      type: String,
+    }
+  }],
+  notification: [],
   codeOtp: {
     type: Number,
   },
@@ -61,8 +80,8 @@ const UserSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-},{
-  collection :''
+}, {
+  collection: "",
 });
 
 UserSchema.virtual("id").get(function () {
@@ -80,16 +99,22 @@ UserModel.schema.path("email").validate(function (value) {
 });
 // validate email is exist
 UserModel.schema.path("email").validate(function (value) {
-  return UserModel.findOne({ email: value }).then(function (user) {
+  return UserModel.findOne({
+    email: value,
+  }).then(function (user) {
     if (user) {
       return false;
     }
     return true;
   });
 }, "Email sudah terdaftar");
+
+
 // validate numberphone isexist
 UserModel.schema.path("numberphone").validate(function (value) {
-  return UserModel.findOne({ numberphone: value }).then((user) => {
+  return UserModel.findOne({
+    numberphone: value,
+  }).then((user) => {
     if (user) {
       return false;
     }

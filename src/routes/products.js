@@ -36,15 +36,17 @@ var storage = multer.diskStorage({
 const uploadOption = multer({
   storage: storage
 }).single("image");
-router.post("/addnewproduct", uploadOption, ProductController.newproduct);
+router.post("/addnewproduct", ProductController.newproduct);
+router.post('/add-new', uploadOption, ProductController.newproductwe)
 
 router.get("/productfind", ProductController.getAllProducts);
 router.put("/update-product/:id", ProductController.updateProduct);
 router.put('/update-product-image/:id', auth, uploadOption, ProductController.updateProductImage);
 router.get("/count/product", ProductController.countProduct);
 router.get("/get-feature", ProductController.getFeature);
-router.get("/filtering-product-category", ProductController.findFilter);
 
+router.get('/get-coment-byid/:id', ProductController.getComment);
+router.get('/productid/:id', ProductController.getProductByIdx)
 
 //without validate
 
@@ -59,16 +61,23 @@ router.get('/getproduct-by-category', ProductController.getProductbyCategory)
 router.get("/filterbyCategory/:id", ProductController.filterbyCategory)
 
 router.get('/getProductByUser/:id', ProductController.getProductByUser)
+router.get('/feed-product', ProductController.feedProduct)
 
 router.post('/sendMessageToBuy/:id', auth, ProductController.sendMessageToBuy)
 router.get('/getMessageToBuy/:id', auth, ProductController.getMessageToBuy)
 
-router.get('/productidby/:id', ProductController.getProductById)
+router.put('/productidby/:id', ProductController.getProductById)
 // router.post('/createnewproducts', ProductController.updateProductById)
 router.post('/cari-product', ProductController.filterProductNew)
 
 router.post('/filter-by-alamat', ProductController.filterByAlamat)
 
 router.get('/get-product/?name', ProductController.filterbyname)
+
+router.get('/get-product-by-filter/:query', ProductController.findDuluProduct)
+
+router.put('/reply-comment/:id', ProductController.reply)
+
+router.get('/product-by-location', ProductController.findProductByNearLocation)
 
 module.exports = router;

@@ -2,24 +2,66 @@ const mongoose = require('mongoose')
 const schema = mongoose.Schema
 // mongoose schema
 const productSchema = new schema({
-    seller:{
+    seller: {
         type: schema.Types.ObjectId,
         ref: 'users'
-    },  
+    },
     name: {
         type: String,
         required: true,
     },
-    alamat: [
-        {
-          kecamatan:{type: String},
-          kota:{type: String},
-          provinsi:{type: String},
-          kode_pos:{type: String},
+    alamat: {
+        type: String,
+        required: true,
+    },
+    coordinateLocation: [{
+        latitude: {
+          type: String,
+        },
+        longitude: {
+          type: String,
         }
-      ],
-    like: [],
-    comment: [],
+      }],
+    like: [{
+        userLike: {
+            type: schema.Types.ObjectId,
+            ref: 'users'
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    comment: [{
+        userId: {
+            type: schema.Types.ObjectId,
+            ref: 'users'
+        },
+        comment: {
+            type: String,
+            required: true,
+        },
+
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        replyComment: [{
+            reply: {
+                type: String,
+                required: true,
+            },
+            userId: {
+                type: schema.Types.ObjectId,
+                ref: 'users'
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            },
+        }],
+
+    }],
     description: {
         type: String,
         required: true,
@@ -28,70 +70,70 @@ const productSchema = new schema({
         type: String,
         default: ''
     },
-    net:{
-        type: Boolean,
+    net: {
+        type: String,
         required: true,
     },
     baru: {
-        type: Boolean,
+        type: String,
         required: true,
     },
-    image:{
-        type:String,
-        required: true,
+    image: {
+        type: String,
     },
-    images : [{
-        type:String,
+    images: [{
+        type: String,
     }],
     brand: {
         type: String,
-        default:''
+        default: ''
     },
     harga_jual: {
-        type:String,
+        type: String,
         required: true,
     },
-    harga_beli:{
-        type:String,
+    harga_beli: {
+        type: String,
         required: true,
     },
-    category:{
+    category: {
         type: schema.Types.ObjectId,
         ref: 'categories',
         required: true,
     },
-    countInStock:{
-        type:String,
-        required:true,
-        min:0,
-        max:255
+    countInStock: {
+        type: String,
+        required: true,
+        min: 0,
+        max: 255
     },
     rating: {
-        type:Number,
-        default:0,
+        type: Number,
+        default: 0,
     },
-    numReviews:{
-        type:Number,
-        default:0,
-    },
-    isFeature:{
-        type:Boolean,
-        default:false,
+    view: [{
+        type: schema.Types.ObjectId,
+        ref: 'users'
+    }],
+    isFeature: {
+        type: Boolean,
+        default: false,
     },
     linkButtonMessage: {
         type: String,
-        default:''
+        default: ''
     },
-    dateCreated:{
-        type:Date,
-        default:Date.now,
+    dateCreated: {
+        type: Date,
+        default: Date.now,
     },
-    updatedAt:{
-        type:Date,
-        default:Date.now,
-    }
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
+    pesan: []
 })
-productSchema.virtual('id').get(function(){
+productSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 

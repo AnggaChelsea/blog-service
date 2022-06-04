@@ -10,72 +10,26 @@ const sha256 = require("crypto-js/sha256");
 var crypto = require('crypto');
 const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
 const dotenv = require("dotenv");
-const passwordSchema = require('../models/codePassword');
 dotenv.config();
+const passwordSchema = require('../models/codePassword');
 
 console.log(process.env.URL_HOST);
-const { find } = require("../models/user");
+const {
+  find
+} = require("../models/user");
 const productModel = require("../models/product");
 var kode = null;
 class UserController {
- 
-  //for local
-  static async registerLocal(req, res) {
-    const { name, email, password, image, alamat, numberphone } = req.body;
-    console.log(kode)
-    const user = await new userModel({
-      name,
-      email,
-      password,
-      image,
-      alamat,
-      numberphone,
-    });
-    if (user) {
-      return res.status(200).send({
-        message: "user berhasil registrasi",
-        user,
-      });
-    } else {
-      return res.status(500).send({
-        message: "user gagal registrasi",
-      });
-    }
-  }
 
-  static async loginLocal(req, res) {
-    const { email, password } = req.body;
-    const user = await userModel.findOne({
-      email,
-      password,
-    });
-    if (user) {
-      const token = jwt.sign(
-        {
-          email: user.email,
-          id: user._id,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
-      return res.status(200).send({
-        message: "login berhasil",
-        token,
-      });
-    } else {
-      return res.status(500).send({
-        message: "login gagal",
-      });
-    }
-  }
-
-  ///
 
   static async regisByPhone(req, res) {
     const code = Math.round(Math.random() * 100000);
-    const { name, phone, email, password } = req.body;
+    const {
+      name,
+      phone,
+      email,
+      password
+    } = req.body;
     const user = await new userModel({
       name,
       phone,
@@ -89,18 +43,25 @@ class UserController {
   }
 
   static async updateUser(req, res) {
-    const { name, email, password, image, alamat, numberphone } = req.body;
+    const filename = req.file
+    const nameFileImage = Math.round(Math.random() * 100000) + filename
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+    } = req.body;
     const user = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         name,
         email,
         password,
-        image,
+        image: nameFileImage,
         alamat,
         numberphone,
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -139,7 +100,10 @@ class UserController {
   }
 
   static async getChatByBuyer(req, res) {
-    const { buyerId, sellerId } = req.body;
+    const {
+      buyerId,
+      sellerId
+    } = req.body;
     const chat = await messageModel
       .find({
         buyerId,
@@ -170,13 +134,11 @@ class UserController {
   static async follow(req, res) {
     const followers = req.body;
     const findDuluUser = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           followers: followers,
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -190,32 +152,56 @@ class UserController {
     res.status(200).json(findDuluUser);
   }
 
-  
-  static async sendPesan(req, res) {
-    const userparams = req.params;
-    const productparams = req.params;
-    const { message, file, senderId, productId } = req.body;
-    const findProduct = await productModel.findById(productparams);
-    if (productparams) {
-      productId.push(productparams.id);
-      const findUserToChat = await userModel.findByIdAndUpdate(
-        userparams,
-        {
-          $push: {
-            pesan: {
-              message,
-              file,
-              senderId,
-              productId,
-            },
-          },
-        },
-        {
-          new: true,
-        }
-      );
-    } else {
-      productId.push(null);
+
+  static async sendPesan(req, res) {;
+    const {
+      sellerId, // sellerid yang nerima pesan / yang punya barang
+      message,
+      file,
+      buyerId, //sender id ini yang diisi oleh user untuk tanya
+      productId, //product yang di pesan
+    } = req.body;
+    const date = new Date();
+    const sendTerima = await userModel.findByIdAndUpdate(sellerId, {
+      $push: {
+        pesanTerima: [{
+          buyerId,
+          createdAt: date,
+        }],
+      },
+    }, 
+      {
+        new: true,
+      }
+    );
+    const sendTerkirim = await userModel.findByIdAndUpdate(buyerId, {
+      $push: {
+        pesanKirim: [{
+          buyerId,
+          createdAt: date,
+        }]
+      }
+    }, {
+      new: true,
+    })
+    if(sendTerima && sendTerkirim){
+      const pesan = await new messageModel({
+        sellerId,
+        message,
+        file,
+        buyerId,
+        productId,
+        createdAt,
+      });
+      pesan.save();
+      return res.status(200).json({
+        pesan,
+        message: "pesan dikirim",
+      });
+    }else{
+      return res.status(404).json({
+        message: "pesan gagal dikirim",
+      });
     }
   }
 
@@ -241,28 +227,70 @@ class UserController {
 
   static async sendpesan(req, res) {
     const userparams = req.params.id;
-    const { senderId, message, file, productId } = req.body;
+    const {
+      senderId,
+      message,
+      file,
+      productId
+    } = req.body;
     const findUserToChat = await userModel.findByIdAndUpdate(
-      userparams,
-      {
+      userparams, {
         $push: {
-          pesan: {
-            message,
-            file,
-            senderId,
-            productId,
-          },
+            pesanmasuk: [{
+              senderId,
+              message,
+              file,
+              productId,
+            }]
         },
-      },
-      {
+      }, {
         new: true,
       }
     );
     if (findUserToChat) {
+      await userModel.findOneAndUpdate(
+        senderId, {
+          $push: {
+              pesanterkirim: [{
+                kirimke: userparams,
+                file: findUserToChat.file,
+                message: findUserToChat.mesage,
+                productId: findUserToChat.productId
+            }]
+          }
+        }
+      )
+      const masukpesan = await messageModel.find(senderId);
+      if(masukpesan.senderId != null){
+        const insertPesan = await new messageModel({
+          productId: findUserToChat.productId,
+          message: findUserToChat.message,
+          file: findUserToChat.file,
+          senderId: findUserToChat.senderId,
+          buyerId: findUserToChat.buyerId,
+        })
+      }else{
+        await messageModel.findOneAndUpdate(
+          {
+            senderId: senderId,
+            productId: findUserToChat.productId,
+          }, {
+            $push: {
+              message: findUserToChat.message,
+              file: findUserToChat.file,
+              senderId: findUserToChat.senderId,
+              buyerId: findUserToChat.buyerId,
+            },
+          }, {
+            new: true,
+          }
+        )
+      }
       res.status(200).json({
         message: "pesan berhasil dikirim",
         findUserToChat,
       });
+
     } else {
       res.status(404).json({
         message: "pesan gagal dikirim",
@@ -270,8 +298,25 @@ class UserController {
     }
   }
 
+  static async getPesan(req, res) {
+    const userId = req.params.userId
+    const findUser = await userModel.findById(userId)
+    if(findUser != null){
+      res.response(200).json({message: 'success'})
+    }else{
+      res.response(404).json({message: 'kosong'})
+    }
+  }
+
   static async register(req, res) {
-    const { name, email, password, image, alamat, numberphone } = req.body;
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone
+    } = req.body;
     const newUser = await new userModel({
       name,
       email,
@@ -326,53 +371,97 @@ class UserController {
     const tokenGoogle = req.body;
   }
 
-  static async registerByPhone(req, res){
+  static async registerByPhone(req, res) {
     const phoneNumber = req.body;
     const code = Math.floor(Math.random() * 10000)
     // Make request to Verify API
     messagebird.verify.create(number, {
-        originator : 'Code',
-        template : `ini kode konfirmasinya ${code}`
+      originator: 'Code',
+      template: `ini kode konfirmasinya ${code}`
     }, function (err, response) {
-        if (err) {
-            // Request has failed
-            console.log(err);
-            res.response(500).json({message:'error'});
-        } else {
-            // Request was successful
-            console.log(response);
-            res.response(200).json({message:'success'});
-        }
-    })    
+      if (err) {
+        // Request has failed
+        console.log(err);
+        res.response(500).json({
+          message: 'error'
+        });
+      } else {
+        // Request was successful
+        console.log(response);
+        res.response(200).json({
+          message: 'success'
+        });
+      }
+    })
+  }
+
+  static async getPesan(req, res){
+    const userId = req.params.id;
+    const findPesan = await userModel.findById(userId).populate("pesan", {
+      senderId: userId,
+    });
+    if (findPesan) {
+      res.status(200).json({
+        findPesan,
+        message: "pesan ditemukan",
+      });
+    }else{
+      res.status(404).json({
+        message: "pesan not found",
+      });
+    }
+  }
+
+  static async Chatting(req, res){
+    const userId = req.params.id;
+    const findPesan = await userModel.findById(userId).populate("pesan", {
+      senderId: userId,
+    });
+    if (findPesan) {
+      res.status(200).json({
+        findPesan,
+        message: "pesan ditemukan",
+      });
+    }else{
+      res.status(404).json({
+        message: "pesan not found",
+      });
+    }
   }
 
   static async registerNew(req, res) {
     const codeOtpConfirm = Math.floor(Math.random() * 1000000);
-    console.log(codeOtpConfirm);
     const imagePhoto = req.file;
     const namingFile = `Math.floor(Math.random() * 1000000) "-" ${imagePhoto}`;
-    const { name, email, password, image, alamat, numberphone, codeOtp } =
-      req.body;
+    const {
+      name,
+      email,
+      password,
+      image,
+      alamat,
+      numberphone,
+      codeOtp,
+      coordinateLocation,
+    } = req.body;
     // const salt = crypto.randomBytes(1664).toString("hex");
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
-    const usernew = await new userModel({
+    const usernew = await new userModel({ 
       name,
       email,
       password: bcrypt.hashSync(password, 10),
-      image:namingFile,
+      image: namingFile,
       alamat,
       numberphone,
       codeOtp: codeOtpConfirm,
+      coordinateLocation,
     });
     const emailUser = usernew.email;
     const from = "freelacerw9@gmail.com";
-    const userId = usernew.id;
-    const host = "http://localhost:8001";
     const linkConfirm = `mohon masukan code otp ${codeOtpConfirm} ini untuk verifikasi akunmu `;
 
     if (!usernew) {
-      res.status(500).json(err);
+      res.status(500).json(err); 
     } else {
       usernew.save().then((response) => {
         sendVeryficationEmail(from, name, emailUser, linkConfirm);
@@ -383,108 +472,63 @@ class UserController {
     }
   }
 
-  static async loginUser(req, res) {
-    const { email, password } = req.body;
-    const salt = crypto.randomBytes(1664).toString("hex");
-    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
-    const user = await userModel.findOne({
-      email,
-    });
-    if (user.verified === false) {
-      res.status(400).json({
-        code: 401,
-        message: "please verify your email",
-      });
-    }
-    else if (user.verified === true) {
-      if (user.password === hash) {
-        const token = jwt.sign(
-          {
-            userId: user.id,
-            userRole: user.role,
-          },
-          "sayangmamah",
-          {
-            expiresIn: "1h",
-          }
-        );
-        return res.status(200).json({
-          success: true,
-          id: user.id,
-          name: user.name,
-          image: user.image,
-          alamat: user.alamat,
-          token,
-        });
-      } else {
-        res.status(404).json({
-          message: "password or email salah",
-        });
-      }
-    } else {
-      res.status(500).json({
-        success: false,
-      });
-    }
-  }
-
   static async logins(req, res) {
-    const { email, password } = req.body;
+    const {
+      password,
+      email
+    } = req.body;
     const user = await userModel.findOne({
       email,
     });
     if (user) {
       if (user.verified === true) {
-      if (bcrypt.compareSync(password, user.password)) {
-        const token = jwt.sign(
-          {
-            userId: user.id,
-            userRole: user.role,
-          },
-          "sayangmamah",
-          {
-            expiresIn: "1h",
-          }
-        );
-        return res.status(200).json({
-          message: "success login",
-          id: user.id,
-          name: user.name,
-          image: user.image,
-          token,
-        });
-      } else {
+        if (bcrypt.compareSync(password, user.password)) {
+          const token = jwt.sign({
+              userId: user.id,
+              userRole: user.role,
+            },
+            "sayangmamah", {
+              expiresIn: "1h",
+            }
+          );
+          return res.status(200).json({
+            message: "success login",
+            id: user.id,
+            name: user.name,
+            pesan: user.pesan,
+            token,
+          });
+        } else {
+          res.status(400).json({
+            message: "password or email wrong",
+          });
+        }
+      } else if (user.verified === false) {
         res.status(400).json({
-          message: "password or email wrong",
+          code: 401,
+          message: "please verify your email",
         });
       }
-    } 
-    else if(user.verified === false) {
+    } else {
       res.status(400).json({
-        code: 401,
-        message: "please verify your email",
+        message: "email not found",
       });
     }
-  }else {
-    res.status(400).json({
-      message: "email not found",
-    });
-  }
   }
 
   static async checkEmail(req, res) {
-    const { email } = req.body;
-    const findEmail = await userModel.findOne({
-      email,
+    const {
+      email
+    } = req.body;
+    const otpPassword = Math.floor(Math.random() * 1000000);
+    const findEmail = await userModel.findOneAndUpdate(email, {
+      codeOtp: otpPassword,
+    }, {
+      new: true,
     });
     if (findEmail) {
-      const kodeMath = Math.floor(Math.random() * 1000000);
-      const codeToDatabase = await new passwordSchema({
-        code:kodeMath
-      })
       const from = "adeadeaja2121@gmail.com";
-      const linkto = `code verifikasi anda ${kodeMath}`
-      codeToDatabase.save()
+      const linkto = `code verifikasi anda ${otpPassword}`
       sendVeryficationPassword(from, email, linkto);
       return res.status(200).json({
         success: true,
@@ -498,21 +542,35 @@ class UserController {
     }
   }
 
+  static async checkCodeOtpPassword(req, res) {
+    const codeOtp = req.body.codeOtp;
+    const findCode = await userModel.findOne({
+      codeOtp,
+    });
+    if (findCode) {
+      return res.status(200).json({
+        success: true,
+        message: "success",
+      });
+    }
+    return res.status(404).json({
+      message: "code otp not found",
+    });
+  }
+
   static async verifyOtp(req, res) {
-    const { codeOtp } = req.body;
-    const findOtp = await userModel.findOneAndUpdate(
-      {
-        codeOtp: codeOtp,
+    const {
+      codeOtp
+    } = req.body;
+    const findOtp = await userModel.findOneAndUpdate({
+      codeOtp: codeOtp,
+    }, {
+      $set: {
+        verified: true,
       },
-      {
-        $set: {
-          verified: true,
-        },
-      },
-      {
-        new: true,
-      }
-    );
+    }, {
+      new: true,
+    });
     if (findOtp) {
       res.status(200).json({
         message: "success verify otp",
@@ -525,7 +583,10 @@ class UserController {
   }
 
   static async message(req, res) {
-    const { message, uploadfile } = req.body;
+    const {
+      message,
+      uploadfile
+    } = req.body;
     const userId = req.params.id;
 
     let userid = await userModel
@@ -581,13 +642,13 @@ class UserController {
 
   static async changPasswordUser(req, res) {
     const userId = req.params;
-    const { password } = req.body;
+    const {
+      password
+    } = req.body;
     const findEmail = await userModel.findOneAndUpdate(
-      userId,
-      {
+      userId, {
         password: bcrypt.hashSync(password, 10),
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -602,22 +663,22 @@ class UserController {
     }
   }
 
-  
+
 
   static async forgotPassword(req, res) {
-    const { email } = req.body;
+    const {
+      email
+    } = req.body;
     const userId = req.params.id;
     const user = await userModel.findOne({
       email,
     });
     if (user && userId === user.id) {
       const secret = process.env.SCRET_KEY;
-      const token = jwt.sign(
-        {
+      const token = jwt.sign({
           userId: user.id,
         },
-        secret,
-        {
+        secret, {
           expiresIn: "1h",
         }
       );
@@ -653,20 +714,19 @@ class UserController {
   }
 
   static async follow(req, res) {
-    const { userFollow } = req.body;
+    const {
+      userFollow
+    } = req.body;
     const findUserDulu = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         $push: {
           followers: userFollow,
         },
-      },
-      {
+      },{
         new: true,
       }
     );
-    if (findUserDulu) {
-      findUserDulu.save();
+    if (findUserDulu){
       res.status(200).json({
         message: "success follow",
       });
@@ -677,31 +737,32 @@ class UserController {
     }
   }
 
-  static async checkCodeOtpPassword(req, res){
-    const { code } = req.body;
-    const findCode = await passwordSchema.findOne({
-      code: code,
-    });
-    if (findCode) {
-      res.status(200).json({
-        message: "success verify otp",
-      });
-    }
-    else{
-      res.status(404).json({
-        message: "failed verify otp",
-      });
-    }
-  }
+  // static async checkCodeOtpPassword(req, res) {
+  //   const {
+  //     code
+  //   } = req.body;
+  //   const findCode = await passwordSchema.findOne({
+  //     code: code,
+  //   });
+  //   if (findCode) {
+  //     res.status(200).json({
+  //       message: "success verify otp",
+  //     });
+  //   } else {
+  //     res.status(404).json({
+  //       message: "failed verify otp",
+  //     });
+  //   }
+  // }
 
   static async changePassword(req, res) {
-    const { newpassword } = req.body;
+    const {
+      newpassword
+    } = req.body;
     const user = await userModel.findByIdAndUpdate(
-      req.params.id,
-      {
+      req.params.id, {
         password: newpassword,
-      },
-      {
+      }, {
         new: true,
       }
     );
@@ -721,7 +782,7 @@ class UserController {
     }
   }
 
-  
+
   static async getAllUser(req, res) {
     const user = await userModel.find();
     if (user) {

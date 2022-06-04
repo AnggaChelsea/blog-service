@@ -10,13 +10,16 @@ const MessageSChema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    buyerId:{
+    buyyerId:{
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
     message: {
         type: String,
         required: true
+    },
+    image:{
+        type: String,
     },
     seen: {
         type: Boolean,
