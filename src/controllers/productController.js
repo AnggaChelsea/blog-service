@@ -155,32 +155,13 @@ class ProductController {
     res.status(200).json(procat);
   }
 
-  static async findProductByNearLocation(req, res){
-    // const {
-    //   latitude,
-    //   longitude
-    // } = req.body;
-    const find = await products.find()
-    const findUser = await userModel.find()
-    if(find.coordinateLocation.latitude === findUser.coordinateLocation.latitude && find.coordinateLocation.longitude === userModle.coordinateLocation.longitude){
-      return res.status(200).json({message: 'get it',  data: find })
-    }else{
-      return res.status(404)
-    }
-  }
 
-  static async newproductwe(req, res) {
-    // const image = req.file;
+
+  static async newproductweUpload(req, res) {
+    const images = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
-    // navigator.geolocation.getCurrentPosition(getLatLon);
-
-    // function getLatLon(position) {
-    //   var latitude = position.coords.latitude;
-    //   var longitude = position.coords.longitude;
-    //   console.log("latitude is " + latitude);
-    //   console.log("Longitude is " + longitude);
-    // }
+  
     const {
       seller,
       name,
@@ -194,12 +175,13 @@ class ProductController {
       countInStock,
       rating,
       net,
+      image,
       numReviews,
       like,
       baru,
       latitude,
       longitude,
-      image,
+      
       isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
@@ -216,7 +198,6 @@ class ProductController {
       const product = new products({
         seller,
         name,
-        alamat,
         description,
         richDecription,
         brand,
@@ -226,7 +207,6 @@ class ProductController {
         category,
         countInStock,
         rating,
-        image,
         net,
         numReviews,
         like,
@@ -247,6 +227,78 @@ class ProductController {
         });
     }
   }
+
+  static async newproductwe(req, res) {
+    const images = req.file;
+    const host = "https";
+    const prodUrl = "obscure-ravine-40173.herokuapp.com";
+  
+    const {
+      seller,
+      name,
+      alamat,
+      description,
+      richDecription,
+      brand,
+      harga_jual,
+      harga_beli,
+      category,
+      countInStock,
+      rating,
+      net,
+      image,
+      numReviews,
+      like,
+      baru,
+      latitude,
+      longitude,
+      
+      isFeature,
+    } = req.body;
+    const basePath = `${host}://${prodUrl}/assets/images/`;
+    // const changetolower = name ? "STRING" : name.toLowerCase();
+    // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
+    if (name === "senjata" || name === "senjata api") {
+      return res.status(401).json({
+        status: 401,
+        message: "product ini berbahaya",
+      });
+    } else {
+      console.log(req.body.hargaJual);
+
+      const product = new products({
+        seller,
+        name,
+        description,
+        richDecription,
+        brand,
+        image,
+        harga_jual,
+        harga_beli,
+        category,
+        countInStock,
+        rating,
+        net,
+        numReviews,
+        like,
+        baru,
+        latitude,
+        longitude,
+        isFeature,
+        alamat,
+      });
+      product
+        .save()
+        .then((response) => {
+          res.status(200).json(response);
+          console.log("ini response", response);
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    }
+  }
+
   static async newproduct(req, res) {
     const imageFile = req.file;
     const host = "https";

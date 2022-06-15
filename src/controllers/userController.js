@@ -437,15 +437,14 @@ class UserController {
       name,
       email,
       password,
-      image,
       alamat,
       numberphone,
-      codeOtp,
       coordinateLocation,
     } = req.body;
     // const salt = crypto.randomBytes(1664).toString("hex");
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
+    const findUser = (user) => user.email === email;
     const usernew = await new userModel({ 
       name,
       email,
@@ -574,6 +573,9 @@ class UserController {
     if (findOtp) {
       res.status(200).json({
         message: "success verify otp",
+      });
+      await userModel.findOneAndDelete({
+        codeOtp: codeOtp,
       });
     } else {
       res.status(500).json({
@@ -714,13 +716,14 @@ class UserController {
   }
 
   static async follow(req, res) {
+    const userId = req.params.id;
     const {
       userFollow
     } = req.body;
     const findUserDulu = await userModel.findByIdAndUpdate(
-      req.params.id, {
+      userId, {
         $push: {
-          followers: userFollow,
+          followers: userId,
         },
       },{
         new: true,
@@ -735,6 +738,23 @@ class UserController {
         message: "failed follow",
       });
     }
+  }
+
+  static async getFollowers(req, res){
+    const userId = req.params.id;
+    const findUser = await userModel.findById(userId).populate('followers');
+    if (findUser){
+      res.status(200).json({
+        message: "success get followers",
+        findUser,
+      });
+    }else{
+      res.status(500).json({
+        message: "failed get followers",
+      });
+    }
+
+
   }
 
   // static async checkCodeOtpPassword(req, res) {

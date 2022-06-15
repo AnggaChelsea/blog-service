@@ -1,7 +1,7 @@
 {
   "name": "olx_node",
   "version": "1.0.0",
-  "description": "",
+  "description": "http & https\r http hype text transfer protocol\r http hyper text transfer protocol scure\r api ->  https://obscure-ravine-40173.herokuapp.com",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -47,5 +47,17 @@
   "devDependencies": {
     "jest": "^27.5.1",
     "supertest": "^6.2.2"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnggaChelsea/server_heroku_be_node_commerce.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/AnggaChelsea/server_heroku_be_node_commerce/issues"
+  },
+  "homepage": "https://github.com/AnggaChelsea/server_heroku_be_node_commerce#readme"
 }

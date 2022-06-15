@@ -57,7 +57,7 @@ router.put('/changepassword/:id', registerController.changePassword);
 router.get('/user/:id', profile.getProfile);
 router.put('/verify/:id', registerController.verifyEmail);
 
-router.patch('/user/follow/:id',  registerController.followeUser);
+router.patch('/user/follow/:id', auth,  registerController.followeUser);
 router.put('/user/followers/:id',  registerController.follow);
 
 router.post('/user/product', productNew.createNewProducts);
@@ -67,6 +67,8 @@ router.post('/user/chat/buyyerseller', registerController.getChatByBuyer);
 
 router.put('/verify-code-otp', registerController.verifyOtp);
 router.post('/login', registerController.logins)
+
+router.get('/get/followers/:id', registerController.getFollowers);
 
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
 

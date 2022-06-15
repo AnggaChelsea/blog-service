@@ -13,9 +13,7 @@ const io = require('socket.io')(http);
 
 var helmet = require('helmet');
 const sha256 = require("crypto-js/sha256");
-// var crypto = require('crypto');
-const fileUpload = require('express-fileupload');
-var upload = multer();
+
 require('dotenv').config();
 const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
 const port = process.env.PORT ||8001;
@@ -50,48 +48,21 @@ app.use(cors({
 }));
 
 //for send sms use messagebird
-// const code = 1234
-// messagebird.messages.create({
-//   originator : '6285161291334',
-//   recipient : '625724248746',
-//   body : `Hello World, I am a text message and I was hatched by Javascript ${code}!`
-// },
-// function (err, response) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log(response);
-//   }
-// }
-// );
 
-// app.use(function(req, res, next) {
-//   res.setHeader("Content-Type", "application/json");
-//   next();
-// });
-//hashing password use crypto
-// const password = "angga"
-// const salt = crypto.randomBytes(1664).toString('hex');
-// const hash = crypto.pbkdf2Sync(password, salt, 
-//   1000, 64, `sha512`).toString(`hex`);
-// console.log(hash)
+
+app.use(function(req, res, next) {
+  res.setHeader("Content-Type", "application/json");
+  next();
+});
+
 const password = "angga"
 const bcy =  bcrypt.hash(password,10)
 console.log(bcy)
-// app.get("/", function(req,res){
-//   res.send("<h1>Hallo world w</h1>");
-// })
 app.use(cors())
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
+  extended: false
 })); 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: true}));
-
-
-app.use(fileUpload());
-
 
 mongooseConnection();
 
@@ -102,21 +73,21 @@ app.use(morgan("tiny"));
 //router
 const rolesRouter = require("./routes/roles");
 const routes = require("./routes");
-app.use((err, req, res, next) => {
-  if (err) {
-    res.status(401).json({ message: err });
-  }
-});
-io.on("connection", (socket) => {
-  console.log("User connected");
-  socket.on("disconnect", ()=>{
-  console.log("Disconnected")
-});
-socket.on("getDoc", docId => {
-  safeJoin(docId);
-  socket.emit("document", documents[docId]);
-});
-});
+// app.use((err, _req, res, ) => {
+//   if (err) {
+//     err.status(401).json({ message: err });
+//   }
+// });
+// io.on("connection", (socket) => {
+//   console.log("User connected");
+//   socket.on("disconnect", ()=>{
+//   console.log("Disconnected")
+// });
+// socket.on("getDoc", docId => {
+//   safeJoin(docId);
+//   socket.emit("document", documents[docId]);
+// });
+// });
 
 app.use(routes);
 

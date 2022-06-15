@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const schema = mongoose.Schema;
 const UserSchema = mongoose.Schema({
   name: {
     type: String,
@@ -19,13 +20,18 @@ const UserSchema = mongoose.Schema({
   image: {
     type: String,
   },
-  followers: [],
+  followers: [{
+    userId: {
+      type: schema.Types.ObjectId,
+      ref: 'users'
+    }
+  }],
   alamat: {
     type: String,
   },
   PesanKirim: [{
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: schema.Types.ObjectId,
       ref: "users",
     },
     createdAt: {

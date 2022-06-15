@@ -141,4 +141,4 @@ productSchema.set('toJSON', {
     virtuals: true
 });
 const products = mongoose.model('products', productSchema)
-module.exports = products
+module.exports = products 

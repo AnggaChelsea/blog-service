@@ -170,6 +170,7 @@ class MessageController {
       });
   }
 
+
   static getInox(req, res) {
     const {
       id
@@ -192,6 +193,7 @@ class MessageController {
         });
       });
   }
+
 
 }
 
