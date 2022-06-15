@@ -170,7 +170,7 @@ class ProductController {
   }
 
   static async newproductwe(req, res) {
-    const image = req.file;
+    // const image = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
     // navigator.geolocation.getCurrentPosition(getLatLon);
@@ -197,8 +197,10 @@ class ProductController {
       numReviews,
       like,
       baru,
+      latitude,
+      longitude,
+      image,
       isFeature,
-      coordinateLocation,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
@@ -224,13 +226,15 @@ class ProductController {
         category,
         countInStock,
         rating,
+        image,
         net,
         numReviews,
         like,
         baru,
+        latitude,
+        longitude,
         isFeature,
         alamat,
-        coordinateLocation
       });
       product
         .save()
@@ -409,7 +413,7 @@ class ProductController {
 
   static async viewFeedProduct(req, res) {
     const userId = req.body;
-    const product = await products.findByIdAndUpdate(req.params.id, {
+     await products.findByIdAndUpdate(req.params.id, {
       $push: {
         view: {
           userId: userId,
@@ -456,7 +460,7 @@ class ProductController {
 
   static async filterbyname(req, res) {
     const name = req.query.name;
-    const product = await products.find(name === name);
+    const product = await products.find(name);
     console.log(req.query.name);
     if (!product) {
       return res.status(404).json({
@@ -660,6 +664,7 @@ class ProductController {
       });
     }
   }
+  
 }
 
 module.exports = ProductController;

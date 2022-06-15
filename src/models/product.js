@@ -14,14 +14,12 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
-    coordinateLocation: [{
-        latitude: {
+    latitude: {
           type: String,
-        },
-        longitude: {
+    },
+    longitude: {
           type: String,
-        }
-      }],
+    },
     like: [{
         userLike: {
             type: schema.Types.ObjectId,
@@ -80,6 +78,7 @@ const productSchema = new schema({
     },
     image: {
         type: String,
+        required: true
     },
     images: [{
         type: String,
