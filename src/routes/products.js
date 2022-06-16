@@ -72,7 +72,7 @@ router.put('/productidby/:id', auth, ProductController.getProductById)
 // router.post('/createnewproducts', auth, ProductController.updateProductById)
 router.post('/cari-product', auth, ProductController.filterProductNew)
 
-router.post('/filter-by-alamat', auth, ProductController.filterByAlamat)
+router.post('/filter-by-alamat', ProductController.filterByAlamat)
 
 router.get('/get-product/?name', auth, ProductController.filterbyname)
 

@@ -36,14 +36,14 @@ class ProductController {
     }
   }
   static async filterByAlamat(req, res) {
-    const alamat = req.body;
-    const product = await products.findOne(alamat);
-    if (product) {
-      res.status(200).json(product);
-    } else {
+    const {alamat} = req.body;
+    const product = await products.find({alamat: {$regex: alamat, $options: 'i'}}).limit(5);
+    if (!product) {
       res.status(404).json({
         message: "Product not found",
       });
+    } else {
+      res.status(200).json(product);
     }
   }
   static async getFeature(req, res) {
