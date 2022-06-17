@@ -46,6 +46,17 @@ class ProductController {
       res.status(200).json(product);
     }
   }
+  static async filterbylatlong(req, res){
+    const {latitude} = req.body;
+    const latlong = await products.find({latitude: {$regex: latitude, $options: 'i'}});
+    if (!latlong) {
+      res.status(404).json({
+        message: "Product not found",
+      });
+    } else {
+      res.status(200).json(latlong);
+    }
+  }
   static async getFeature(req, res) {
     const product = await products
       .find({
