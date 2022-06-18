@@ -48,18 +48,19 @@ class MessageController {
     const sellerId = req.params._id;
     const buyyerId = req.body.buyyerId;
     const productId = req.body.productId;
-    const message = req.body.message;
+    const messages = req.body.messages;
     const image = req.body.image;
     // const from = req.body.from;
     const newMessage = new messagemodel({
-      message,
+      messages,
       image,
       // from,
       sellerId,
       productId,
       buyyerId,
     });
-    await newMessage.save();
+    console.log('succes1')
+    newMessage.save();
     res.status(201).json({
       message: "success send message",
       data: newMessage,
@@ -68,7 +69,6 @@ class MessageController {
 
 
   static async sendMessage(req, res) {
-    const sellerId = req.params._id;
     const {
       seller,
       buyyerId,
@@ -83,8 +83,9 @@ class MessageController {
       image,
       productId
     });
+    console.log('succes1')
     if(newMessage){
-      const notifPesanKirim = await userModel.findByIdAndUpdate({_id:buyyerId}, {
+      const notifPesanKirim = await userModel.findOneAndUpdate({buyyerId}, {
         $push: {
           PesanKirim: {
             seller,
@@ -96,8 +97,21 @@ class MessageController {
       }, {
         new: true
       });
-      const notifPesanTerima = await userModel.findByIdAndUpdate(
-        sellerId, {
+      console.log('succes2')
+      const notiftProuducts = await productModel.findOneAndUpdate(productId, {
+        $push: {
+          notif: {
+            buyyerId,
+            messages,
+          }
+        }
+      }, {
+        new: true
+      }
+      );
+      console.log('succes3')
+      const notifPesanTerima = await userModel.findOneAndUpdate(
+        seller, {
           $push: {
            PesanTerima: {
               buyyerId: buyyerId,
@@ -110,8 +124,9 @@ class MessageController {
           new: true
         }
       );
+      console.log('succes4')
       if(notifPesanKirim != null && notifPesanTerima != null){
-        const pushNotifProduct = await productModel.findByIdAndUpdate(productId, {
+        const pushNotifProduct = await productModel.findOneAndUpdate(productId, {
           $push: {
             pesan: {
               buyyerId: buyyerId,
@@ -119,26 +134,22 @@ class MessageController {
           }
         }, {
           new: true
-        });
-        message.save()
-          .then(() => {
-            return res.status(201).json({
-              message: "success send message",
-              data: message,
-              notif: pushNotifProduct
-            });
-          })
-          .catch(err => {
-            return res.status(500).json({
-              message: "failed send message",
-              data: err,
-            });
-          });
-          return res.status(200).json({
-          message: "success send message",
-          data: notifPesanKirim,
-        })
+        });   
       }
+      newMessage.save()
+      .then(() => {
+        return res.status(201).json({
+          message: "success send message",
+          data: message,
+          notif: notiftProuducts
+        });
+      })
+      .catch(err => {
+        return res.status(500).json({
+          message: "failed send message",
+          data: err,
+        });
+      });
     }else{
       return res.status(500).json({
          message: "failed send message",
@@ -170,6 +181,7 @@ class MessageController {
       });
   }
 
+
   static getInox(req, res) {
     const {
       id
@@ -192,6 +204,7 @@ class MessageController {
         });
       });
   }
+
 
 }
 

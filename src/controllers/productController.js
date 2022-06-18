@@ -36,14 +36,58 @@ class ProductController {
     }
   }
   static async filterByAlamat(req, res) {
-    const alamat = req.body;
-    const product = await products.findOne(alamat);
-    if (product) {
-      res.status(200).json(product);
-    } else {
+    const {
+      alamat
+    } = req.body;
+    const product = await products.find({
+      alamat: {
+        $regex: alamat,
+        $options: 'i'
+      }
+    }).limit(5);
+    if (!product) {
       res.status(404).json({
         message: "Product not found",
       });
+    } else {
+      res.status(200).json(product);
+    }
+  }
+  static async filterbynameregex(req, res) {
+    const {
+      name
+    } = req.body;
+    const product = await products.find({
+      name: {
+        $regex: name,
+        $options: 'i'
+      }
+    }).limit(5);
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    } else {
+      return res.status(200).json(product);
+    }
+
+  }
+  static async filterbylatlong(req, res) {
+    const {
+      latitude
+    } = req.body;
+    const latlong = await products.find({
+      latitude: {
+        $regex: latitude,
+        $options: 'i'
+      }
+    });
+    if (!latlong) {
+      res.status(404).json({
+        message: "Product not found",
+      });
+    } else {
+      res.status(200).json(latlong);
     }
   }
   static async getFeature(req, res) {
@@ -155,32 +199,13 @@ class ProductController {
     res.status(200).json(procat);
   }
 
-  static async findProductByNearLocation(req, res){
-    // const {
-    //   latitude,
-    //   longitude
-    // } = req.body;
-    const find = await products.find()
-    const findUser = await userModel.find()
-    if(find.coordinateLocation.latitude === findUser.coordinateLocation.latitude && find.coordinateLocation.longitude === userModle.coordinateLocation.longitude){
-      return res.status(200).json({message: 'get it',  data: find })
-    }else{
-      return res.status(404)
-    }
-  }
 
-  static async newproductwe(req, res) {
-    const image = req.file;
+
+  static async newproductweUpload(req, res) {
+    const images = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
-    // navigator.geolocation.getCurrentPosition(getLatLon);
 
-    // function getLatLon(position) {
-    //   var latitude = position.coords.latitude;
-    //   var longitude = position.coords.longitude;
-    //   console.log("latitude is " + latitude);
-    //   console.log("Longitude is " + longitude);
-    // }
     const {
       seller,
       name,
@@ -194,16 +219,20 @@ class ProductController {
       countInStock,
       rating,
       net,
+      image,
       numReviews,
       like,
       baru,
+      latitude,
+      longitude,
+
       isFeature,
-      coordinateLocation,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
     // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
     if (name === "senjata" || name === "senjata api") {
+      res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
       return res.status(401).json({
         status: 401,
         message: "product ini berbahaya",
@@ -214,7 +243,6 @@ class ProductController {
       const product = new products({
         seller,
         name,
-        alamat,
         description,
         richDecription,
         brand,
@@ -228,9 +256,10 @@ class ProductController {
         numReviews,
         like,
         baru,
+        latitude,
+        longitude,
         isFeature,
         alamat,
-        coordinateLocation
       });
       product
         .save()
@@ -243,6 +272,79 @@ class ProductController {
         });
     }
   }
+
+  static async newproductwe(req, res) {
+    const images = req.file.filename;
+    const host = "https";
+    const prodUrl = "obscure-ravine-40173.herokuapp.com";
+
+    const {
+      seller,
+      name,
+      alamat,
+      description,
+      richDecription,
+      brand,
+      harga_jual,
+      harga_beli,
+      category,
+      countInStock,
+      rating,
+      net,
+      image,
+      numReviews,
+      like,
+      baru,
+      latitude,
+      longitude,
+
+      isFeature,
+    } = req.body;
+    const basePath = `${host}://${prodUrl}/assets/images/`;
+    // const changetolower = name ? "STRING" : name.toLowerCase();
+    // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
+    if (name === "senjata" || name === "senjata api") {
+      res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+      return res.status(401).json({
+        status: 401,
+        message: "product ini berbahaya",
+      });
+    } else {
+      console.log(req.body.hargaJual);
+
+      const product = new products({
+        seller,
+        name,
+        description,
+        richDecription,
+        brand,
+        image: images,
+        harga_jual,
+        harga_beli,
+        category,
+        countInStock,
+        rating,
+        net,
+        numReviews,
+        like,
+        baru,
+        latitude,
+        longitude,
+        isFeature,
+        alamat,
+      });
+      product
+        .save()
+        .then((response) => {
+          res.status(200).json(response);
+          console.log("ini response", response);
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    }
+  }
+
   static async newproduct(req, res) {
     const imageFile = req.file;
     const host = "https";
@@ -299,6 +401,7 @@ class ProductController {
       product
         .save()
         .then((response) => {
+          res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
           res.status(200).json(response);
           console.log("ini response", response);
         })
@@ -409,7 +512,7 @@ class ProductController {
 
   static async viewFeedProduct(req, res) {
     const userId = req.body;
-    const product = await products.findByIdAndUpdate(req.params.id, {
+    await products.findByIdAndUpdate(req.params.id, {
       $push: {
         view: {
           userId: userId,
@@ -456,7 +559,7 @@ class ProductController {
 
   static async filterbyname(req, res) {
     const name = req.query.name;
-    const product = await products.find(name === name);
+    const product = await products.find(name);
     console.log(req.query.name);
     if (!product) {
       return res.status(404).json({
@@ -660,6 +763,7 @@ class ProductController {
       });
     }
   }
+
 }
 
 module.exports = ProductController;

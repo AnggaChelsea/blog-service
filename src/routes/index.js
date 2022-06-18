@@ -22,5 +22,7 @@ router.use(`/cart`, require("./cart"));
 router.use(`/followers`, followers);
 router.use(`/product`, productR);
 
+router.use('/post-product', require('./products/postProduct'));
+
 
 module.exports = router;

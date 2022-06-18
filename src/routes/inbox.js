@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const inboxController = require("../controllers/inbox/inboxController");
+const messageController = require('../controllers/messageController')
 
 router.post('/sendchat', inboxController.chattouser);
 router.get('/inbox/:id', inboxController.getInbox);

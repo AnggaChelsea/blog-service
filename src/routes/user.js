@@ -5,7 +5,7 @@ const profile = require('../controllers/users/profile')
 const followrs = require('../controllers/users/followers')
 const productNew = require('../controllers/products/getProducts')
 const auth = require("../middleware/auth");
-
+const moment = require('moment');
 const multer = require("multer");
 
 const MIME_TYPE = {
@@ -13,13 +13,14 @@ const MIME_TYPE = {
   "image/jpg": "jpg",
   "image/jpeg": "jpeg",
 }
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const isValid = MIME_TYPE[file.mimetype];
     let uploadError = new Error("Invalid mime type");
     if(isValid){
       uploadError = null;
-      cb(null, "assets/image/profile");
+      cb(null, "src/assets/images/users");
     }else{
       cb(uploadError, "file iss not support");
     }
@@ -28,7 +29,12 @@ var storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const fileName = file.originalname.toLowerCase().split(" ").join("-");
     const extension = MIME_TYPE[file.mimetype];
-    const suffix = Date.now() + "-" + Math.round(Math.random() * 1000 + '-' + extension)
+    const date = Date.now();
+    const daTime = new Date()
+    //format date
+    const getTime = daTime.getHours() + "-" + daTime.getMinutes() + "-" + daTime.getSeconds();
+    const formatdate = moment(date).format("DD-MM-YYYY");
+    const suffix = formatdate + '-' + getTime
     cb(null, suffix + "-" + fileName);
   }
 })
@@ -57,7 +63,7 @@ router.put('/changepassword/:id', registerController.changePassword);
 router.get('/user/:id', profile.getProfile);
 router.put('/verify/:id', registerController.verifyEmail);
 
-router.patch('/user/follow/:id',  registerController.followeUser);
+router.patch('/user/follow/:id', auth,  registerController.followeUser);
 router.put('/user/followers/:id',  registerController.follow);
 
 router.post('/user/product', productNew.createNewProducts);
@@ -67,6 +73,8 @@ router.post('/user/chat/buyyerseller', registerController.getChatByBuyer);
 
 router.put('/verify-code-otp', registerController.verifyOtp);
 router.post('/login', registerController.logins)
+
+router.get('/get/followers/:id', registerController.getFollowers);
 
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
 
