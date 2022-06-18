@@ -18,7 +18,7 @@ var storage = multer.diskStorage({
     let uploadError = new Error("Invalid mime type");
     if(isValid){
       uploadError = null;
-      cb(null, "assets/images");
+      cb(null, "src/assets/images/products");
     }else{
       cb(uploadError, "file iss not support");
     }
