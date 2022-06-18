@@ -36,8 +36,15 @@ class ProductController {
     }
   }
   static async filterByAlamat(req, res) {
-    const {alamat} = req.body;
-    const product = await products.find({alamat: {$regex: alamat, $options: 'i'}}).limit(5);
+    const {
+      alamat
+    } = req.body;
+    const product = await products.find({
+      alamat: {
+        $regex: alamat,
+        $options: 'i'
+      }
+    }).limit(5);
     if (!product) {
       res.status(404).json({
         message: "Product not found",
@@ -46,9 +53,35 @@ class ProductController {
       res.status(200).json(product);
     }
   }
-  static async filterbylatlong(req, res){
-    const {latitude} = req.body;
-    const latlong = await products.find({latitude: {$regex: latitude, $options: 'i'}});
+  static async filterbynameregex(req, res) {
+    const {
+      name
+    } = req.body;
+    const product = await products.find({
+      name: {
+        $regex: name,
+        $options: 'i'
+      }
+    }).limit(5);
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    } else {
+      return res.status(200).json(product);
+    }
+
+  }
+  static async filterbylatlong(req, res) {
+    const {
+      latitude
+    } = req.body;
+    const latlong = await products.find({
+      latitude: {
+        $regex: latitude,
+        $options: 'i'
+      }
+    });
     if (!latlong) {
       res.status(404).json({
         message: "Product not found",
@@ -172,7 +205,7 @@ class ProductController {
     const images = req.file;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
-  
+
     const {
       seller,
       name,
@@ -192,13 +225,14 @@ class ProductController {
       baru,
       latitude,
       longitude,
-      
+
       isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
     // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
     if (name === "senjata" || name === "senjata api") {
+      res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
       return res.status(401).json({
         status: 401,
         message: "product ini berbahaya",
@@ -240,10 +274,10 @@ class ProductController {
   }
 
   static async newproductwe(req, res) {
-    const images = req.file;
+    const images = req.file.filename;
     const host = "https";
     const prodUrl = "obscure-ravine-40173.herokuapp.com";
-  
+
     const {
       seller,
       name,
@@ -263,13 +297,14 @@ class ProductController {
       baru,
       latitude,
       longitude,
-      
+
       isFeature,
     } = req.body;
     const basePath = `${host}://${prodUrl}/assets/images/`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
     // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
     if (name === "senjata" || name === "senjata api") {
+      res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
       return res.status(401).json({
         status: 401,
         message: "product ini berbahaya",
@@ -283,7 +318,7 @@ class ProductController {
         description,
         richDecription,
         brand,
-        image,
+        image: images,
         harga_jual,
         harga_beli,
         category,
@@ -366,6 +401,7 @@ class ProductController {
       product
         .save()
         .then((response) => {
+          res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
           res.status(200).json(response);
           console.log("ini response", response);
         })
@@ -476,7 +512,7 @@ class ProductController {
 
   static async viewFeedProduct(req, res) {
     const userId = req.body;
-     await products.findByIdAndUpdate(req.params.id, {
+    await products.findByIdAndUpdate(req.params.id, {
       $push: {
         view: {
           userId: userId,
@@ -727,7 +763,7 @@ class ProductController {
       });
     }
   }
-  
+
 }
 
 module.exports = ProductController;

@@ -10,6 +10,10 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
+    notif:{
+        type: Array,
+        default: []
+    },
     alamat: {
         type: String,
         required: true,

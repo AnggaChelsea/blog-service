@@ -6,7 +6,7 @@ const MessageSChema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'products'
     },
-    sellerId:{
+    seller:{
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
@@ -14,9 +14,8 @@ const MessageSChema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    message: {
+    messages: {
         type: String,
-        required: true
     },
     image:{
         type: String,

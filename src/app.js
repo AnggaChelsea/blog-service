@@ -6,10 +6,10 @@ const morgan = require("morgan");
 const cors = require("cors");
 const mongooseConnection = require("./config/db");
 const multer = require("multer");
-
+const formidable = require('express-formidable');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-
+const path = require('path')
 
 var helmet = require('helmet');
 const sha256 = require("crypto-js/sha256");
@@ -46,6 +46,7 @@ app.use(function (req, res, next) {
 app.use(cors({
   origin: '*'
 }));
+// 
 
 //for send sms use messagebird
 

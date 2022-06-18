@@ -11,6 +11,7 @@ const MIME_TYPE = {
   "image/jpg": "jpg",
   "image/jpeg": "jpeg",
 }
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const isValid = MIME_TYPE[file.mimetype];
@@ -38,6 +39,7 @@ var storage = multer.diskStorage({
 const uploadOption = multer({
   storage: storage
 }).single("image");
+
 router.post("/addnewproduct", auth, ProductController.newproduct);
 router.post('/add-new', uploadOption, ProductController.newproductwe)
 
@@ -81,6 +83,7 @@ router.get('/get-product-by-filter/:query', auth, ProductController.findDuluProd
 router.put('/reply-comment/:id', auth, ProductController.reply)
 
 router.post('/filter-by-latlong', ProductController.filterbylatlong)
+router.post('/filter-by-name', ProductController.filterbynameregex)
 
 
 module.exports = router;
