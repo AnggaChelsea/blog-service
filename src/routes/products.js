@@ -50,7 +50,7 @@ router.get("/count/product", auth,ProductController.countProduct);
 router.get("/get-feature", auth,ProductController.getFeature);
 
 router.get('/get-coment-byid/:id', auth,ProductController.getComment);
-router.get('/productid/:id', auth,ProductController.getProductByIdx)
+router.get('/productid/:id',ProductController.getProductByIdx)
 
 //without validate
 
@@ -84,6 +84,8 @@ router.put('/reply-comment/:id', auth, ProductController.reply)
 
 router.post('/filter-by-latlong', ProductController.filterbylatlong)
 router.post('/filter-by-name', ProductController.filterbynameregex)
+
+router.put('/feed-product-by-id/:id', ProductController.viewFeedProduct)
 
 
 module.exports = router;

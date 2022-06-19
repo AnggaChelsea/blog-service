@@ -29,6 +29,10 @@ app.all('*', function(req, res, next) {
   next();
 });
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');

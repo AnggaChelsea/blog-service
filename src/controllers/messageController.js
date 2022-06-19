@@ -45,7 +45,7 @@ class MessageController {
   }
 
   static async sendMessage1(req, res) {
-    const sellerId = req.params._id;
+    const seller = req.params;
     const buyyerId = req.body.buyyerId;
     const productId = req.body.productId;
     const messages = req.body.messages;
@@ -136,6 +136,7 @@ class MessageController {
           new: true
         });   
       }
+      console.log('succes5')
       newMessage.save()
       .then(() => {
         return res.status(201).json({

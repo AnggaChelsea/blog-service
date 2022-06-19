@@ -221,6 +221,7 @@ class ProductController {
       net,
       image,
       numReviews,
+      harga_sewa,
       like,
       baru,
       latitude,
@@ -244,6 +245,7 @@ class ProductController {
         seller,
         name,
         description,
+        harga_sewa,
         richDecription,
         brand,
         image,
@@ -292,6 +294,7 @@ class ProductController {
       rating,
       net,
       image,
+      harga_sewa,
       numReviews,
       like,
       baru,
@@ -325,6 +328,7 @@ class ProductController {
         countInStock,
         rating,
         net,
+        harga_sewa,
         numReviews,
         like,
         baru,
@@ -496,7 +500,7 @@ class ProductController {
     const product = await products.find();
     const banyakLike = 0;
     for (let i = 0; i < product.length; i++) {
-      const feed = product[i].like;
+      let feed = product[i].like;
       for (let j = 0; j < feed.length; j++) {
         const obj = Object.keys(feed[j]).length;
         banyakLike = obj;
@@ -511,20 +515,37 @@ class ProductController {
   }
 
   static async viewFeedProduct(req, res) {
+    const {productId} = req.params;
     const userId = req.body;
-    await products.findByIdAndUpdate(req.params.id, {
+    const productFindandUpdate = await products.findByIdAndUpdate(productId, {
       $push: {
         view: {
           userId: userId,
         },
       },
-    });
+      $inc: {
+        viewProduct: 1,
+      },
+    }, 
+    {
+      new: true,
+    }
+    );
+    if(productFindandUpdate){
+      res.status(200).json({
+        message: "success get feed",
+      });
+    } else {
+      res.status(404).json({
+        message: "tidak ada feed"
+      })
+    }
   }
 
   static async addLikeProduct(req, res) {
     const userLike = req.body;
     const findDuluProduct = await products.findByIdAndUpdate(
-      req.params.id, {
+      req.params.id, { 
         $push: {
           like: userLike,
         },
@@ -590,7 +611,6 @@ class ProductController {
       res.status(404).json(err);
     }
   }
-
   static async filterbyCategory(req, res) {
     const product = await products.find({
       category: req.params.id,
