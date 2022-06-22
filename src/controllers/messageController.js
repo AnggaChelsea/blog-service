@@ -54,8 +54,6 @@ class MessageController {
     const newMessage = new messagemodel({
       messages,
       image,
-      // from,
-      sellerId,
       productId,
       buyyerId,
     });

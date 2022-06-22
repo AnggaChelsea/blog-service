@@ -1,0 +1,3558 @@
+{
+	"info": {
+		"_postman_id": "043f5a92-a076-4d2f-9db9-e9a07ed12596",
+		"name": "olx_backend_services",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19115370"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "pesan",
+					"item": [
+						{
+							"name": "get-pesan",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{olx}}chat/get-pesan-by-buyyer/:id",
+									"host": [
+										"{{olx}}chat"
+									],
+									"path": [
+										"get-pesan-by-buyyer",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6294d8df198d5940ade4d7ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "send pesan",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"seller\":\"62a212dc369171a4e15bff61\",\r\n    \"buyyerId\":\"62a210fa2fa0823e31d9b2a3\",\r\n    \"message\":\"hallo nanya product ini \",\r\n    \"productId\":\"62a438844899f06bee580fba\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/chat/send-messageintoseller",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"chat",
+										"send-messageintoseller"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sendpesan",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "add-pesan",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"seller\":\"62a4506a5198c3a5245db3b9\",\r\n    \"buyyerId\":\"62ad896a34d312557c313296\",\r\n    \"message\":\"hallo nanya product ini \",\r\n    \"productId\":\"62ad840d15bbc3b728b76075\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/chat/send-pesan-to-seller",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"chat",
+										"send-pesan-to-seller"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sendpesan",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"buyyerId\":\"62ad896a34d312557c313296\",\r\n    \"productId\":\"62a91f3973a26bbc6e0c2177\",\r\n    \"messages\":\"hallo bang\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/chat/send-pesan-to-seller/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"chat",
+										"send-pesan-to-seller",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "62a4506a5198c3a5245db3b9"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"seller\",\n    \"email\":\"freelancerw9@gmail.com\",\n    \"alamat\":\"sukabumi\",\n    \"password\":\"buyyer\",\n    \"role\":\"626b9b71e64b96457ff05e96\",\n    \"latitude\":\"-6.984374489568597\",\n    \"longitude\":\"106.61749316720615\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/register/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"register",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjBmNTQ0MmEzMzQzNmE0MmM1YmUzNDYiLCJ1c2VyUm9sZSI6IjYyMGY1NDMxYTMzNDM2YTQyYzViZTM0MiIsImlhdCI6MTY0NTYyNTgwOCwiZXhwIjoxNjQ1NjI5NDA4fQ.zp3NzaJ2Svk8-KpxyC4nwKpDtt2qFR2VhHr9E5IySaA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"kunpayakun091@gmail.com\",\n    \"password\":\"buyyer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "roles",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/roles/addrole",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"roles",
+								"addrole"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getroles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/roles/getroles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"roles",
+								"getroles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot_password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"adeadeaja2121@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/user/user/confirmationemail/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"user",
+								"confirmationemail",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6207b9ae58e10f1a698620a3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/user/user/62a212dc369171a4e15bff61",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"62a212dc369171a4e15bff61"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inbox",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"senderId\":\"620cd713049963b49004bebe\",\n    \"reciveId\":\"620f5442a33436a42c5be346\",\n    \"message\":\"Hallo ka eva ?\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/inbox/sendchat",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"inbox",
+								"sendchat"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAlluser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/user/get-all-users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"get-all-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateuser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userid",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/user/user/626f582413878dac3398b494",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"626f582413878dac3398b494"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "followers",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"followers\":\"62a210fa2fa0823e31d9b2a3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/user/followers/62a212dc369171a4e15bff61",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"followers",
+								"62a212dc369171a4e15bff61"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "follows",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"followid\":\"621819418a27da105e209f77\",\n    \"followersId\":\"6218f737cfd13a7ae9be8274\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/followers/follow",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"followers",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFollowers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"followersId\":\"621819418a27da105e209f77\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/followers/follow",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"followers",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8001/followers/unfollow/621819418a27da105e209f77",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/followers/unfollow/621819418a27da105e209f77",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"followers",
+								"unfollow",
+								"621819418a27da105e209f77"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8002/user/user/profile/6218194e8a27da105e209f7a",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8002/user/user/profile/6218194e8a27da105e209f7a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"user",
+								"user",
+								"profile",
+								"6218194e8a27da105e209f7a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgotpassword",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changePassword",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/verifyakun",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/verify/6270df2b2917df67b205750b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"verify",
+								"6270df2b2917df67b205750b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get chat seller buyyer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"buyerId\":\"625b1784aebdeea4e72af24a\",\r\n    \"sellerId\":\"625b08ca3ba9195d1d1dbd1e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/user/chat/buyyerseller",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"chat",
+								"buyyerseller"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_user",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "registerformdata",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "changePassword",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\":\"cinta\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/user/changePassword/6294d8df198d5940ade4d7ad",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"changePassword",
+								"6294d8df198d5940ade4d7ad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProfile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"aga mutia\",\n    \"email\":\"aga1@gmail.com\",\n    \"alamat\":\"sumatera\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/user/update-profile/62767f0614c10a233141dc96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"update-profile",
+								"62767f0614c10a233141dc96"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changePasswiord",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\":\"puti\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/user/changePassword/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"changePassword",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6294d8df198d5940ade4d7ad"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sendPesan",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"senderId\":\"627680f1fdbbec9d614d4600\",\n    \"message\":\"hallo ka bunga! ka pesan product ini ya \",\n    \"productId\":\"62818badc64fbdff8fc337d7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/user/sendPesan/6276858fbcbf77d84958c401",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"sendPesan",
+								"6276858fbcbf77d84958c401"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findPesanbySenderId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/user//user/findPesan/626f582413878dac3398b494",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"",
+								"user",
+								"findPesan",
+								"626f582413878dac3398b494"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify-code-otp",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"codeOtp\":212783\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/verify-code-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"verify-code-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register-by-form",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "checkCodeOtpPassword",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "checkEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"kunpayakun091@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/user/checkEmail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"user",
+								"checkEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify code otp password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/checkCodeOtpPassword",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"checkCodeOtpPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verifyOtpPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codeOtp\":\"17293\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/verify/otp-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"verify",
+								"otp-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registerFormData",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "ade",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "adew@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "alamat",
+									"value": "jaksel",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hendr/OneDrive/Pictures/adad.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/register/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"register",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-pesan-userid",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "getFollowers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/user/get/followers/62a212dc369171a4e15bff61",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"get",
+								"followers",
+								"62a212dc369171a4e15bff61"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registerFormData",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "angga lesmana",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "angga.lesmana_si17@nusaputra.ac.id",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Sayangmamah1.",
+									"type": "text"
+								},
+								{
+									"key": "alamat",
+									"value": "sukabumi",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Dell/Pictures/cat/12.-Tips-Merawat-Anak-Kucing-Munchkin.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8001/user/register/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"user",
+								"register",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "cart",
+					"item": [
+						{
+							"name": "add-to-cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mjg4OTA5YjVhMzdkMTU0ZTliOWNjNTciLCJ1c2VyUm9sZSI6IjYyNmI5YjcxZTY0Yjk2NDU3ZmYwNWU5NiIsImlhdCI6MTY1MzExNzEyOSwiZXhwIjoxNjUzMTIwNzI5fQ.LcPP5etGO5Po1V_kT74-Z5XKoRjEld-WZHBwoZDfkQ8",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"productId\":\r\n        \"62a91f3973a26bbc6e0c2177\",\r\n    \"userId\":\"62a212dc369171a4e15bff61\",\r\n    \"quantity\":1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/cart/add-cart",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"cart",
+										"add-cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getCart",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8001/cart/get-cart/:userId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"cart",
+										"get-cart",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "6294d8df198d5940ade4d7ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getOrderByUserId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8001/cart/get-order-id/6285094767f036d607aa8085",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"cart",
+										"get-order-id",
+										"6285094767f036d607aa8085"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "transaction",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://olxbackendservice.herokuapp.com/cart/get-transaction/:userId",
+									"protocol": "https",
+									"host": [
+										"olxbackendservice",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"cart",
+										"get-transaction",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "6294d8df198d5940ade4d7ad"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "chekcout",
+					"item": [
+						{
+							"name": "checkout",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n            \"provinsi\":\"jawa barat\",\r\n            \"kabupaten\":\"sukabumi\",\r\n            \"kecamatan\":\"pelabuhanratu\",\r\n            \"desa\":\"pasirsuren\",\r\n            \"alamatSesuaiKTP\":\"kp gobang\",\r\n            \"kodePos\":\"43364\",\r\n            \"phone\":\"085724243454\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://olxbackendservice.herokuapp.com/cart/checkout-cart/:cartId",
+									"protocol": "https",
+									"host": [
+										"olxbackendservice",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"cart",
+										"checkout-cart",
+										":cartId"
+									],
+									"variable": [
+										{
+											"key": "cartId",
+											"value": "6297121e887c7fd39452e3ce"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add-list-checkout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cartid\":[\n        {\"cartid\":\"6288911f5a37d154e9b9cc5f\"},\n        {\"cartid\":\"62889209d1075c79b6b9234c\"}\n    ],\n    \"userId\":\"6288909b5a37d154e9b9cc57\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/cart/add-to-checkout-list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"cart",
+										"add-to-checkout-list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-ceckout-list by userid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8001/cart/get-checkout-list/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"cart",
+										"get-checkout-list",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6288909b5a37d154e9b9cc57"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "filter",
+					"item": [
+						{
+							"name": "filter-by-latlong",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"latitude\":\"-6.190100650692594\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/products//filter-by-latlong",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"products",
+										"",
+										"filter-by-latlong"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "filter-by-alamat",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"alamat\":\"bali\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/products/filter-by-alamat",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"products",
+										"filter-by-alamat"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "filterbyCategory",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8002/products/filterbyCategory/62086f7b917ad254e651f1b5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8002",
+									"path": [
+										"products",
+										"filterbyCategory",
+										"62086f7b917ad254e651f1b5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "filter-by-name",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\" zoom version anak\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8001/products/filter-by-name",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"products",
+										"filter-by-name"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "add_product_formData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWYxMzg2ODhmZmQ0Y2ZmODg3YmU4ZDEiLCJpYXQiOjE2NDMzNjg2NzEsImV4cCI6MTY0MzM3MjI3MX0.6sZX6Ms_0YwNjKu4F60DSzdqklgvwbZTmb3Fb3f49FY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/add-new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"add-new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjBmNTQ0MmEzMzQzNmE0MmM1YmUzNDYiLCJ1c2VyUm9sZSI6IjYyMGY1NDMxYTMzNDM2YTQyYzViZTM0MiIsImlhdCI6MTY0NTE4MDA4NCwiZXhwIjoxNjQ1MTgzNjg0fQ.ns_fxo2fenCV0Y-kA76SUvtr05F4zO6Gw-YOzo9f4wE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aga@gmail.com\",\n    \"password\":\"aga\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/productfind",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"productfind"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n     \"name\": \"Product 11\",\n    \"description\": \"adad\",\n    \"richDecription\": \"\",\n    \"image\": \"\",\n    \"images\": [\n        \"\"\n    ],\n    \"brand\": \"\",\n    \"price\": 100,\n    \"category\": {\n        \"_id\": \"61eb8fbdf84de6255a4efde1\",\n        \"name\": \"Cars13\",\n        \"icon\": \"cars13.jpg\",\n        \"color\": \"bue\",\n        \"__v\": 0\n    },\n    \"countInStock\": 12,\n    \"rating\": 1,\n    \"numReviews\": 0,\n    \"isFeature\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/update-product/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"update-product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61ebdd1051550b91f3d4bec1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hitungstock",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWVjNDQxNWM4YWU0N2ZhNTQ2MDMwZWIiLCJpYXQiOjE2NDI4OTExMDEsImV4cCI6MTY0Mjg5NDcwMX0.eQy83JWnPE-IgF232gizBa8MkYyir_tZ5LVstJKTgqg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/count/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"count",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addimage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product feed",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"6285095867f036d607aa8088\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/feed-product/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"feed-product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "628f91aa6f6464db0b5150a0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "likeProduct",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjQ0NzExN2JjODVhMTQ3M2IxZmVkZjUiLCJ1c2VyUm9sZSI6IjYyMGY1NDMxYTMzNDM2YTQyYzViZTM0MiIsImlhdCI6MTY0OTk4MjMzNywiZXhwIjoxNjQ5OTg1OTM3fQ.uMVrUO8_v3n0F4K-50ul1GiGLbrvH56yBhwxw5JhvTg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"625b08ca3ba9195d1d1dbd1c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/products/like/626b1e8487f5d4a2fc8e8731",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"products",
+								"like",
+								"626b1e8487f5d4a2fc8e8731"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteproduct",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/products/product_delete/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								"product_delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "62030e6d7cc45c119df812af"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "finproductbyuser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/products/getProductByUser/6285094767f036d607aa8085",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"getProductByUser",
+								"6285094767f036d607aa8085"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "byid",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"62a210fa2fa0823e31d9b2a3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/productid/62a438844899f06bee580fba",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"productid",
+								"62a438844899f06bee580fba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "newcreate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "likeproducts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjY0NzJkNmFiMzgyN2E1NmU2ZTM3NjAiLCJ1c2VyUm9sZSI6IjYyMGY1NDMxYTMzNDM2YTQyYzViZTM0MiIsImlhdCI6MTY1MDc1MDE3OCwiZXhwIjoxNjUwNzUzNzc4fQ.RrscqTzENFV1nn-3GZDEL_d3ufK3Cco3ofexZIvUnsE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userLike\":\"626b9b83e64b96457ff05e99\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/like/:id/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"like",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "626c0650d6000953727af0bd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "riview-products",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/products/view-product/625000757ee45744c37e2728",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"view-product",
+								"625000757ee45744c37e2728"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filternameproduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"mobilio baru\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://obscure-ravine-40173.herokuapp.com/products/cari-product",
+							"protocol": "https",
+							"host": [
+								"obscure-ravine-40173",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"products",
+								"cari-product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addproductFormData",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "jasa",
+									"type": "text"
+								},
+								{
+									"key": "seller",
+									"value": "62a4506a5198c3a5245db3b9",
+									"type": "text"
+								},
+								{
+									"key": "alamat",
+									"value": "sukabumi",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "bangunan",
+									"type": "text"
+								},
+								{
+									"key": "ketentuan",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "baru",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Dell/Pictures/freelance/banner.jpeg"
+								},
+								{
+									"key": "harga_jual",
+									"value": "200000",
+									"type": "text"
+								},
+								{
+									"key": "harga_beli",
+									"value": "250000",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "626bad0c9173ff75c0385b45",
+									"type": "text"
+								},
+								{
+									"key": "countInStock",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "net",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/add-new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"add-new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pdateimagewithFormData",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "bissmillahformadddata",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "filterbyname",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/products/get-product/?name=celana dalam",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"get-product",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "celana dalam"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addproductlike",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "addlikeproduct",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userLike\":\"627297ca8f9609b68ca86988\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/like/62734ac905bb1a5d9e99fd49",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"like",
+								"62734ac905bb1a5d9e99fd49"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "comment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comment\":\"ini organ apa ya mas, klw bisa organ jantung dah?\",\r\n    \"userId\":\"627e720d761bb1d46792e409\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://olxbackendservice.herokuapp.com/products/comment/628509cd678613c6edadd772",
+							"protocol": "https",
+							"host": [
+								"olxbackendservice",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"products",
+								"comment",
+								"628509cd678613c6edadd772"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "getcomment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/products/get-coment-byid/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"get-coment-byid",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "627521fce36d398748c12da5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productid",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/products/productid/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"productid",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "628509cd678613c6edadd772"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter-regex",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "feed-product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/products/feed-product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"feed-product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "replycomment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reply\":\"mantaps\",\r\n    \"userId\":\"628d664f554c699b6d556841\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/reply/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"reply",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cari by lokasi",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/products/product-by-location",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"product-by-location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add_product_json",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"seller\":\"62a212dc369171a4e15bff61\",\r\n        \"name\":\"kursi keluarga\",\r\n        \"alamat\":\"jakarta barat rt 04 rw 07 des kebon jeruk kec kebon jeruk\",\r\n        \"latitude\":\"-6.190100650692594\", \r\n        \"longitude\":\"106.76373858164443\",\r\n        \"description\":\"kursi ini di jamin nyaman karna  bahan mpuk\",\r\n        \"net\":true,\r\n        \"baru\":true,\r\n        \"image\":\"kursibaru.jpg\",\r\n        \"harga_jual\":\"4000000\",\r\n        \"harga_beli\":\"4000000\",\r\n        \"category\":\"626baca49173ff75c0385b33\",\r\n        \"countInStock\":12\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/add-new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"add-new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post-products",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8001/post-product/add-new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"post-product",
+								"add-new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "feed",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"62a210fa2fa0823e31d9b2a3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/products/feed-product-by-id/62a438844899f06bee580fba",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"products",
+								"feed-product-by-id",
+								"62a438844899f06bee580fba"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "addorder/checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderItems\":[\n        {\n            \"quantity\":2,\n            \"product\":\"627521fce36d398748c12da5\"\n        }\n        \n    ],\n    \"shippingAddress\":\"pelabuhanratu\",\n    \"shippingAddress2\":\"sukabumi\",\n    \"city\":\"sukabumi\",\n    \"zipCode\":\"43364\",\n    \"phone\":\"085724248746\",\n    \"user\":\"627522e3ff81503f48bef4b1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/orders/order-product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"orders",
+								"order-product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8000/v1/api/orders/order-by-user/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/v1/api/orders/order-by-user/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"api",
+								"orders",
+								"order-by-user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61ed46ba4bb3521741b43c5a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ordercount",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/orders/order-count",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"orders",
+								"order-count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order_total_sales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/v1/api/orders/order-total-sales",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"api",
+								"orders",
+								"order-total-sales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/v1/api/orders/order-product/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"api",
+								"orders",
+								"order-product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61ed7139d32dabb47937ca28"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit-status-order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\":\"publish\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/api/orders/order-product/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"api",
+								"orders",
+								"order-product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61ed7139d32dabb47937ca28"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-order-product-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/v1/api/orders/get-order-product/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"api",
+								"orders",
+								"get-order-product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61ed7cb93b05f8311bd4a6da"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-order-product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/v1/api/orders/get-order-product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"api",
+								"orders",
+								"get-order-product"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chat",
+			"item": [
+				{
+					"name": "inbox/inbox by user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"62767f0614c10a233141dc96\",\r\n    \"reciveId\":\"627680f1fdbbec9d614d4600\",\r\n    \"message\":\"hallo bang\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/inbox/sendchat/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"inbox",
+								"sendchat",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "chattobuy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"623f3f43de97d4ae3e3a1e3e\",\n    \"sellerId\":[\n        \"625b08ca3ba9195d1d1dbd1e\",\n        {\n            \"pesan\":\"hallo bang\"\n        }\n    ],\n    \"buyerId\":[\n        \"625b1784aebdeea4e72af24a\",\n        {\n            \"pesan\":\"ada yang bisa saya bantu\"\n        }\n    ],\n    \"pesan\":\"terimakasih chat dengan baik dan benar yah\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/chat/send-messageintoproduct",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"chat",
+								"send-messageintoproduct"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getIboxid",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/inbox/inbox/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"inbox",
+								"inbox",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6280ea9e4555fa381eb606ae"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "deploy",
+			"item": [
+				{
+					"name": "category",
+					"item": [
+						{
+							"name": "getcategorylist",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/category/categoryList",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"category",
+										"categoryList"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "categorybyid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/category/find_category_by_id/:id",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"category",
+										"find_category_by_id",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "62086e5110df949e287aa8d9"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "products",
+					"item": [
+						{
+							"name": "getproducts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://enigmatic-caverns-66334.herokuapp.com/products/productfind",
+									"protocol": "https",
+									"host": [
+										"enigmatic-caverns-66334",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"productfind"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getproductbyid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/products/productidby/624f72bb358e733b41eab4ee",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"productidby",
+										"624f72bb358e733b41eab4ee"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "feed",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/products/product_feed",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"product_feed"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getbycategory",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/products/filterbyCategory/62086e5110df949e287aa8d9",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"filterbyCategory",
+										"62086e5110df949e287aa8d9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getproductbyuser",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/products/getProductByUser/621819418a27da105e209f77",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"getProductByUser",
+										"621819418a27da105e209f77"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "addproduct",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"seller\":\"620a46968b9afa12c935dacc\",\n    \"name\": \"mangkuk bakso\",\n    \"description\": \"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores consequatur beatae, praesentium fugit nulla doloribus fugiat sapiente voluptatum culpa! Eaque!\",\n    \"richDecription\": \"Irit Ramah\",\n    \"image\": \"mangkuk.png\",\n    \"images\": [\n        \"mobilio1.png\",\n        \"mobilio2.png\"\n    ],\n    \"brand\": \"Honda\",\n    \"hargaJual\":\"15000000\",\n    \"hargaBeli\":\"1400000\",\n    \"category\":\"62086e5110df949e287aa8d9\",\n    \"countInStock\":\"2\",\n    \"rating\":\"2\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8001/user/user/6209c00c3a40707b0b1fc2eb",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8001",
+									"path": [
+										"user",
+										"user",
+										"6209c00c3a40707b0b1fc2eb"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "likeproduct",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/products/like/624f7224358e733b41eab4e6",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"like",
+										"624f7224358e733b41eab4e6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchProductByName",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Beat 123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://enigmatic-caverns-66334.herokuapp.com/products/search-product",
+									"protocol": "https",
+									"host": [
+										"enigmatic-caverns-66334",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"search-product"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "addProduct",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchproduct",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Beat 123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://enigmatic-caverns-66334.herokuapp.com/products/search-product",
+									"protocol": "https",
+									"host": [
+										"enigmatic-caverns-66334",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"search-product"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add product",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"seller\":\"623f3081a43007cab9feb986\",\n    \"name\": \"BEAT VARIO PINK\",\n    \"description\": \"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores consequatur beatae, praesentium fugit nulla doloribus fugiat sapiente voluptatum culpa! Eaque!\",\n    \"richDecription\": \"Irit Ramah\",\n    \"image\": \"beat.png\",\n    \"images\": [\n        \"beat.png\",\n        \"beat.png\"\n    ],\n    \"brand\": \"motor\",\n    \"harga_jual\":\"15444000000\",\n    \"harga_beli\":\"120000000\",\n    \"alamat\":\"sumatera\",\n    \"category\":\"62086ec7917ad254e651f1a9\",\n    \"countInStock\":\"2\",\n    \"baru\":true,\n    \"ketentuan\":\"nego\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/products/addnewproduct",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"addnewproduct"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "chattoseller",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\":\"aga11\",\n    \"email\":\"aga11@gmail.com\",\n    \"password\":\"aga\",\n    \"role\":\"62076b7d04be65c5ca2a4659\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/user/user/register",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"user",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\":\"aga11@gmail.com\",\n    \"password\":\"aga\"\n    \n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/user/user/login",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"user",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getroles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/roles/getroles",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"roles",
+										"getroles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "inboxbyuser",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/inbox/getInboxByUserId/6209c00c3a40707b0b1fc2eb",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"inbox",
+										"getInboxByUserId",
+										"6209c00c3a40707b0b1fc2eb"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getUserById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getInbox",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/inbox/getInboxByUserId/:id",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"inbox",
+										"getInboxByUserId",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "621819418a27da105e209f77"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://arcane-tor-29221.herokuapp.com/user/get-all-users",
+									"protocol": "https",
+									"host": [
+										"arcane-tor-29221",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"user",
+										"get-all-users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "chat to user to but",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"productId\":\"621839ec527f72f55b73e379\",\n    \"sellerId\":\"621819418a27da105e209f77\",\n    \"buyerId\":\"6218194e8a27da105e209f7a\",\n    \"message\":\"hallo ka ?\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://enigmatic-caverns-66334.herokuapp.com/chat/send-messageintoproduct",
+									"protocol": "https",
+									"host": [
+										"enigmatic-caverns-66334",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"chat",
+										"send-messageintoproduct"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getachatbyseller",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://enigmatic-caverns-66334.herokuapp.com/products/getMessageToBuy/62257a043ffebb636a55e07c",
+									"protocol": "https",
+									"host": [
+										"enigmatic-caverns-66334",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"products",
+										"getMessageToBuy",
+										"62257a043ffebb636a55e07c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "chatbyseller",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8002/products/getMessageToBuy/62257a043ffebb636a55e07c",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8002",
+									"path": [
+										"products",
+										"getMessageToBuy",
+										"62257a043ffebb636a55e07c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getchatbuyyer",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "service_product",
+					"item": [
+						{
+							"name": "getProducts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://gentle-spire-77983.herokuapp.com/user/user/profile/621839ec527f72f55b73e37asdasddsasdas",
+									"protocol": "https",
+									"host": [
+										"gentle-spire-77983",
+										"herokuapp",
+										"com"
+									],
+									"path": [
+										"user",
+										"user",
+										"profile",
+										"621839ec527f72f55b73e37asdasddsasdas"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "newapi",
+			"item": [
+				{
+					"name": "follow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8002/products/productfind",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8002/products/productfind",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"products",
+								"productfind"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "followers",
+			"item": [
+				{
+					"name": "follow user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"followersId\":\"625b08ca3ba9195d1d1dbd1e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/followers/followersbyuser/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"followers",
+								"followersbyuser",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "625b1784aebdeea4e72af24a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get followers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"followers\":\"625b1784aebdeea4e72af24a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/followers/getfollowers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"followers",
+								"getfollowers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "deployment terbaru",
+			"item": [
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "add product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "mangkuk",
+									"type": "text"
+								},
+								{
+									"key": "seller",
+									"value": "6264a90aa4e9cc05def634c7",
+									"type": "text"
+								},
+								{
+									"key": "alamat",
+									"value": "sukabumi",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "mangkuk terbaik di indonesia terbuat dari baja dan batu",
+									"type": "text"
+								},
+								{
+									"key": "ketentuan",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "baru",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hendr/OneDrive/Pictures/mydevelopment/mangkuk.jpg"
+								},
+								{
+									"key": "harga_jual",
+									"value": "100000",
+									"type": "text"
+								},
+								{
+									"key": "harga_beli",
+									"value": "150000",
+									"type": "text"
+								},
+								{
+									"key": "countInStock",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://service-nodejs-express-olx.herokuapp.com/v1/api1/products/addnewproduct",
+							"protocol": "https",
+							"host": [
+								"service-nodejs-express-olx",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"v1",
+								"api1",
+								"products",
+								"addnewproduct"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "deletecategory",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/delete_category/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"delete_category",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "61ebbc8c1fbfd0a5b29f1de9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addcategory",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"Makanan\",\n    \"icon\":\"makanan.png\",\n    \"color\":\"blue\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/category/addCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"category",
+						"addCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmEyMTJkYzM2OTE3MWE0ZTE1YmZmNjEiLCJ1c2VyUm9sZSI6IjYyNmI5YjcxZTY0Yjk2NDU3ZmYwNWU5NiIsImlhdCI6MTY1NDc5NTM5MSwiZXhwIjoxNjU0Nzk4OTkxfQ.maZfs_xRDTa--ZxlfDXMWGPhFx4pQG_CloFN_MRn7kM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8001/category/categoryList",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"category",
+						"categoryList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8000/categoryList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8002/category/categoryList",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8002",
+					"path": [
+						"category",
+						"categoryList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8000/updateCategory/:id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"name\": \"Properti\",\n        \"icon\": \"rumah.png\",\n        \"color\": \"bue\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8002/category/updateCategory/62086e5110df949e287aa8d9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8002",
+					"path": [
+						"category",
+						"updateCategory",
+						"62086e5110df949e287aa8d9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findbyidCategory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://olxbackendservice.herokuapp.com/category/find_category_by_id/626bac729173ff75c0385b2a",
+					"protocol": "https",
+					"host": [
+						"olxbackendservice",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"category",
+						"find_category_by_id",
+						"626bac729173ff75c0385b2a"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

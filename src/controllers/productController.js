@@ -695,6 +695,7 @@ class ProductController {
       seller: product.seller,
     });
   }
+
   static async filterProductNew(req, res) {
     const nameProduct = req.body;
     const productfind = await products.findOne(nameProduct);
@@ -709,7 +710,8 @@ class ProductController {
 
   static async updateProductImage(req, res) {
     const image = req.file;
-    const basePath = `${req.protocol}://${req.get("host")}/assets/images/`;
+    const basePath = `https://servicedealdulu.herokuapp.com/assets/images/${image.filename}`;
+    
     const {
       seller,
       name,
