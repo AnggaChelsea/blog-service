@@ -10,7 +10,7 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
-    notif:{
+    notif: {
         type: Array,
         default: []
     },
@@ -18,11 +18,14 @@ const productSchema = new schema({
         type: String,
         required: true,
     },
+    viewProduct: {
+        type: Number,
+    },
     latitude: {
-          type: String,
+        type: String,
     },
     longitude: {
-          type: String,
+        type: String,
     },
     like: [{
         userLike: {
@@ -74,11 +77,9 @@ const productSchema = new schema({
     },
     net: {
         type: String,
-        required: true,
     },
     baru: {
         type: String,
-        required: true,
     },
     image: {
         type: String,
@@ -106,17 +107,21 @@ const productSchema = new schema({
     },
     countInStock: {
         type: String,
-        required: true,
         min: 0,
         max: 255
+    },
+    harga_sewa: {
+        type: String,
     },
     rating: {
         type: Number,
         default: 0,
     },
     view: [{
-        type: schema.Types.ObjectId,
-        ref: 'users'
+        userId: {
+            type: schema.Types.ObjectId,
+            ref: 'users'
+        }
     }],
     isFeature: {
         type: Boolean,
@@ -145,4 +150,4 @@ productSchema.set('toJSON', {
     virtuals: true
 });
 const products = mongoose.model('products', productSchema)
-module.exports = products 
+module.exports = products

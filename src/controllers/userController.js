@@ -153,7 +153,8 @@ class UserController {
   }
 
 
-  static async sendPesan(req, res) {;
+  static async sendPesan(req, res) {
+    ;
     const {
       sellerId, // sellerid yang nerima pesan / yang punya barang
       message,
@@ -169,11 +170,9 @@ class UserController {
           createdAt: date,
         }],
       },
-    }, 
-      {
-        new: true,
-      }
-    );
+    }, {
+      new: true,
+    });
     const sendTerkirim = await userModel.findByIdAndUpdate(buyerId, {
       $push: {
         pesanKirim: [{
@@ -184,7 +183,7 @@ class UserController {
     }, {
       new: true,
     })
-    if(sendTerima && sendTerkirim){
+    if (sendTerima && sendTerkirim) {
       const pesan = await new messageModel({
         sellerId,
         message,
@@ -198,7 +197,7 @@ class UserController {
         pesan,
         message: "pesan dikirim",
       });
-    }else{
+    } else {
       return res.status(404).json({
         message: "pesan gagal dikirim",
       });
@@ -236,12 +235,12 @@ class UserController {
     const findUserToChat = await userModel.findByIdAndUpdate(
       userparams, {
         $push: {
-            pesanmasuk: [{
-              senderId,
-              message,
-              file,
-              productId,
-            }]
+          pesanmasuk: [{
+            senderId,
+            message,
+            file,
+            productId,
+          }]
         },
       }, {
         new: true,
@@ -251,17 +250,17 @@ class UserController {
       await userModel.findOneAndUpdate(
         senderId, {
           $push: {
-              pesanterkirim: [{
-                kirimke: userparams,
-                file: findUserToChat.file,
-                message: findUserToChat.mesage,
-                productId: findUserToChat.productId
+            pesanterkirim: [{
+              kirimke: userparams,
+              file: findUserToChat.file,
+              message: findUserToChat.mesage,
+              productId: findUserToChat.productId
             }]
           }
         }
       )
       const masukpesan = await messageModel.find(senderId);
-      if(masukpesan.senderId != null){
+      if (masukpesan.senderId != null) {
         const insertPesan = await new messageModel({
           productId: findUserToChat.productId,
           message: findUserToChat.message,
@@ -269,22 +268,20 @@ class UserController {
           senderId: findUserToChat.senderId,
           buyerId: findUserToChat.buyerId,
         })
-      }else{
-        await messageModel.findOneAndUpdate(
-          {
-            senderId: senderId,
-            productId: findUserToChat.productId,
-          }, {
-            $push: {
-              message: findUserToChat.message,
-              file: findUserToChat.file,
-              senderId: findUserToChat.senderId,
-              buyerId: findUserToChat.buyerId,
-            },
-          }, {
-            new: true,
-          }
-        )
+      } else {
+        await messageModel.findOneAndUpdate({
+          senderId: senderId,
+          productId: findUserToChat.productId,
+        }, {
+          $push: {
+            message: findUserToChat.message,
+            file: findUserToChat.file,
+            senderId: findUserToChat.senderId,
+            buyerId: findUserToChat.buyerId,
+          },
+        }, {
+          new: true,
+        })
       }
       res.status(200).json({
         message: "pesan berhasil dikirim",
@@ -301,10 +298,14 @@ class UserController {
   static async getPesan(req, res) {
     const userId = req.params.userId
     const findUser = await userModel.findById(userId)
-    if(findUser != null){
-      res.response(200).json({message: 'success'})
-    }else{
-      res.response(404).json({message: 'kosong'})
+    if (findUser != null) {
+      res.response(200).json({
+        message: 'success'
+      })
+    } else {
+      res.response(404).json({
+        message: 'kosong'
+      })
     }
   }
 
@@ -395,7 +396,7 @@ class UserController {
     })
   }
 
-  static async getPesan(req, res){
+  static async getPesan(req, res) {
     const userId = req.params.id;
     const findPesan = await userModel.findById(userId).populate("pesan", {
       senderId: userId,
@@ -405,14 +406,14 @@ class UserController {
         findPesan,
         message: "pesan ditemukan",
       });
-    }else{
+    } else {
       res.status(404).json({
         message: "pesan not found",
       });
     }
   }
 
-  static async Chatting(req, res){
+  static async Chatting(req, res) {
     const userId = req.params.id;
     const findPesan = await userModel.findById(userId).populate("pesan", {
       senderId: userId,
@@ -422,7 +423,7 @@ class UserController {
         findPesan,
         message: "pesan ditemukan",
       });
-    }else{
+    } else {
       res.status(404).json({
         message: "pesan not found",
       });
@@ -445,7 +446,7 @@ class UserController {
     // const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
     const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
     const findUser = (user) => user.email === email;
-    const usernew = await new userModel({ 
+    const usernew = await new userModel({
       name,
       email,
       password: bcrypt.hashSync(password, 10),
@@ -460,7 +461,7 @@ class UserController {
     const linkConfirm = `mohon masukan code otp ${codeOtpConfirm} ini untuk verifikasi akunmu `;
 
     if (!usernew) {
-      res.status(500).json(err); 
+      res.status(500).json(err);
     } else {
       usernew.save().then((response) => {
         sendVeryficationEmail(from, name, emailUser, linkConfirm);
@@ -574,8 +575,10 @@ class UserController {
       res.status(200).json({
         message: "success verify otp",
       });
-      await userModel.findOneAndDelete({
-        codeOtp: codeOtp,
+      await userModel.findOneAndUpdate({
+        $set: {
+          codeOtp: 0
+        },
       });
     } else {
       res.status(500).json({
@@ -725,11 +728,11 @@ class UserController {
         $push: {
           followers: userId,
         },
-      },{
+      }, {
         new: true,
       }
     );
-    if (findUserDulu){
+    if (findUserDulu) {
       res.status(200).json({
         message: "success follow",
       });
@@ -740,15 +743,15 @@ class UserController {
     }
   }
 
-  static async getFollowers(req, res){
+  static async getFollowers(req, res) {
     const userId = req.params.id;
     const findUser = await userModel.findById(userId).populate('followers');
-    if (findUser){
+    if (findUser) {
       res.status(200).json({
         message: "success get followers",
         findUser,
       });
-    }else{
+    } else {
       res.status(500).json({
         message: "failed get followers",
       });
