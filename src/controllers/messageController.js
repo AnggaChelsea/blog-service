@@ -78,7 +78,7 @@ class MessageController {
       buyyerId,
       seller,
       messages,
-      image,
+      image, 
       productId
     });
     console.log('succes1')

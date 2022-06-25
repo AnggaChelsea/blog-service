@@ -41,51 +41,53 @@ const uploadOption = multer({
 }).single("image");
 
 router.post("/addnewproduct", auth, ProductController.newproduct);
-router.post('/add-new', uploadOption, ProductController.newproductwe)
+router.post('/add-new',auth, uploadOption, ProductController.newproductwe)
 
 router.get("/productfind", ProductController.getAllProducts);
 router.put("/update-product/:id", ProductController.updateProduct);
-router.put('/update-product-image/:id', auth, uploadOption, ProductController.updateProductImage);
-router.get("/count/product", auth,ProductController.countProduct);
-router.get("/get-feature", auth,ProductController.getFeature);
+router.put('/update-product-image/:id', uploadOption, ProductController.updateProductImage);
+router.get("/count/product",ProductController.countProduct);
+router.get("/get-feature",ProductController.getFeature);
 
 router.get('/get-coment-byid/:id', auth,ProductController.getComment);
-router.get('/productid/:id',ProductController.getProductByIdx)
+router.put('/productid/:id',ProductController.getProductByIdx)
 
 //without validate
 
-router.put("/like/:id", auth,ProductController.addLikeProduct)
+router.put("/like/:id",auth, ProductController.addLikeProduct)
 
-router.put('/comment/:id', auth,ProductController.commentProduct)
+router.put('/comment/:id', auth, ProductController.commentProduct)
 
-router.delete("/product_delete/:id", auth,ProductController.deleteProduct)
+router.delete("/product_delete/:id",ProductController.deleteProduct)
 
-router.get('/getproduct-by-category', auth,ProductController.getProductbyCategory)
+router.get('/getproduct-by-category',ProductController.getProductbyCategory)
 
-router.get("/filterbyCategory/:id", auth,ProductController.filterbyCategory)
+router.get("/filterbyCategory/:id",ProductController.filterbyCategory)
 
-router.get('/getProductByUser/:id', auth,ProductController.getProductByUser)
-router.get('/feed-product', auth,ProductController.feedProduct)
+router.get('/getProductByUser/:id',auth, ProductController.getProductByUser)
+router.get('/feed-product',ProductController.feedProduct)
 
-router.post('/sendMessageToBuy/:id', auth, ProductController.sendMessageToBuy)
-router.get('/getMessageToBuy/:id', auth, ProductController.getMessageToBuy)
+router.post('/sendMessageToBuy/:id',auth,  ProductController.sendMessageToBuy)
+router.get('/getMessageToBuy/:id',auth,  ProductController.getMessageToBuy)
 
-router.put('/productidby/:id', auth, ProductController.getProductById)
-// router.post('/createnewproducts', auth, ProductController.updateProductById)
-router.post('/cari-product', auth, ProductController.filterProductNew)
+router.put('/productidby/:id', auth,  ProductController.getProductById)
+// router.post('/createnewproducts', ProductController.updateProductById)
+router.post('/cari-product', ProductController.filterProductNew)
 
 router.post('/filter-by-alamat', ProductController.filterByAlamat)
 
-router.get('/get-product/?name', auth, ProductController.filterbyname)
+router.get('/get-product/?name', ProductController.filterbyname)
 
-router.get('/get-product-by-filter/:query', auth, ProductController.findDuluProduct)
+router.get('/get-product-by-filter/:query', ProductController.findDuluProduct)
 
-router.put('/reply-comment/:id', auth, ProductController.reply)
+router.put('/reply-comment/:id',auth, ProductController.reply)
 
 router.post('/filter-by-latlong', ProductController.filterbylatlong)
 router.post('/filter-by-name', ProductController.filterbynameregex)
 
 router.put('/feed-product-by-id/:id', ProductController.viewFeedProduct)
+
+// router.get('/get-product-feed', ProductController.feedView)
 
 
 module.exports = router;

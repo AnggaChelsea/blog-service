@@ -278,7 +278,7 @@ class ProductController {
   static async newproductwe(req, res) {
     const images = req.file.filename;
     const host = "https";
-    const prodUrl = "obscure-ravine-40173.herokuapp.com";
+    const prodUrl = "https://servicedealdulu.herokuapp.com";
 
     const {
       seller,
@@ -303,7 +303,7 @@ class ProductController {
 
       isFeature,
     } = req.body;
-    const basePath = `${host}://${prodUrl}/assets/images/`;
+    const basePath = `${host}://${prodUrl}/src/assets/images/products/${images}`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
     // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
     if (name === "senjata" || name === "senjata api") {
@@ -321,7 +321,7 @@ class ProductController {
         description,
         richDecription,
         brand,
-        image: images,
+        image: basePath,
         harga_jual,
         harga_beli,
         category,
@@ -461,7 +461,7 @@ class ProductController {
     const findId = findDuluProduct.find(
       (comment) => comment.comment._id === findComment
     );
-    if (findId) {}
+    if (findId) { }
   }
 
   static async reply(req, res) {
@@ -515,7 +515,7 @@ class ProductController {
   }
 
   static async viewFeedProduct(req, res) {
-    const {productId} = req.params;
+    const { productId } = req.params;
     const userId = req.body;
     const productFindandUpdate = await products.findByIdAndUpdate(productId, {
       $push: {
@@ -526,12 +526,12 @@ class ProductController {
       $inc: {
         viewProduct: 1,
       },
-    }, 
-    {
-      new: true,
-    }
+    },
+      {
+        new: true,
+      }
     );
-    if(productFindandUpdate){
+    if (productFindandUpdate) {
       res.status(200).json({
         message: "success get feed",
       });
@@ -545,13 +545,13 @@ class ProductController {
   static async addLikeProduct(req, res) {
     const userLike = req.body;
     const findDuluProduct = await products.findByIdAndUpdate(
-      req.params.id, { 
-        $push: {
-          like: userLike,
-        },
-      }, {
-        new: true,
-      }
+      req.params.id, {
+      $push: {
+        like: userLike,
+      },
+    }, {
+      new: true,
+    }
     );
     if (!findDuluProduct) {
       res.status(404).json({
@@ -593,6 +593,7 @@ class ProductController {
   }
 
   static async getProductByIdx(req, res) {
+    const {usercheck} = req.body;
     const find = await products
       .findById(req.params.id)
       .populate("seller", {
@@ -606,6 +607,14 @@ class ProductController {
         name: 1
       });
     if (find) {
+      await products.findByIdAndUpdate(req.params.id, {
+        $push: {
+          view: {userId: usercheck},
+        },
+      }, {
+        new: true,
+      });
+
       res.status(200).json(find);
     } else {
       res.status(404).json(err);
@@ -617,6 +626,29 @@ class ProductController {
     });
     if (!product) return res.status(404).json("invalid product");
     res.status(200).json(product);
+  }
+
+  //feed
+  static async feedView(req, res) {
+    const checkProduct = await products.find();
+    let banyakView = 0;
+    console.log('ini banyak view', banyakView);
+    for(let i = 0 ; i < checkProduct.length; i++){
+      const view = checkProduct[i].view;
+      for(let j = 0; j < view.length; j++){
+        const obj = Object.keys(view[j]).length;
+        banyakView.push(obj);
+        if(obj >= 3){
+          res.status(200).json({
+            message: "success get feed",
+            product: checkProduct,
+          });
+          console.log('feed dapat 1')
+        }else{
+          console.log('feed tidak dapat 1')
+        }
+      }
+    }
   }
 
   static async getProductByUser(req, res) {
@@ -681,12 +713,12 @@ class ProductController {
     const product = await products
       .findByIdAndUpdate(
         req.params.id, {
-          $set: {
-            numReviews: numReviews + 1,
-          },
-        }, {
-          new: true,
-        }
+        $set: {
+          numReviews: numReviews + 1,
+        },
+      }, {
+        new: true,
+      }
       )
       .populate("seller");
     if (!product) return res.status(404).json("invalid product");
@@ -711,7 +743,7 @@ class ProductController {
   static async updateProductImage(req, res) {
     const image = req.file;
     const basePath = `https://servicedealdulu.herokuapp.com/assets/images/${image.filename}`;
-    
+
     const {
       seller,
       name,
@@ -750,29 +782,29 @@ class ProductController {
     } else {
       imagePath = product.image;
     }
-    if (categoryId) {}
+    if (categoryId) { }
     const productFindandUpdate = await products.findByIdAndUpdate(
       req.params.id, {
-        // $set: req.body, //if dont want to write to all field
-        seller,
-        name: changetolower,
-        alamat: alamatTolower,
-        description,
-        richDecription,
-        brand,
-        harga_jual,
-        harga_beli,
-        category,
-        countInStock,
-        rating,
-        ketentuan,
-        numReviews,
-        like,
-        baru,
-        isFeature,
-      }, {
-        new: true,
-      }
+      // $set: req.body, //if dont want to write to all field
+      seller,
+      name: changetolower,
+      alamat: alamatTolower,
+      description,
+      richDecription,
+      brand,
+      harga_jual,
+      harga_beli,
+      category,
+      countInStock,
+      rating,
+      ketentuan,
+      numReviews,
+      like,
+      baru,
+      isFeature,
+    }, {
+      new: true,
+    }
     );
     if (productFindandUpdate) {
       res.status(200).json({
