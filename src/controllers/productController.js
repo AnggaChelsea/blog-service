@@ -276,9 +276,9 @@ class ProductController {
   }
 
   static async newproductwe(req, res) {
-    const images = req.file.filename;
-    const host = "https";
-    const prodUrl = "https://servicedealdulu.herokuapp.com";
+    // const images = req.file.filename;
+    const host = "http";
+    const prodUrl = "localhost:8001";
 
     const {
       seller,
@@ -300,16 +300,15 @@ class ProductController {
       baru,
       latitude,
       longitude,
-
       isFeature,
     } = req.body;
-    const basePath = `${host}://${prodUrl}/src/assets/images/products/${images}`;
+    // const basePath = `${host}://${prodUrl}/src/assets/images/products/${images}`;
     // const changetolower = name ? "STRING" : name.toLowerCase();
     // const alamatTolower = alamat ? "STRING" : alamat.toLowerCase();
-    if (name === "senjata" || name === "senjata api") {
+    if (name === "senjata" || name === "senjata api" || name === "pistol" || name === "samurai" || name === "ak-47") {
       res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-      return res.status(401).json({
-        status: 401,
+      return res.status(400).json({
+        status: 400,
         message: "product ini berbahaya",
       });
     } else {
@@ -321,7 +320,7 @@ class ProductController {
         description,
         richDecription,
         brand,
-        image: basePath,
+        image,
         harga_jual,
         harga_beli,
         category,
@@ -415,95 +414,18 @@ class ProductController {
     }
   }
 
-  static async commentProduct(req, res) {
-    const {
-      comment,
-      userId
-    } = req.body;
-    const commentId = req.params.id;
-    const findComment = await products.find();
-    for (let i = 0; i < findComment.length; i++) {
-      if (findComment[i].comment._id == productId) {
-
-      }
-    }
-
-  }
-
-  static async getComment(req, res) {
-    const idProduct = req.params;
-    let comment = [];
-    const getComment = products.findById(idProduct);
-    if (getComment) {
-      for (let i = 0; i < getComment.length; i++) {
-        const comments = getComment[i].comment;
-        comment.push(comments);
-        console.log(comment);
-      }
-      res.status(200).json({
-        message: "success get comment",
-        comment: getComment.comment,
-      });
-    } else {
-      res.status(404).json({
-        messageM: "tidak ada comment"
-      });
-    }
-  }
-
-  static async replyComment(req, res) {
-    const findComment = req.params;
-    const {
-      reply,
-      userId
-    } = req.body;
-    const findDuluProduct = await products.find();
-    const findId = findDuluProduct.find(
-      (comment) => comment.comment._id === findComment
-    );
-    if (findId) { }
-  }
-
-  static async reply(req, res) {
-    const findComment = req.params;
-    const {
-      reply,
-      userId
-    } = req.body;
-    const findDuluProduct = await products.find();
-    for (let i = 0; i < findDuluProduct.length; i++) {
-      if (findDuluProduct[i].comment._id === findComment) {
-        await products.findOneAndUpdate(findComment, {
-          $push: {
-            comment: [{
-              replyComment: [{
-                reply,
-                userId,
-              }]
-            }],
-          },
-        }, {
-          new: true,
-        });
-      }
-    }
-    if (findDuluProduct) {
-      res.status(200).json(findDuluProduct);
-    } else {
-      res.status(404).json({
-        message: "tidak ada comment"
-      })
-    }
-  }
 
   static async feedProduct(req, res) {
     const product = await products.find();
     const banyakLike = 0;
+    var getdata = null
+    console.log(getdata);
     for (let i = 0; i < product.length; i++) {
       let feed = product[i].like;
       for (let j = 0; j < feed.length; j++) {
         const obj = Object.keys(feed[j]).length;
         banyakLike = obj;
+        getdata = obj;
         if (obj >= 3) {
           res.status(200).json({
             message: "success get feed",

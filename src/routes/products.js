@@ -49,14 +49,11 @@ router.put('/update-product-image/:id', uploadOption, ProductController.updatePr
 router.get("/count/product",ProductController.countProduct);
 router.get("/get-feature",ProductController.getFeature);
 
-router.get('/get-coment-byid/:id', auth,ProductController.getComment);
 router.put('/productid/:id',ProductController.getProductByIdx)
 
 //without validate
 
 router.put("/like/:id",auth, ProductController.addLikeProduct)
-
-router.put('/comment/:id', auth, ProductController.commentProduct)
 
 router.delete("/product_delete/:id",ProductController.deleteProduct)
 
@@ -79,8 +76,6 @@ router.post('/filter-by-alamat', ProductController.filterByAlamat)
 router.get('/get-product/?name', ProductController.filterbyname)
 
 router.get('/get-product-by-filter/:query', ProductController.findDuluProduct)
-
-router.put('/reply-comment/:id',auth, ProductController.reply)
 
 router.post('/filter-by-latlong', ProductController.filterbylatlong)
 router.post('/filter-by-name', ProductController.filterbynameregex)
