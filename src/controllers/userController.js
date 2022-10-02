@@ -485,10 +485,14 @@ class UserController {
         if (bcrypt.compareSync(password, user.password)) {
           const token = jwt.sign({
               userId: user.id,
+              name: user.name,
+              email: user.email,
               userRole: user.role,
+              verified: user.verified,
+
             },
             "sayangmamah", {
-              expiresIn: "1h",
+              expiresIn: "1m",
             }
           );
           return res.status(200).json({
@@ -684,7 +688,7 @@ class UserController {
           userId: user.id,
         },
         secret, {
-          expiresIn: "1h",
+          expiresIn: "1m",
         }
       );
       const emails = user.email;

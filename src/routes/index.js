@@ -21,10 +21,11 @@ router.use(`/inbox`, require("./inbox"));
 router.use(`/cart`, require("./cart"));
 router.use(`/followers`, followers);
 router.use(`/product`, productR);
-router.use('/socialMedia', require('./socialMedia'));
+// router.use('/socialMedia', require('./socialMedia'));
 router.use('/comment', require('./products/comment'));
 
 router.use('/post-product', require('./products/postProduct'));
+
 
 
 module.exports = router;

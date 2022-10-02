@@ -43,7 +43,7 @@ const uploadOption = multer({
 router.post("/addnewproduct", auth, ProductController.newproduct);
 router.post('/add-new',auth, uploadOption, ProductController.newproductwe)
 
-router.get("/productfind", ProductController.getAllProducts);
+router.get("/productfind",auth, ProductController.getAllProducts);
 router.put("/update-product/:id", ProductController.updateProduct);
 router.put('/update-product-image/:id', uploadOption, ProductController.updateProductImage);
 router.get("/count/product",ProductController.countProduct);

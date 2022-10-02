@@ -3,8 +3,9 @@ const schema = mongoose.Schema;
 const UserSchema = mongoose.Schema({
   name: {
     type: String,
-    required: true,
-  },
+    default: 'User'
+    // required: false,
+  }, 
   email: {
     type: String,
     required: true,
@@ -17,11 +18,11 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  image: { 
     type: String,
   },
   followers: [{
-    userId: {
+    userId: { 
       type: schema.Types.ObjectId,
       ref: 'users'
     }

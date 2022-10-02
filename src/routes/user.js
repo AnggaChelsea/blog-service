@@ -8,6 +8,8 @@ const auth = require("../middleware/auth");
 const multer = require("multer");
 const moment = require("moment");
 const path = require('path');
+const simple = require('../controllers/simpleController');
+const regisosi = require('../controllers/userosiController')
 
 const MIME_TYPE = {
   "image/png": "png",
@@ -52,6 +54,10 @@ router.put('/user/changePassword/:id', registerController.changPasswordUser);
 router.get('/get-all-users', registerController.getAllUser);
 router.get('/get-user-by-id/:id', registerController.getUserById);
 router.post('/user/checkEmail', registerController.checkEmail);
+
+router.post('/regissimple', simple.signup)
+router.post('/loginsimple', simple.login)
+
 // router.post('/user/checkPassword', registerController.checkCodeOtpPassword);
 router.post('/user/check-kode-otp-password', registerController.checkCodeOtpPassword);
 router.get('/user/get-user-pesan/:userid', registerController.getPesan);
@@ -79,5 +85,7 @@ router.post('/login', registerController.logins)
 router.get('/get/followers/:id', registerController.getFollowers);
 
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
+
+router.post('/regisosi', regisosi.registerosi)
 
 module.exports = router;
