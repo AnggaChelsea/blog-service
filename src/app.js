@@ -19,7 +19,7 @@ const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`)
 const port = process.env.PORT ||8001;
 
 app.use(helmet());
-
+ 
 //cors
 app.all('*', function(req, res, next) {
   var origin = req.get('origin'); 
@@ -27,7 +27,7 @@ app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
-});
+}); 
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
