@@ -14,12 +14,29 @@ const messagebird = require("messagebird")(
 const dotenv = require("dotenv");
 dotenv.config();
 const passwordSchema = require("../models/codePassword");
+const navbarM = require("../models/navbar");
 
 console.log(process.env.URL_HOST);
 const { find } = require("../models/user");
 const productModel = require("../models/product");
 var kode = null;
 class UserController {
+	static async createNav(req, res) {
+		const { namelabel, link, typeLilnk } = req.body;
+		const newNav = new navbarM({
+			namelabel,
+			link,
+			typeLilnk,
+		})
+			.then((resp) => {
+				return res.status(200).json({ message: "success", data: resp });
+				newNav.save();
+			})
+			.catch((err) => {
+				return res.status(500).json({ message: "failed", data: resp });
+			});
+	}
+
 	static async regisByPhone(req, res) {
 		const code = Math.round(Math.random() * 100000);
 		const { name, phone, email, password } = req.body;
@@ -429,31 +446,28 @@ class UserController {
 	static async registerNew(req, res) {
 		const codeOtpConfirm = Math.floor(Math.random() * 1000000);
 		const imagePhoto = req.file;
-		const namingFile = `Math.floor(Math.random() * 1000000) "-" ${imagePhoto}`;
-
-		let hasil = codeOtpConfirm.toString().slice(0, 4);
-
-		console.log(hasil, "jalan");
 		const { name, email, password, alamat, numberphone, coordinateLocation } =
 			req.body;
 		// const salt = crypto.randomBytes(1664).toString("hex");
 		// const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
 		// const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
 		// const findUser = (user) => user.email === email;
-		const usernew = await new userModel({
-			name,
-			email,
-			password: bcrypt.hashSync(password, 10),
-			image: namingFile,
-			alamat,
-			numberphone,
-			codeOtp: hasil,
-			coordinateLocation,
-		});
-		const emailUser = usernew.email;
-		const from = "freelacerw9@gmail.com";
-		const linkConfirm = `mohon masukan code otp ${hasil} ini untuk verifikasi akunmu `;
 
+		if (codeOtpComfirmation.length >= 4) {
+			const usernew = await new userModel({
+				name,
+				email,
+				password: bcrypt.hashSync(password, 10),
+				image: namingFile,
+				alamat,
+				numberphone,
+				codeOtp: codeOtpConfirm,
+				coordinateLocation,
+			});
+			const emailUser = usernew.email;
+			const from = "freelacerw9@gmail.com";
+			const linkConfirm = `mohon masukan code otp ${codeOtpConfirm} ini untuk verifikasi akunmu `;
+		}
 		if (!usernew) {
 			res.status(500).json(err);
 		} else {

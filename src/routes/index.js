@@ -25,7 +25,8 @@ router.use(`/product`, productR);
 router.use('/comment', require('./products/comment'));
 
 router.use('/post-product', require('./products/postProduct'));
-
+router.use('/navbar', require('./nav'));
+router.use('/navbar-sql', require('./service/sql/navbar'))
 
 
 module.exports = router;

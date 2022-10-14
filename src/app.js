@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const mongooseConnection = require("./config/db");
+const configSql = require("./config/sql")
 const multer = require("multer");
 const formidable = require('express-formidable');
 const http = require('http').Server(app);
@@ -16,7 +17,7 @@ const sha256 = require("crypto-js/sha256");
 
 require('dotenv').config();
 const messagebird = require('messagebird')(`${process.env.MESSAGEBIRD_API_KEY}`);
-const port = process.env.PORT ||8001;
+const port = process.env.PORT ||8011;
 
 app.use(helmet());
  
@@ -50,11 +51,6 @@ app.use(function (req, res, next) {
 app.use(cors({
   origin: '*'
 }));
-// 
-
-//for send sms use messagebird
-
-
 app.use(function(req, res, next) {
   res.setHeader("Content-Type", "application/json");
   next();
@@ -71,6 +67,12 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 mongooseConnection();
 
+app.get('/', function(req, res) {
+  if(configSql.configSql.db){
+      res.send('mysql connect');
+  }
+});
+
 require("dotenv").config();
 app.use(morgan("tiny"));
 
@@ -78,21 +80,6 @@ app.use(morgan("tiny"));
 //router
 const rolesRouter = require("./routes/roles");
 const routes = require("./routes");
-// app.use((err, _req, res, ) => {
-//   if (err) {
-//     err.status(401).json({ message: err });
-//   }
-// });
-// io.on("connection", (socket) => {
-//   console.log("User connected");
-//   socket.on("disconnect", ()=>{
-//   console.log("Disconnected")
-// });
-// socket.on("getDoc", docId => {
-//   safeJoin(docId);
-//   socket.emit("document", documents[docId]);
-// });
-// });
 
 app.use(routes);
 
