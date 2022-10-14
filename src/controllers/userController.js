@@ -3,6 +3,7 @@ const messageModel = require("../models/message");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
+const smsVerify = require("../helper/smsverif")
 const sendVeryficationPassword = require("../helper/passwordVerification");
 const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
@@ -448,10 +449,6 @@ class UserController {
 		const imagePhoto = req.file;
 		const { name, email, password, alamat, numberphone, coordinateLocation } =
 			req.body;
-		// const salt = crypto.randomBytes(1664).toString("hex");
-		// const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
-		// const imageUrl = `${process.env.LOCAL_HOST}${process.env.URL_HOST}${process.env.PATH_PROFILE}`;
-		// const findUser = (user) => user.email === email;
 
 		if (codeOtpComfirmation.length >= 4) {
 			const usernew = await new userModel({

@@ -10,6 +10,7 @@ const moment = require("moment");
 const path = require('path');
 const simple = require('../controllers/simpleController');
 const regisosi = require('../controllers/userosiController')
+const regisphone = require('../controllers/users/register')
 
 const MIME_TYPE = {
   "image/png": "png",
@@ -87,5 +88,7 @@ router.get('/get/followers/:id', registerController.getFollowers);
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
 
 router.post('/regisosi', regisosi.registerosi)
+
+router.post('/regis-phone', regisphone.regisPhone)
 
 module.exports = router;

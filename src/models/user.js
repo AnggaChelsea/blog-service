@@ -78,6 +78,10 @@ const UserSchema = mongoose.Schema({
     maxlength: 12,
     required: false,
   },
+  phone: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'numberphone',
+  },
   followers: [],
   created_at: {
     type: Date,
