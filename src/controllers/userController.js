@@ -3,7 +3,7 @@ const messageModel = require("../models/message");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
-const smsVerify = require("../helper/smsverif")
+const smsVerify = require("../helper/smsverif");
 const sendVeryficationPassword = require("../helper/passwordVerification");
 const nodemailer = require("../config/nodemailer");
 const allProduct = require("../models/allproducts");
@@ -450,30 +450,28 @@ class UserController {
 		const { name, email, password, alamat, numberphone, coordinateLocation } =
 			req.body;
 
-		if (codeOtpComfirmation.length >= 4) {
+		if (codeOtpConfirm.length >= 4) {
+			codeOtpConfirm.slice(0, 4);
 			const usernew = await new userModel({
 				name,
 				email,
 				password: bcrypt.hashSync(password, 10),
 				image: namingFile,
 				alamat,
-				numberphone,
+				numberphone, 
 				codeOtp: codeOtpConfirm,
 				coordinateLocation,
 			});
-			const emailUser = usernew.email;
-			const from = "freelacerw9@gmail.com";
-			const linkConfirm = `mohon masukan code otp ${codeOtpConfirm} ini untuk verifikasi akunmu `;
-		}
-		if (!usernew) {
-			res.status(500).json(err);
-		} else {
-			usernew.save().then((response) => {
-				sendVeryficationEmail(from, name, emailUser, linkConfirm);
-				res.status(200).json({
-					message: "success register",
+			if (!usernew) {
+				res.status(500).json(err);
+			} else {
+				usernew.save().then((response) => {
+					sendVeryficationEmail(from, name, emailUser, linkConfirm);
+					res.status(200).json({
+						message: "success register",
+					});
 				});
-			});
+			}
 		}
 	}
 

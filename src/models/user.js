@@ -10,6 +10,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  isCaptain: {
+    type: Boolean,
+    default: false,
+  },
   verified: {
     type: Boolean,
     default: false,
@@ -17,6 +21,10 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  namaTeam: {
+    type: schema.Types.ObjectId,
+    ref: 'namaTeam',
   },
   image: { 
     type: String,
@@ -72,7 +80,10 @@ const UserSchema = mongoose.Schema({
     ref: "roles",
     default: "626b9b71e64b96457ff05e96",
   },
-
+  typeRole: {
+    type: Number,
+    default:2
+  },
   numberphone: {
     type: String,
     maxlength: 12,
