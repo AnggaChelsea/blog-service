@@ -78,7 +78,6 @@ app.use(morgan("tiny"));
 
 
 //router
-const rolesRouter = require("./routes/roles");
 const routes = require("./routes");
 
 app.use(routes);

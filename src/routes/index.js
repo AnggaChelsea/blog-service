@@ -5,7 +5,6 @@ const jwta = require("../middleware/jwtAdmin")
 const api = process.env.API_URL;
 router.use(`/user`, userRouter);
 
-router.use(`/roles`, require("./roles"));
 // router.use('/socialMedia', require('./socialMedia'));
 
 router.use('/navbar', require('./nav'));

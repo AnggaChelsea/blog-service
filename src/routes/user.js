@@ -6,7 +6,6 @@ const auth = require("../middleware/auth");
 const multer = require("multer");
 const moment = require("moment");
 const path = require('path');
-const regisosi = require('../controllers/userosiController')
 const regisphone = require('../controllers/users/register')
 
 const MIME_TYPE = {
@@ -80,7 +79,6 @@ router.get('/get/followers/:id', registerController.getFollowers);
 
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
 
-router.post('/regisosi', regisosi.registerosi)
 
 router.post('/regis-phone', regisphone.regisPhone)
 

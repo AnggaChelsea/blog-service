@@ -5,6 +5,7 @@ const authToken = "74940f0d26f25e42b5a3175f3485c186";
 const client = require("twilio")(accountSid, authToken);
 const userModel = require("../../models/user");
 const emailVerif = require("../../helper/emailVerifycation")
+const moment = require("moment");
 
 class PhoneController {
 	static async regisPhone(req, res) {
@@ -29,14 +30,17 @@ class PhoneController {
 	}
 	static async registerEmail(req, res) {
         const code = Math.floor(Math.random() * 10000);
-		const { email, password, name, alamat } = req.body;
+		const { email, password, name, alamat, tanggalLahir, numberphone } = req.body;
 		console.log("registerEmail", email, password, name, alamat); 
 		const createUser = await new userModel({
 			email: email.toLowerCase(),
 			password,
 			name: name.toUpperCase(),
 			alamat: alamat.toUpperCase(),
+			tanggalLahir:moment(tanggalLahir).format('LL'),
+			numberphone
 		});
+		console.log(createUser);
         const sendemail = await emailVerif(email, name, code  )
         if(sendemail){
             console.log('success send email', sendemail(email, name, code))

@@ -1,12 +1,10 @@
 const userModel = require("../models/user");
-const messageModel = require("../models/message");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const smsVerify = require("../helper/smsverif");
 const sendVeryficationPassword = require("../helper/passwordVerification");
 const nodemailer = require("../config/nodemailer");
-const allProduct = require("../models/allproducts");
 const sha256 = require("crypto-js/sha256");
 var crypto = require("crypto");
 const messagebird = require("messagebird")(
@@ -14,12 +12,10 @@ const messagebird = require("messagebird")(
 );
 const dotenv = require("dotenv");
 dotenv.config();
-const passwordSchema = require("../models/codePassword");
 const navbarM = require("../models/navbar");
 
 console.log(process.env.URL_HOST);
 const { find } = require("../models/user");
-const productModel = require("../models/product");
 var kode = null;
 class UserController {
 	static async createNav(req, res) {

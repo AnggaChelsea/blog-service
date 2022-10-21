@@ -14,7 +14,7 @@ const UserSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  verified: {
+  verified: { 
     type: Boolean,
     default: false,
   },
@@ -75,10 +75,9 @@ const UserSchema = mongoose.Schema({
     type: Number,
   },
 
-  role: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "roles",
-    default: "626b9b71e64b96457ff05e96",
+  tanggalLahir: {
+    type: String,
+    required: true,
   },
   typeRole: {
     type: Number,
