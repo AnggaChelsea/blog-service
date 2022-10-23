@@ -7,7 +7,7 @@ const SendConfirmation = (email, name, confirmations) => {
         to: email,
         subject: "Confirmation Email",
         html: `
-        <strong style="color:blue">Hi ${name}!</strong> <br />terimakasih sudah mendaftar di ourCommerce. <br />
+        <strong style="color:blue">Hi ${name}!</strong> <br />terimakasih sudah mendaftar di OSI, Berikut Kode Verifikasi. <br />
          
         <p>${confirmations}</p>`
        

@@ -10,6 +10,7 @@ router.use(`/user`, userRouter);
 router.use('/navbar', require('./nav'));
 router.use('/navbar-sql', require('./service/sql/navbar'))
 router.use('/team', require('./teams/teams.router'))
+router.use('/lapang', require('./lapang/lapang'))
 
 
 module.exports = router;

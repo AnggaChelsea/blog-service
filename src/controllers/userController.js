@@ -34,21 +34,6 @@ class UserController {
 			});
 	}
 
-	static async regisByPhone(req, res) {
-		const code = Math.round(Math.random() * 100000);
-		const { name, phone, email, password } = req.body;
-		const user = await new userModel({
-			name,
-			phone,
-		});
-		if (user) {
-			return res.status(200).send({
-				message: "user berhasil registrasi",
-				user,
-			});
-		}
-	}
-
 	static async updateUser(req, res) {
 		const filename = req.file;
 		const nameFileImage = Math.round(Math.random() * 100000) + filename;
@@ -77,57 +62,6 @@ class UserController {
 				message: "User not found",
 			});
 		}
-	}
-
-	static async followeUser(req, res) {
-		const followers = req.body;
-		const user = await userModel.findById(req.params.id);
-		if (user) {
-			const newFollow = await new userModel({
-				followers,
-			});
-			newFollow
-				.save()
-				.then((response) => {
-					return res.status(200).json({
-						response,
-						user: userid,
-						message: "followers bertambah",
-					});
-				})
-				.catch((err) => {
-					res.status(500).json(err);
-				});
-		}
-	}
-
-	static async getChatByBuyer(req, res) {
-		const { buyerId, sellerId } = req.body;
-		const chat = await messageModel
-			.find({
-				buyerId,
-				sellerId,
-			})
-			.populate("buyerId", "name")
-			.populate("sellerId", "name");
-		if (chat) {
-			return res.status(200).json({
-				chat,
-				message: "chat ditemukan",
-			});
-		}
-		return res.status(400).json({
-			message: "chat not found",
-		});
-		// if(chat.buyerId === buyerId && chat.sellerId === sellerId){
-		//   res.status(200).json({
-		//     chat
-		//   })
-		// }else{
-		//   res.status(404).json({
-		//     message: 'chat not found'
-		//   })
-		// }
 	}
 
 	static async follow(req, res) {
@@ -308,166 +242,43 @@ class UserController {
 		}
 	}
 
-	static async getPesan(req, res) {
-		const userId = req.params.userId;
-		const findUser = await userModel.findById(userId);
-		if (findUser != null) {
-			res.response(200).json({
-				message: "success",
-			});
-		} else {
-			res.response(404).json({
-				message: "kosong",
-			});
-		}
-	}
-
-	static async register(req, res) {
-		const { name, email, password, image, alamat, numberphone } = req.body;
-		const newUser = await new userModel({
-			name,
-			email,
-			password,
-			image,
-			alamat,
-			numberphone,
-		});
-		const emailUser = usernew.email;
-		const from = "adeadeaja2121@gmail.com";
-		const userId = usernew.id;
-		const host = "http://localhost:8001";
-		const linkConfirm = `mohon klik link ini untuk verifikasi akunmu ${host}/user/verify/${userId}`;
-		let message = {
-			from: from,
-			to: emailUser,
-			subject: "AMP4EMAIL message",
-			text: "OLX COMMERCE",
-			html: `<p>Terimakasih click link ini untuk verifikasi ${linkConfirm}</p>`,
-			amp: `<!doctype html>
-          <html ⚡4email>
-            <head>
-              <meta charset="utf-8">
-              <style amp4email-boilerplate>body{visibility:hidden}</style>
-              <script async src="https://cdn.ampproject.org/v0.js"></script>
-              <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
-            </head>
-            <body>
-              <p>Image: <amp-img src="https://cldup.com/P0b1bUmEet.png" width="16" height="16"/></p>
-              <p>GIF (requires "amp-anim" script in header):<br/>
-                <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
-            </body>
-          </html>`,
-		};
-		nodemailer.sendMail(message, (err, info) => {
-			if (err) {
-				res.status(500).json(err);
-			} else {
-				usernew.save().then((response) => {
-					sendVeryficationEmail(from, emailUser, linkConfirm);
-					return res.status(200).json({
-						message: "success register",
-						response,
-					});
-				});
-			}
-		});
-	}
-
 	static async registerGoogle(req, res) {
 		//register by google
 		const tokenGoogle = req.body;
 	}
 
-	static async registerByPhone(req, res) {
-		const phoneNumber = req.body;
-		const code = Math.floor(Math.random() * 10000);
-		// Make request to Verify API
-		messagebird.verify.create(
-			number,
-			{
-				originator: "Code",
-				template: `ini kode konfirmasinya ${code}`,
-			},
-			function (err, response) {
-				if (err) {
-					// Request has failed
-					console.log(err);
-					res.response(500).json({
-						message: "error",
-					});
-				} else {
-					// Request was successful
-					console.log(response);
-					res.response(200).json({
-						message: "success",
-					});
-				}
-			}
-		);
-	}
-
-	static async getPesan(req, res) {
-		const userId = req.params.id;
-		const findPesan = await userModel.findById(userId).populate("pesan", {
-			senderId: userId,
-		});
-		if (findPesan) {
-			res.status(200).json({
-				findPesan,
-				message: "pesan ditemukan",
-			});
-		} else {
-			res.status(404).json({
-				message: "pesan not found",
-			});
-		}
-	}
-
-	static async Chatting(req, res) {
-		const userId = req.params.id;
-		const findPesan = await userModel.findById(userId).populate("pesan", {
-			senderId: userId,
-		});
-		if (findPesan) {
-			res.status(200).json({
-				findPesan,
-				message: "pesan ditemukan",
-			});
-		} else {
-			res.status(404).json({
-				message: "pesan not found",
-			});
-		}
-	}
-
 	static async registerNew(req, res) {
 		const codeOtpConfirm = Math.floor(Math.random() * 1000000);
-		const imagePhoto = req.file;
-		const { name, email, password, alamat, numberphone, coordinateLocation } =
-			req.body;
+		const toString = codeOtpConfirm.toString();
+		const slic = toString.split(0, 4);
+		const {
+			name,
+			email,
+			password,
+			alamat,
+			image,
+			numberphone,
+			coordinateLocation,
+		} = req.body;
 
-		if (codeOtpConfirm.length >= 4) {
-			codeOtpConfirm.slice(0, 4);
-			const usernew = await new userModel({
-				name,
-				email,
-				password: bcrypt.hashSync(password, 10),
-				image: namingFile,
-				alamat,
-				numberphone, 
-				codeOtp: codeOtpConfirm,
-				coordinateLocation,
+		const usernew = await new userModel({
+			name,
+			email,
+			password: bcrypt.hashSync(password, 10),
+			image,
+			alamat,
+			numberphone,
+			codeOtp: slic,
+			coordinateLocation,
+		});
+		if (!usernew) {
+			res.status(500).json(err);
+		} else {
+			usernew.save();
+			sendVeryficationEmail(email, name, slic);
+			res.status(200).json({
+				message: "success register",
 			});
-			if (!usernew) {
-				res.status(500).json(err);
-			} else {
-				usernew.save().then((response) => {
-					sendVeryficationEmail(from, name, emailUser, linkConfirm);
-					res.status(200).json({
-						message: "success register",
-					});
-				});
-			}
 		}
 	}
 

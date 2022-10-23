@@ -13,6 +13,9 @@ const phoneSchema = new schema({
     },
     codeOtp: {
         type: 'string',
+    },
+    typeNumber: {
+        type: String,
     }
 })
 const createTable = mongoose.model('numberphone', phoneSchema)
