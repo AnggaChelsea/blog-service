@@ -10,7 +10,7 @@ const LapangSchema = new mongoose.Schema({
 		required: true,
 	},
 	rate: {
-		type: Number,
+		type: String,
 		default: 0,
 	},
 	gambar: [
@@ -42,11 +42,14 @@ const LapangSchema = new mongoose.Schema({
 	members: {
 		type: schema.Types.ObjectId,
 		ref: "teams",
-		required: false,
 	},
 	createdAt: {
 		type: Date,
 		default: new Date(),
+	},
+	katagory: {
+		type: schema.Types.ObjectId,
+		ref: "category-lapangs",
 	},
 });
 

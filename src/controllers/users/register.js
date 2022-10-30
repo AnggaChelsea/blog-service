@@ -37,10 +37,10 @@ class PhoneController {
 			req.body;
 		console.log("registerEmail", email, password, name, alamat);
 		const createUser = await new userModel({
-			email: email.toLowerCase(),
+			email: email,
 			password,
-			name: name.toUpperCase(),
-			alamat: alamat.toUpperCase(),
+			name: name,
+			alamat: alamat,
 			tanggalLahir: moment(tanggalLahir).format("LL"),
 			numberphone,
 		});

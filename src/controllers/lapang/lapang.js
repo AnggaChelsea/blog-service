@@ -15,9 +15,9 @@ class LapangController {
 			description,
 			turnament,
 			members,
-		} = req.bddy;
+		} = req.body;
 		const newData = await new lapangModel({
-			nama,
+			nama: nama,
 			hargaSewaPerjam,
 			gambar,
 			lokasi,
