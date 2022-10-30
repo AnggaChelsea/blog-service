@@ -1,7 +1,6 @@
 {
   "name": "osi-service",
   "version": "1.0.0",
-  "type": "module",
   "description": "http & https\r http hype text transfer protocol\r http hyper text transfer protocol scure\r api ->  https://obscure-ravine-40173.herokuapp.com",
   "main": "app.js",
   "scripts": {
