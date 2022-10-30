@@ -15,22 +15,25 @@ class PhoneController {
 		const slicCode = convertString.slice(0, 4);
 		console.log(slicCode);
 		const { phone, password } = req.body;
+		const idn = '+62'
+		const phonecode = idn+phone
+		console.log(phonecode);
 		const userRegis = await new phoneS({
-			phone,
+			phone: phonecode,
 			password,
 			codeOtp: slicCode,
 			typeNumber: 'Phone'
 		});
-		console.log(phone);
+		console.log(userRegis.phone);
 		if (!userRegis) {
 			res.status(500).json({ message: "server error" });
 		} else {
 			setTimeout(function () {
-				verifPhone(phone, slicCode);
+				verifPhone(phonecode, slicCode);
 			}, 5000);
 			res.status(200).json({ message: "success code terkirim" });
 		}
-	}
+	} 
 	static async registerEmail(req, res) {
 		const code = Math.floor(Math.random() * 10000);
 		const { email, password, name, alamat, tanggalLahir, numberphone } =
