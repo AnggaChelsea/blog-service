@@ -1,6 +1,7 @@
 {
   "name": "osi-service",
   "version": "1.0.0",
+  "type": "module",
   "description": "http & https\r http hype text transfer protocol\r http hyper text transfer protocol scure\r api ->  https://obscure-ravine-40173.herokuapp.com",
   "main": "app.js",
   "scripts": {
@@ -10,7 +11,7 @@
   "author": "olx",
   "license": "ISC",
   "engines": {
-    "node": "v16.17.0"
+    "node": "v14.18.1"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.19.4",
