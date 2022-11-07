@@ -1,145 +1,161 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
-const UserSchema = mongoose.Schema({
-  name: {
-    type: String,
-    default: 'User'
-    // required: false,
-  }, 
-  email: {
-    type: String,
-    required: true,
-  },
-  isCaptain: {
-    type: Boolean,
-    default: false,
-  },
-  verified: { 
-    type: Boolean,
-    default: false,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  namaTeam: {
-    type: schema.Types.ObjectId,
-    ref: 'namaTeam',
-  },
-  image: { 
-    type: String,
-  },
-  followers: [{
-    userId: { 
-      type: schema.Types.ObjectId,
-      ref: 'users'
-    }
-  }],
-  alamat: {
-    type: String,
-  },
-  PesanKirim: [{
-    userId: {
-      type: schema.Types.ObjectId,
-      ref: "users",
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    }
-  }],
-  pesanTerima: [{
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "products",
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    }
-  }],
-  coordinateLocation: [{
-    latitude: {
-      type: String,
-    },
-    longitude: {
-      type: String,
-    }
-  }],
-  notification: [],
-  codeOtp: {
-    type: Number,
-  },
+const UserSchema = mongoose.Schema(
+	{
+		name: {
+			type: String,
+			default: "User",
+			// required: false,
+		},
+		email: {
+			type: String,
+			required: true,
+		},
+		isCaptain: {
+			type: Boolean,
+			default: false,
+		},
+		verified: {
+			type: Boolean,
+			default: false,
+		},
+		password: {
+			type: String,
+			required: true,
+		},
+		namaTeam: {
+			type: schema.Types.ObjectId,
+			ref: "namaTeam",
+		},
+		image: {
+			type: String,
+		},
+		followers: [
+			{
+				userId: {
+					type: schema.Types.ObjectId,
+					ref: "users",
+				},
+			},
+		],
+		alamat: {
+			type: String,
+		},
+		PesanKirim: [
+			{
+				userId: {
+					type: schema.Types.ObjectId,
+					ref: "users",
+				},
+				createdAt: {
+					type: Date,
+					default: Date.now,
+				},
+			},
+		],
+		pesanTerima: [
+			{
+				userId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "users",
+				},
+			},
+		],
+		coordinateLocation: [
+			{
+				latitude: {
+					type: String,
+				},
+				longitude: {
+					type: String,
+				},
+			},
+		],
+		notification: [],
+		codeOtp: {
+			type: Number,
+		},
 
-  tanggalLahir: {
-    type: String,
-    required: true,
-  },
-  typeRole: {
-    type: Number,
-    default:2
-  },
-  numberphone: {
-    type: String,
-    maxlength: 12,
-    required: false,
-  },
-  phone: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'numberphone',
-  },
-  followers: [],
-  created_at: {
-    type: Date,
-    default: Date.now,
-  },
-  updated_at: {
-    type: Date,
-    default: Date.now,
-  },
-}, {
-  collection: "",
-});
+		tanggalLahir: {
+			type: String,
+			required: true,
+		},
+		typeRole: {
+			type: Number,
+			default: 2,
+		},
+		jenisKelamin: {
+			type: String,
+			required: true,
+		},
+		numberphone: {
+			type: String,
+			maxlength: 12,
+			required: false,
+		},
+		// kategori: {
+		// 	type: mongoose.Schema.ObjectId,
+		// 	ref: "category-lapangs",
+		// 	required: true,
+		// },
+		phone: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "numberphone",
+		},
+		followers: [],
+		created_at: {
+			type: Date,
+			default: Date.now,
+		},
+		updated_at: {
+			type: Date,
+			default: Date.now,
+		},
+		pemain: {
+			type: mongoose.Schema.ObjectId,
+			ref: "category-lapangs",
+			required: true,
+		},
+	},
+	{
+		collection: "",
+	}
+);
 
 UserSchema.virtual("id").get(function () {
-  return this._id.toHexString();
+	return this._id.toHexString();
 });
 
 // Ensure virtual fields are serialised.
 UserSchema.set("toJSON", {
-  virtuals: true,
+	virtuals: true,
 });
 const UserModel = mongoose.model("users", UserSchema);
 //validate email
 UserModel.schema.path("email").validate(function (value) {
-  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+	return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
 });
 // validate email is exist
 UserModel.schema.path("email").validate(function (value) {
-  return UserModel.findOne({
-    email: value,
-  }).then(function (user) {
-    if (user) {
-      return false;
-    }
-    return true;
-  });
+	return UserModel.findOne({
+		email: value,
+	}).then(function (user) {
+		if (user) {
+			return false;
+		}
+		return true;
+	});
 }, "Email sudah terdaftar");
-
 
 // validate numberphone isexist
 UserModel.schema.path("numberphone").validate(function (value) {
-  return UserModel.findOne({
-    numberphone: value,
-  }).then((user) => {
-    if (user) {
-      return false;
-    }
-    return true;
-  });
+	return UserModel.findOne({
+		numberphone: value,
+	}).then((user) => {
+		if (user) {
+			return false;
+		}
+		return true;
+	});
 }, "Nomor telepon sudah terdaftar");
 module.exports = UserModel;

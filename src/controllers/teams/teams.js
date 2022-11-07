@@ -6,10 +6,10 @@ class TeamController {
 		const {
 			nama,
 			pemain,
-			jumlahTeam,
 			statusOpen,
 			isActive,
-			unixCode,
+			gambar,
+			kategori
 			// daerah,
 		} = req.body;
 		// const unixcodedata = await teamModel.find();
@@ -21,14 +21,20 @@ class TeamController {
 		//         }
 		//     })
 		// }
-
+		const teamJumlah = await teamModel.find()
+		if(teamJumlah != null){
+			for(let i = 0; i < teamJumlah.length; i++){
+				console.log(teamJumlah[i].pemain, 'jumlahTeam')
+			}
+		}
 		const team = await new teamModel({
 			nama,
 			pemain,
-			jumlahTeam,
 			statusOpen,
 			isActive,
 			unixCode: unixCodeTeam,
+			gambar,
+			kategori
 			// daerah,
 		});
 
@@ -46,10 +52,17 @@ class TeamController {
 	}
 
 	static async getTeams(req, res) {
-		const timedata = await teamModel.find().populate("pemain");
+		let datapemain;
+		const timedata = await teamModel.find().populate("pemain").populate("kategori");
+		for(let i = 0; i < timedata.length; i++) {
+			const coun =  timedata[i].pemain
+			const lengPemain = coun.length
+			datapemain = lengPemain
+		}
+		console.log(datapemain, 'ini data pemain')
 		if (!timedata) return;
 
-		res.status(200).send({ message: "success get data", data: timedata });
+		res.status(200).send({ message: "success get data", data: timedata, jumlahPemain: datapemain });
 	}
 
 	static async gabungTeam(req, res) {

@@ -8,5 +8,5 @@ const categorySchema = new mongoose.Schema({
         type: String,
     }
 })
-const category = mongoose.model('Category-lapang', categorySchema)
+const category = mongoose.model('category-lapangs', categorySchema)
 module.exports = category

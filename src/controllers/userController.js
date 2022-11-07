@@ -271,6 +271,7 @@ class UserController {
 			codeOtp: slic,
 			coordinateLocation,
 		});
+		console.log(usernew.password)
 		if (!usernew) {
 			res.status(500).json(err);
 		} else {
@@ -375,9 +376,9 @@ class UserController {
 	static async verifyOtp(req, res) {
 		const { codeOtp } = req.body;
 		const findOtp = await userModel.findOneAndUpdate(
-			{
-				codeOtp: codeOtp,
-			},
+			
+				codeOtp,
+			
 			{
 				$set: {
 					verified: true,
@@ -390,12 +391,7 @@ class UserController {
 		if (findOtp) {
 			res.status(200).json({
 				message: "success verify otp",
-			});
-			await userModel.findOneAndUpdate({
-				$set: {
-					codeOtp: 0,
-				},
-			});
+			})
 		} else {
 			res.status(500).json({
 				message: "failed verify otp",
@@ -615,9 +611,9 @@ class UserController {
 	}
 
 	static async getAllUser(req, res) {
-		const user = await userModel.find();
+		const user = await userModel.find().populate("pemain")
 		if (user) {
-			res.status(200).json({
+			res.status(200).json({ 
 				message: "success get all user",
 				data: user,
 			});

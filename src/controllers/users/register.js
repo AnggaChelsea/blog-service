@@ -7,6 +7,7 @@ const userModel = require("../../models/user");
 const emailVerif = require("../../helper/emailVerifycation");
 const moment = require("moment");
 const whatsappVerif = require("../../helper/whatsappverif");
+const bcrypt = require('bcrypt')
 
 class PhoneController {
 	static async regisPhone(req, res) {
@@ -34,21 +35,27 @@ class PhoneController {
 			res.status(200).json({ message: "success code terkirim" });
 		}
 	} 
-	static async registerEmail(req, res) {
+	static async registerEmail(req, res){
+		const salt = bcrypt.genSaltSync(10)
 		const code = Math.floor(Math.random() * 10000);
-		const { email, password, name, alamat, tanggalLahir, numberphone } =
+		const { email, password, name, alamat, image, tanggalLahir, pemain ,numberphone, jenisKelamin, tinggiBadan } =
 			req.body;
 		console.log("registerEmail", email, password, name, alamat);
 		const createUser = await new userModel({
 			email: email,
-			password,
+			password: bcrypt.hashSync(password, salt),
 			name: name,
-			alamat: alamat,
-			tanggalLahir: moment(tanggalLahir).format("LL"),
+			alamat: alamat, 
+			tanggalLahir,
 			numberphone,
-		});
-		console.log(createUser);
+			jenisKelamin,
+			image, 
+			pemain,
+		}); 
+		console.log(createUser); 
+		console.log(code, 'otp') 
 		const sendemail = await emailVerif(email, name, code);
+		console.log(sendemail,'console email');
 		if (sendemail) {
 			console.log("success send email", sendemail(email, name, code));
 		} else {
@@ -85,7 +92,11 @@ class PhoneController {
 			dataSave.save()
 			if (codeVerif) return res.status(200).json({ message: "success" });
 		}
-	} 
+	}
+	
+	static async loginEmail(req, res){
+		
+	}
 
 	static async loginNumberPhone(req, res) {
 		const {phone, password} = req.body;
