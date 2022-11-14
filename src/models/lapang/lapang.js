@@ -5,6 +5,10 @@ const LapangSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	pemilikId:{
+		type: schema.Types.ObjectId,
+		ref: 'users'
+	},
 	hargaSewaPerjam: {
 		type: String,
 		required: true,
@@ -39,10 +43,10 @@ const LapangSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
-	members: {
+	members: [{
 		type: schema.Types.ObjectId,
-		ref: "teams",
-	},
+		ref: "users",
+	}],
 	createdAt: {
 		type: Date,
 		default: new Date(),

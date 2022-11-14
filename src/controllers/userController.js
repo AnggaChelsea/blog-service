@@ -261,6 +261,10 @@ class UserController {
 			coordinateLocation,
 		} = req.body;
 
+		if(name || email || password || numberphone || alamat || image == ''){
+			res.status(400).json({message: 'wajib isi data'})
+		}
+
 		const usernew = await new userModel({
 			name,
 			email,
@@ -309,6 +313,7 @@ class UserController {
 						id: user.id,
 						name: user.name,
 						pesan: user.pesan,
+						typeUser: user.typeUser,
 						token,
 					});
 				} else {

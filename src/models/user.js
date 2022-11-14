@@ -53,6 +53,7 @@ const UserSchema = mongoose.Schema(
 				},
 			},
 		],
+		
 		pesanTerima: [
 			{
 				userId: {
@@ -116,6 +117,10 @@ const UserSchema = mongoose.Schema(
 			ref: "category-lapangs",
 			required: true,
 		},
+		typeUser: {
+			type: String,
+			required: true,
+		}
 	},
 	{
 		collection: "",

@@ -38,7 +38,7 @@ class PhoneController {
 	static async registerEmail(req, res){
 		const salt = bcrypt.genSaltSync(10)
 		const code = Math.floor(Math.random() * 10000);
-		const { email, password, name, alamat, image, tanggalLahir, pemain ,numberphone, jenisKelamin, tinggiBadan } =
+		const { email, password, name, alamat, image, tanggalLahir, pemain ,numberphone, jenisKelamin, typeUser, tinggiBadan } =
 			req.body;
 		console.log("registerEmail", email, password, name, alamat);
 		const createUser = await new userModel({
@@ -51,6 +51,7 @@ class PhoneController {
 			jenisKelamin,
 			image, 
 			pemain,
+			typeUser
 		}); 
 		console.log(createUser); 
 		console.log(code, 'otp') 
