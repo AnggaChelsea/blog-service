@@ -1,4 +1,6 @@
 const navaModel = require('../models/navbar')
+const navSqlMmodel = require('../models/sql/nav')
+
 
 class Navbar {
     static async create(req, res) {
@@ -27,6 +29,13 @@ class Navbar {
       if(!getnav) return res.status(404).json("invalid navigation")
       return res.status(200).json({message: 'success', data: getnav})
     }
+
+    static async getAllNavbar(req, res){
+        const dataNav = await navSqlMmodel.allNav()
+        res.json({message: 'success', data: dataNav})
+    }
+
+
 }
 
 module.exports = Navbar

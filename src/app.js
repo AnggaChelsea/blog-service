@@ -5,11 +5,14 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const mongooseConnection = require("./config/db");
+const sqlConnection = require("./config/db_sql_connect")
 const configSql = require("./config/sql_connect");
 const multer = require("multer");
 const formidable = require("express-formidable");
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
+const mysql = require('mysql2');
+
 const path = require("path");
 
 var helmet = require("helmet");
@@ -61,6 +64,7 @@ app.use(
 		origin: "*",
 	})
 );
+
 app.use(function (req, res, next) {
 	res.setHeader("Content-Type", "application/json");
 	next();
@@ -90,6 +94,25 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 5
 // );
 
 mongooseConnection();
+const dbpool = mysql.createPool({
+	host: 'localhost',
+	user: 'root',
+	database: 'osi_admin',
+	waitForConnections: true,
+	connectionLimit: 10,
+	queueLimit: 0
+  });
+
+  app.use('/connection', (req, res) => {
+	dbpool.execute('SELECT * FROM navbar', (err, rows) => {
+		if(err){
+			res.json({
+				message: 'Error executing connection query failed'
+			})
+		}
+		res.json({message: 'Connection success', data: rows});
+	})
+} )
 
 app.get("/", function (req, res) {
 	if (configSql.configSql.db) {

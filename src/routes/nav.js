@@ -4,6 +4,6 @@ const nav = require('../controllers/navbar')
 
 
 route.post('/createnav', nav.create)
-route.get('/getNav', nav.getNav)
+route.get('/get-nav', nav.getAllNavbar)
 
 module.exports = route

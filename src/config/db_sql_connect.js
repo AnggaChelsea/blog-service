@@ -1,15 +1,14 @@
-const mysql = require('mysql');
-const dbConfig = require('./sql_connect')
 
-const connection = mysql.createConnection({
-    host: dbConfig.host || 'localhost',
-    user: dbConfig.user || 'root',
-    database: dbConfig.database
-})
+const mysql = require('mysql2');
 
-connection.connect(error => {
-    if(error) throw error;
-    console.log('success connection')
-})
+// Create the connection pool. The pool-specific settings are the defaults
+const dbpool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  database: 'osi_admin',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
-module.exports = connection
+module.exports = dbpool.promise()
