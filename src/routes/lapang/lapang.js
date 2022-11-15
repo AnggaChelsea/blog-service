@@ -8,5 +8,6 @@ router.post('/create-lapang', auth, lapangcontrollers.CreateLapang)
 router.get('/get-lapang', auth, lapangcontrollers.getLapang)
 router.post('/get-by-pemilik', auth, lapangcontrollers.getLapangByPemilik)
 router.post('/get-by-category', auth, lapangcontrollers.getLapangByKatagori)
+router.post('/join-member', auth, lapangcontrollers.joinMember)
 
 module.exports = router;
