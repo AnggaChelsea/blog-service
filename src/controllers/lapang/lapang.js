@@ -72,6 +72,16 @@ class LapangController {
 		
 	}
 
+	static async getLapangByKatagori(req, res){
+		const {katagory} = req.body;
+		let lapangKate = await lapangModel.findOne({katagory: katagory})
+		if(lapangKate === null){
+			res.status(404).send({message: 'Belum Register Lapang'})
+		}else{
+			res.status(200).send({message: 'success get data', data: lapangKate})
+		}
+	}
+
 	static async createCatagory(req, res) {
 		const { nama, gambar } = req.body;
 		const dataKategori = await new katagoryModel({

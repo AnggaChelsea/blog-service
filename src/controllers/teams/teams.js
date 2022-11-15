@@ -80,5 +80,25 @@ class TeamController {
 		if (!teamdata) return;
 		res.status(200).send({ message: "success gabung", data: teamdata });
 	}
+	static async joinMemberTeam(req, res){
+		const teamId = req.params;
+		const {pemainId} = req.body;
+		const datapemain = await teamModel.findOne({pemainId: pemainId});
+		if(datapemain != null){
+			const dataLapangUpdate = await teamModel.findOneAndUpdate(teamId, {
+				$push: {pemainId: [pemainId]}
+			}, 
+			
+			{
+				new: true
+			})
+			res.status(201).json({message:'success jadi memeber', data: dataLapangUpdate})
+		}else{
+			res.status(400).json({message: 'belum bisa jadi memeber'})
+		}
+
+
+	}
+	
 }
 module.exports = TeamController;
