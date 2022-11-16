@@ -122,7 +122,8 @@ class LapangController {
 	}
 	static async getKategory(req, res){
 		const data = await katagoryModel.find()
-		if(!data){
+		console.log(data)
+		if(data != null){
 			res.status(200).json({message: 'success', data: data})
 		}else{
 			res.status(400).json({message: 'error'})
