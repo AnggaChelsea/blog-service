@@ -64,7 +64,7 @@ router.post('/login', registerController.logins)
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
 
 
-router.post('/regis-phone', regisphone.regisPhone)
-router.post('/regis-whatsapp', regisphone.regisWhatsapp)
+// router.post('/regis-phone', regisphone.regisPhone)
+// router.post('/regis-whatsapp', regisphone.regisWhatsapp)
 
 module.exports = router;

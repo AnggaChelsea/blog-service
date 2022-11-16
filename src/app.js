@@ -20,10 +20,10 @@ var helmet = require("helmet");
 const sha256 = require("crypto-js/sha256");
 
 require("dotenv").config();
-const messagebird = require("messagebird")(
-	`${process.env.MESSAGEBIRD_API_KEY}`
-);
-const port = process.env.PORT || 5000;
+// const messagebird = require("messagebird")(
+// 	`${process.env.MESSAGEBIRD_API_KEY}`
+// );
+const port = process.env.PORT || 8011;
 
 app.use(helmet());
 

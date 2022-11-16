@@ -10,31 +10,31 @@ const whatsappVerif = require("../../helper/whatsappverif");
 const bcrypt = require('bcrypt')
 
 class PhoneController {
-	static async regisPhone(req, res) {
-		const codeOtpConfirm = Math.floor(Math.random() * 1000000);
-		const convertString = codeOtpConfirm.toString();
-		const slicCode = convertString.slice(0, 4);
-		console.log(slicCode);
-		const { phone, password } = req.body;
-		const idn = '+62'
-		const phonecode = idn+phone
-		console.log(phonecode);
-		const userRegis = await new phoneS({
-			phone: phonecode,
-			password,
-			codeOtp: slicCode,
-			typeNumber: 'Phone'
-		});
-		console.log(userRegis.phone);
-		if (!userRegis) {
-			res.status(500).json({ message: "server error" });
-		} else {
-			setTimeout(function () {
-				verifPhone(phonecode, slicCode);
-			}, 5000);
-			res.status(200).json({ message: "success code terkirim" });
-		}
-	} 
+	// static async regisPhone(req, res) {
+	// 	const codeOtpConfirm = Math.floor(Math.random() * 1000000);
+	// 	const convertString = codeOtpConfirm.toString();
+	// 	const slicCode = convertString.slice(0, 4);
+	// 	console.log(slicCode);
+	// 	const { phone, password } = req.body;
+	// 	const idn = '+62'
+	// 	const phonecode = idn+phone
+	// 	console.log(phonecode);
+	// 	const userRegis = await new phoneS({
+	// 		phone: phonecode,
+	// 		password,
+	// 		codeOtp: slicCode,
+	// 		typeNumber: 'Phone'
+	// 	});
+	// 	console.log(userRegis.phone);
+	// 	if (!userRegis) {
+	// 		res.status(500).json({ message: "server error" });
+	// 	} else {
+	// 		setTimeout(function () {
+	// 			verifPhone(phonecode, slicCode);
+	// 		}, 5000);
+	// 		res.status(200).json({ message: "success code terkirim" });
+	// 	}
+	// } 
 	static async registerEmail(req, res){
 		const salt = bcrypt.genSaltSync(10)
 		const code = Math.floor(Math.random() * 10000);
@@ -73,27 +73,27 @@ class PhoneController {
 			});
 		console.log(await save, "success");
 	}
-	static async regisWhatsapp(req, res) {
-		const codeOtp = Math.floor(Math.random() * 1000000);
-		const toStrin = codeOtp.toString();
-		const codeSend = toStrin.slice(0, 4);
-		const { phone, password } = req.body;
-		const dataSave = await new phoneS({
-			phone: phone,
-			password,
-			codeOtp: codeSend,
-			typeNumber: 'WA'
-		});
-		console.log(dataSave);
-		if (!dataSave) {
-			res.status(400).json({ message: "regis error" });
-		} else {
-			const codeVerif = whatsappVerif(codeSend, phone);
-			console.log(codeVerif, 'whatsappVerif');
-			dataSave.save()
-			if (codeVerif) return res.status(200).json({ message: "success" });
-		}
-	}
+	// static async regisWhatsapp(req, res) {
+	// 	const codeOtp = Math.floor(Math.random() * 1000000);
+	// 	const toStrin = codeOtp.toString();
+	// 	const codeSend = toStrin.slice(0, 4);
+	// 	const { phone, password } = req.body;
+	// 	const dataSave = await new phoneS({
+	// 		phone: phone,
+	// 		password,
+	// 		codeOtp: codeSend,
+	// 		typeNumber: 'WA'
+	// 	});
+	// 	console.log(dataSave);
+	// 	if (!dataSave) {
+	// 		res.status(400).json({ message: "regis error" });
+	// 	} else {
+	// 		const codeVerif = whatsappVerif(codeSend, phone);
+	// 		console.log(codeVerif, 'whatsappVerif');
+	// 		dataSave.save()
+	// 		if (codeVerif) return res.status(200).json({ message: "success" });
+	// 	}
+	// }
 	
 	static async loginEmail(req, res){
 		
