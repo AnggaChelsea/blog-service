@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bcrypt = require("bcryptjs");
+require('dotenv').config();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -22,7 +23,7 @@ require("dotenv").config();
 const messagebird = require("messagebird")(
 	`${process.env.MESSAGEBIRD_API_KEY}`
 );
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 1000;
 
 app.use(helmet());
 
