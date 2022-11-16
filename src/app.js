@@ -23,7 +23,7 @@ require("dotenv").config();
 const messagebird = require("messagebird")(
 	`${process.env.MESSAGEBIRD_API_KEY}`
 );
-const port = process.env.PORT || 1000;
+const port = process.env.PORT || 5000;
 
 app.use(helmet());
 
