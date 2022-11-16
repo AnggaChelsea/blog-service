@@ -1,8 +1,8 @@
-const phoneS = require("../../models/phone");
-const verifPhone = require("../../helper/smsverif");
-const accountSid = "ACad0696755cd0669e8c4165a1e8a6bdec";
-const authToken = "74940f0d26f25e42b5a3175f3485c186";
-const client = require("twilio")(accountSid, authToken);
+// const phoneS = require("../../models/phone");
+// const verifPhone = require("../../helper/smsverif");
+// const accountSid = "ACad0696755cd0669e8c4165a1e8a6bdec";
+// const authToken = "74940f0d26f25e42b5a3175f3485c186";
+// const client = require("twilio")(accountSid, authToken);
 const userModel = require("../../models/user");
 const emailVerif = require("../../helper/emailVerifycation");
 const moment = require("moment");
@@ -15,7 +15,7 @@ class PhoneController {
 	// 	const convertString = codeOtpConfirm.toString();
 	// 	const slicCode = convertString.slice(0, 4);
 	// 	console.log(slicCode);
-	// 	const { phone, password } = req.body;
+	// 	const { phone, password } = req.body; 
 	// 	const idn = '+62'
 	// 	const phonecode = idn+phone
 	// 	console.log(phonecode);
