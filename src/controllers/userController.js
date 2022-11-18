@@ -305,7 +305,7 @@ class UserController {
 						},
 						"sayangmamah",
 						{
-							expiresIn: "1m",
+							expiresIn: "5h",
 						}
 					);
 					return res.status(200).json({
