@@ -68,7 +68,11 @@ class PhoneController {
 			.status(200)
 			.json({
 				message: "Success",
-				data: createUser,
+				data: {
+					name: createUser.name,
+					email: createUser.email,
+					typeUser: createUser.typeUser
+				},
 				email: "success send code ke email anda",
 			});
 		console.log(await save, "success");
