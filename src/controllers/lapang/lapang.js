@@ -17,7 +17,8 @@ class LapangController {
 			turnament,
 			members,
 			katagory,
-			pemilikId
+			pemilikId,
+			jadwal,
 		} = req.body;
 		const newData = await new lapangModel({
 			nama: nama,
@@ -32,7 +33,8 @@ class LapangController {
 			turnament,
 			members,
 			katagory,
-			pemilikId
+			pemilikId,
+			jadwal,
 		});
 		console.log(newData.pemilikId);
 		newData
@@ -51,34 +53,37 @@ class LapangController {
 			});
 	}
 
-	static async getLapang(req, res){
-		const lapangdata = await lapangModel.find().populate('katagory').populate('members').populate('pemilikId')
+	static async getLapang(req, res) {
+		const lapangdata = await lapangModel
+			.find()
+			.populate("katagory")
+			.populate("members")
+			.populate("pemilikId");
 
-		if(!lapangdata){
-			res.status(404).json({ message:'not found' });
-		}else{
-			res.status(200).json({ message:'success', data:lapangdata})
+		if (!lapangdata) {
+			res.status(404).json({ message: "not found" });
+		} else {
+			res.status(200).json({ message: "success", data: lapangdata });
 		}
 	}
 
-	static async getLapangByPemilik(req, res){
-		const {pemilikId} = req.body;
-		let lapang = await lapangModel.findOne({pemilikId: pemilikId})
-		if(lapang === null){
-			res.status(404).send({message: 'Belum Register Lapang'})
-		}else{
-			res.status(200).send({message: 'success get data', data: lapang})
+	static async getLapangByPemilik(req, res) {
+		const { pemilikId } = req.body;
+		let lapang = await lapangModel.findOne({ pemilikId: pemilikId });
+		if (lapang === null) {
+			res.status(404).send({ message: "Belum Register Lapang" });
+		} else {
+			res.status(200).send({ message: "success get data", data: lapang });
 		}
-		
 	}
 
-	static async getLapangByKatagori(req, res){
-		const {katagory} = req.body;
-		let lapangKate = await lapangModel.findOne({katagory: katagory})
-		if(lapangKate === null){
-			res.status(404).send({message: 'Belum Register Lapang'})
-		}else{
-			res.status(200).send({message: 'success get data', data: lapangKate})
+	static async getLapangByKatagori(req, res) {
+		const { katagory } = req.body;
+		let lapangKate = await lapangModel.findOne({ katagory: katagory });
+		if (lapangKate === null) {
+			res.status(404).send({ message: "Belum Register Lapang" });
+		} else {
+			res.status(200).send({ message: "success get data", data: lapangKate });
 		}
 	}
 
@@ -86,47 +91,58 @@ class LapangController {
 		const { nama, gambar } = req.body;
 		const dataKategori = await new katagoryModel({
 			nama,
-			gambar, 
+			gambar,
 		});
-		dataKategori 
+		dataKategori
 			.save()
 			.then((data) => {
-				res
-					.status(200)
-					.json({
-						message: "success creating katagory",
-						data: data,
-						dataKategori,
-					});
+				res.status(200).json({
+					message: "success creating katagory",
+					data: data,
+					dataKategori,
+				});
 			})
 			.catch((err) => {
 				res.status(500).json({ message: "error creating katag" });
 			});
 	}
-	static async joinMember(req, res){
-		const lapangId = req.params;
-		const {pemainId} = req.body;
-		const datapemain = await pemainModel.findOne({pemainId: pemainId});
-		if(datapemain != null){
-			const dataLapangUpdate = await pemainModel.findOneAndUpdate(lapangId, {
-				$push: {pemainId: [pemainId]}
-			}, 
-			
-			{
-				new: true
-			})
-			res.status(201).json({message:'success jadi memeber', data: dataLapangUpdate})
-		}else{
-			res.status(400).json({message: 'belum bisa jadi memeber'})
+	static async joinMember(req, res) {
+		// const lapangId = req.params;
+		const {lapangId, pemainId, statusAcc } = req.body;
+		const datapemain = await pemainModel.findOne({ pemainId: pemainId });
+		if (datapemain != null) {
+			const dataLapangUpdate = await pemainModel.findOneAndUpdate(
+				lapangId,
+				{
+					$push: {
+						pemainId: {
+							pemainId,
+							statusAcc
+						},
+						// statusAcc: {
+						// 	statusAcc: statusAcc ? statusAcc : false,
+						// },
+					},
+				},
+
+				{
+					new: true,
+				}
+			);
+			res
+				.status(201)
+				.json({ message: "success jadi memeber", data: dataLapangUpdate });
+		} else {
+			res.status(400).json({ message: "belum bisa jadi memeber" });
 		}
 	}
-	static async getKategory(req, res){
-		const data = await katagoryModel.find()
-		console.log(data)
-		if(data != null){
-			res.status(200).json({message: 'success', data: data})
-		}else{
-			res.status(400).json({message: 'error'})
+	static async getKategory(req, res) {
+		const data = await katagoryModel.find();
+		console.log(data);
+		if (data != null) {
+			res.status(200).json({ message: "success", data: data });
+		} else {
+			res.status(400).json({ message: "error" });
 		}
 	}
 }

@@ -302,12 +302,14 @@ class UserController {
 							email: user.email,
 							userRole: user.role,
 							verified: user.verified,
+							typeUser: user.typeUser
 						},
 						"sayangmamah",
 						{
-							expiresIn: "5h",
+							expiresIn: "1m",
 						}
 					);
+					console.log(token.expiresIn);
 					return res.status(200).json({
 						message: "success login",
 						id: user.id,
@@ -319,7 +321,7 @@ class UserController {
 				} else {
 					res.status(400).json({
 						message: "password or email wrong",
-					});
+					}); 
 				}
 			} else if (user.verified === false) {
 				res.status(400).json({
@@ -380,19 +382,16 @@ class UserController {
 
 	static async verifyOtp(req, res) {
 		const { codeOtp } = req.body;
-		const findOtp = await userModel.findOneAndUpdate(
-			
-				codeOtp,
-			
-			{
-				$set: {
-					verified: true,
-				},
-			},
-			{
-				new: true,
-			}
+    console.log(codeOtp);
+		const findOtp = await userModel.updateOne(
+				{codeOtp: codeOtp},
+				{ $set:
+					{
+					  verified: true,
+					}
+				 }
 		);
+    console.log(findOtp, 'bawah');
 		if (findOtp) {
 			res.status(200).json({
 				message: "success verify otp",
