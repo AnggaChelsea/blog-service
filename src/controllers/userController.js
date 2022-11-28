@@ -299,7 +299,7 @@ class UserController {
 						{
 							userId: user.id,
 							name: user.name,
-							email: user.email,
+						 	email: user.email,
 							userRole: user.role,
 							verified: user.verified,
 							typeUser: user.typeUser
@@ -382,25 +382,22 @@ class UserController {
 
 	static async verifyOtp(req, res) {
 		const { codeOtp } = req.body;
-    console.log(codeOtp);
-		const findOtp = await userModel.updateOne(
+		const code = await userModel.findOne({codeOtp: codeOtp})
+		console.log(codeOtp, code);
+		if(code !== null){
+			const findOtp = await userModel.updateOne(
 				{codeOtp: codeOtp},
 				{ $set:
 					{
 					  verified: true,
 					}
-				 }
+				 } 
 		);
-    console.log(findOtp, 'bawah');
-		if (findOtp) {
-			res.status(200).json({
-				message: "success verify otp",
-			})
-		} else {
-			res.status(500).json({
-				message: "failed verify otp",
-			});
+		res.status(200).json({message:'success', data: findOtp})
+		}else{
+			res.status(404).json({message:'code otp salah'})
 		}
+		res.status(500).json({message:'error'})
 	}
 
 	static async message(req, res) {
