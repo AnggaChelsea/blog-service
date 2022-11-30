@@ -35,6 +35,23 @@ app.all("*", function (req, res, next) {
 	res.header("Access-Control-Allow-Headers", "Content-Type");
 	next();
 });
+const allowedOrigins = [
+	'capacitor://localhost',
+	'ionic://localhost',
+	'http://localhost',
+	'http://localhost:8080',
+	'http://localhost:8100',
+  ];
+  const corsOptions = {
+	origin: (origin, callback) => {
+	  if (allowedOrigins.includes(origin) || !origin) {
+		callback(null, true);
+	  } else {
+		callback(new Error('Origin not allowed by CORS'));
+	  }
+	},
+  };
+  app.options('*', cors(corsOptions));
 
 app.get("/", (req, res) => {
 	res.send("Hello World!");
