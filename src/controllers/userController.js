@@ -44,9 +44,13 @@ class UserController {
 				name,
 				email,
 				password,
-				image: nameFileImage,
+				image,
 				alamat,
 				numberphone,
+				beratBadan,
+				tinggiBadan,
+				jenisKelamin,
+				tanggalLahir
 			},
 			{
 				new: true,
@@ -306,7 +310,7 @@ class UserController {
 						},
 						"sayangmamah",
 						{
-							expiresIn: "1m",
+							expiresIn: "12h",
 						}
 					);
 					console.log(token.expiresIn);

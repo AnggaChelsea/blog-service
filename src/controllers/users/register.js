@@ -40,7 +40,8 @@ class PhoneController {
 		const code = Math.floor(Math.random() * 1000000000);
 		const slicesCode = code.toString().slice(0, 4)
 		console.log(slicesCode)
-		const { email, password, name, alamat, image, tanggalLahir, pemain ,numberphone, jenisKelamin, typeUser, tinggiBadan, codeOtp } =
+		const { email, password, name, alamat, image, tanggalLahir, pemain ,numberphone, jenisKelamin, typeUser, beratBadan, tinggiBadan
+			, codeOtp } =
 			req.body;
 		console.log("registerEmail", email, password, name, alamat);
 		const createUser = await new userModel({
@@ -54,7 +55,9 @@ class PhoneController {
 			image, 
 			pemain,
 			typeUser,
-			codeOtp: slicesCode
+			codeOtp: slicesCode,
+			beratBadan,
+			tinggiBadan
 		}); 
 		console.log(createUser); 
 		console.log(code, 'otp') 

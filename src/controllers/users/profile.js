@@ -12,12 +12,14 @@ class Profile {
             message: "Successfully get profile",
             dataAll: profile,
             dataProfile: {
-                Nama: profile.name,
-                Email: profile.email,
-                Alamat: profile.alamat,
-                Tanggal_Lahir: profile.tanggalLahir,
-                JenisKelamin: profile.jenisKelamin,
-                NumberPhone: profile.numberphone
+                'Nama': profile.name,
+                'Email': profile.email,
+                'Alamat': profile.alamat,
+                'Tanggal Lahir': profile.tanggalLahir,
+                'Jenis Kelamin': profile.jenisKelamin,
+                'Number Phone': profile.numberphone ? profile.numberphone : '',
+                'Tinggi Badan': profile.tinggiBadan !== 0 ? profile.tinggiBadan : '',
+                'Berat Badan': profile.beratBadan  !== 0 ? profile.beratBadan : '',
             },
             image: profile.image
         })
