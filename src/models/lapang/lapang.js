@@ -60,10 +60,12 @@ const LapangSchema = new mongoose.Schema({
 			pemainId: {
 				type: schema.Types.ObjectId,
 				ref: "users",
+				required: false,
 			},
 			statusAcc: {
 				type: Boolean,
 				default: false,
+				required: false,
 			}
 		},
 	],

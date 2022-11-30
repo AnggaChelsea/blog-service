@@ -53,6 +53,38 @@ class LapangController {
 			});
 	}
 
+	static async addrat(req, res) {
+		const numb = 1;
+		const idLapang = req.body
+		const numbrate = await lapangModel.findOneAndReplace(idLapang, {
+			rate: parseFloat(rate) + 1
+		}, {
+			new: true,
+			useFindAndModify: false
+		})
+		// const dataRate = parseFloat(numbrate.rate)
+		// const total = dataRate + numb
+		// const databaru = await lapangModel.findOneAndReplace(idLapang, {
+		// 	rate: total,
+		// },
+		// {
+		// 	new: true,
+		// 	useFindAndModify: false
+		// },
+		// )
+		// console.log(total)
+		if(numbrate){
+			res.status(200).json({message: 'makasih', data: numbrate})
+		}else{
+			res.status(400).json({message:'error'})
+		}
+		// .then(_ => {
+		// 	res.status(200).json({message: 'thank u', data: databaru})
+		// }).catch(_ => {
+		// 	res.status(500).json({message: 'error'})
+		// })
+	}
+
 	static async getLapang(req, res) {
 		const lapangdata = await lapangModel
 			.find()
@@ -108,7 +140,7 @@ class LapangController {
 	}
 	static async joinMember(req, res) {
 		// const lapangId = req.params;
-		const {lapangId, pemainId, statusAcc } = req.body;
+		const { lapangId, pemainId, statusAcc } = req.body;
 		const datapemain = await pemainModel.findOne({ pemainId: pemainId });
 		if (datapemain != null) {
 			const dataLapangUpdate = await pemainModel.findOneAndUpdate(
@@ -117,7 +149,7 @@ class LapangController {
 					$push: {
 						pemainId: {
 							pemainId,
-							statusAcc
+							statusAcc,
 						},
 						// statusAcc: {
 						// 	statusAcc: statusAcc ? statusAcc : false,
