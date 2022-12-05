@@ -83,17 +83,13 @@ class PhoneController {
 			});
 		console.log(await save, "success");
 	}
-	
-	static async loginEmail(req, res){
-		
-	}
 
 	static async loginNumberPhone(req, res) {
 		const {phone, password} = req.body;
 		const data = await phoneS.findOne({phone: phone})
 		if(data.phone === phone && data.password === password){
 			res.status(200).json({ message: "success login"}); 
-		}else{
+		}else{ 
 			res.status(404).json({ message: "not found",})
 			
 		}

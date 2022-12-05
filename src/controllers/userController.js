@@ -37,7 +37,7 @@ class UserController {
 	static async updateUser(req, res) {
 		const filename = req.file;
 		const nameFileImage = Math.round(Math.random() * 100000) + filename;
-		const { name, email, password, image, alamat, numberphone } = req.body;
+		const { name, email, password, image, alamat, numberphone, beratBadan, tinggiBadan, } = req.body;
 		const user = await userModel.findByIdAndUpdate(
 			req.params.id,
 			{

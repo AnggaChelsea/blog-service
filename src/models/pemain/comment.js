@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema
 
 const schemaStatus = new schema({
-    pemainId: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
 		ref: "users",
+    },
+    statusId: {
+        type: mongoose.Schema.Types.ObjectId,
+		ref: "status",
     },
     gambar: [{
         type: String,
@@ -19,5 +23,5 @@ const schemaStatus = new schema({
     },
 
 })
-const dataStatus = mongoose.model('status', schemaStatus)
-module.exports = dataStatus
+const dataStatus = mongoose.model('comment', schemaStatus)
+module.exports = dataComment

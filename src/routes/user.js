@@ -9,7 +9,7 @@ const regisphone = require('../controllers/users/register')
 
 router.post('/register/user-email', registerController.registerNew);
 router.post('/register/user', regisphone.registerEmail);
-router.put('/user/update-profile/:id', auth, registerController.updateUser);
+router.put('/user/update-profile/:id',  registerController.updateUser);
 router.post('/user/confirmationemail/:id', registerController.forgotPassword);
 router.put('/user/changePassword/:id', registerController.changPasswordUser);
 router.get('/get-all-users', registerController.getAllUser);
