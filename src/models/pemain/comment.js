@@ -23,5 +23,5 @@ const schemaStatus = new schema({
     },
 
 })
-const dataStatus = mongoose.model('comment', schemaStatus)
+const dataComment = mongoose.model('comment', schemaStatus)
 module.exports = dataComment

@@ -13,6 +13,10 @@ const schemaStatus = new schema({
         type: String,
         required: true,
     },
+    like: {
+        type: Number,
+        default: 0,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

@@ -1,36 +1,67 @@
 const statusModel = require('../../models/pemain/status')
-const commentModel = require('../../models/comment')
+const commentModel = require('../../models/pemain/comment')
 class Status {
     static async createStatus(req, res){
-        const {userId, gambar, status} = req.body;
+        const {pemainId, gambar, status, like} = req.body;
         const statusData = await new statusModel({
-            userId,
+            pemainId,
             gambar,
-            status
-        }).then(_ => {
-            res.status(201).json({message: "success", status: statusData})
-        }).catch(err => {
-            res.status(500).json({message:err})
+            status,
+            like
         })
+        await statusData.save();
+        if(statusData){
+            return res.status(200).json({
+                status: statusData.message,
+                data: statusData
+            })
+        }else{
+            return res.status(200).json({
+                status: 'error',
+                message: 'error post status'
+            })
+        }
     }
     static async getStatusByUser(req, res){
-        const userId = req.body;
-        const status = await statusModel.findOne(userId)
-        .then(result => {
-            res.status(200).json({message:'succes', data: status})
-        })
+        const pemainId = req.body;
+        const status = await statusModel.findOne(pemainId).populate('pemainId')
+        if(pemainId){
+            return res.status(200).json({
+                status: status.message,
+                data: status
+            })
+        }else{
+            return res.status(200).json({
+                status: 'error',
+                message: 'error get status'
+            })
+        }
     }
-    static commentStatus(req, res){
-        const {userId, statusId, gambar, status} = req.body;
+    static async getAllStatus(req, res){
+        const status = await statusModel.find({}).populate('pemainId')
+        if(status){
+            return res.status(200).json({
+                status: status.message,
+                data: status
+            })
+        }else{
+            return res.status(200).json({
+                status: 'error',
+                message: 'error get all status'
+            })
+        }
+    }
+    static async commentStatus(req, res){
+        const {pemainId, statusId, gambar, status} = req.body;
         const commentData = await new commentModel({
-            userId, statusId, gambar, status
+            pemainId, statusId, gambar, status
         })
         commentData.save()
-        .then(result => {
-            res.status(200).json({message:'success send comment', data: commentData})
-        }).catch(err => {
-            res.status(500).json({message: 'error '})
-        })
+        if(commentData){
+            return res.status(200).json({message:'status send', data: commentData})
+        }else{
+            return res.status(200).json({message:'error send', data: commentData})
+        }
 
     }
 }

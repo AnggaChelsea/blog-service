@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const registerController = require('../controllers/userController');
+const statusController = require('../controllers/users/status')
 const profile = require('../controllers/users/profile')
 const auth = require("../middleware/auth");
 const regisphone = require('../controllers/users/register')
@@ -26,6 +27,11 @@ router.post('/login', registerController.logins)
 
 
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
+
+router.post('/post-status', statusController.createStatus)
+router.post('/get-status', statusController.getStatusByUser)
+router.get('/get-all-status', statusController.getAllStatus)
+router.post('/comment-status', statusController.commentStatus)
 
 
 // router.post('/regis-phone', regisphone.regisPhone)
