@@ -1,4 +1,5 @@
 /node_modules
+/golang
 basic
 .vscode
 npm-debug.log

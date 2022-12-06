@@ -37,16 +37,20 @@ class UserController {
 	static async updateUser(req, res) {
 		const filename = req.file;
 		const nameFileImage = Math.round(Math.random() * 100000) + filename;
-		const { name, email, password, image, alamat, numberphone } = req.body;
+		const { name, email, password, image, alamat, numberphone, beratBadan, tinggiBadan, } = req.body;
 		const user = await userModel.findByIdAndUpdate(
 			req.params.id,
 			{
 				name,
 				email,
 				password,
-				image: nameFileImage,
+				image,
 				alamat,
 				numberphone,
+				beratBadan,
+				tinggiBadan,
+				jenisKelamin,
+				tanggalLahir
 			},
 			{
 				new: true,
@@ -299,15 +303,17 @@ class UserController {
 						{
 							userId: user.id,
 							name: user.name,
-							email: user.email,
+						 	email: user.email,
 							userRole: user.role,
 							verified: user.verified,
+							typeUser: user.typeUser
 						},
 						"sayangmamah",
 						{
-							expiresIn: "5h",
+							expiresIn: "12h",
 						}
 					);
+					console.log(token.expiresIn);
 					return res.status(200).json({
 						message: "success login",
 						id: user.id,
@@ -319,7 +325,7 @@ class UserController {
 				} else {
 					res.status(400).json({
 						message: "password or email wrong",
-					});
+					}); 
 				}
 			} else if (user.verified === false) {
 				res.status(400).json({
@@ -380,28 +386,22 @@ class UserController {
 
 	static async verifyOtp(req, res) {
 		const { codeOtp } = req.body;
-		const findOtp = await userModel.findOneAndUpdate(
-			
-				codeOtp,
-			
-			{
-				$set: {
-					verified: true,
-				},
-			},
-			{
-				new: true,
-			}
+		const code = await userModel.findOne({codeOtp: codeOtp})
+		console.log(codeOtp, code);
+		if(code !== null){
+			const findOtp = await userModel.updateOne(
+				{codeOtp: codeOtp},
+				{ $set:
+					{
+					  verified: true,
+					}
+				 } 
 		);
-		if (findOtp) {
-			res.status(200).json({
-				message: "success verify otp",
-			})
-		} else {
-			res.status(500).json({
-				message: "failed verify otp",
-			});
+		res.status(200).json({message:'success', data: findOtp})
+		}else{
+			res.status(404).json({message:'code otp salah'})
 		}
+		res.status(500).json({message:'error'})
 	}
 
 	static async message(req, res) {

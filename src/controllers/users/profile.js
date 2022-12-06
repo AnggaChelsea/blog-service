@@ -6,12 +6,22 @@ class Profile {
         if (!profile) {
             res.status(400).json({
                 message: "Profile not found",
-                data: profile,
             })
         }
         res.status(200).json({
             message: "Successfully get profile",
-            data: profile
+            dataAll: profile,
+            dataProfile: {
+                'Nama': profile.name,
+                'Email': profile.email,
+                'Alamat': profile.alamat,
+                'Tanggal Lahir': profile.tanggalLahir,
+                'Jenis Kelamin': profile.jenisKelamin,
+                'Number Phone': profile.numberphone ? profile.numberphone : '',
+                'Tinggi Badan': profile.tinggiBadan !== 0 ? profile.tinggiBadan : '',
+                'Berat Badan': profile.beratBadan  !== 0 ? profile.beratBadan : '',
+            },
+            image: profile.image
         })
     }
     static async follow(req, res) {

@@ -28,6 +28,7 @@ const UserSchema = mongoose.Schema(
 		},
 		image: {
 			type: String,
+			default:null,
 		},
 		followers: [
 			{
@@ -39,6 +40,7 @@ const UserSchema = mongoose.Schema(
 		],
 		alamat: {
 			type: String,
+			default:null,
 		},
 		PesanKirim: [
 			{
@@ -65,9 +67,11 @@ const UserSchema = mongoose.Schema(
 			{
 				latitude: {
 					type: String,
+					default:null,
 				},
 				longitude: {
 					type: String,
+					default:null,
 				},
 			},
 		],
@@ -86,7 +90,7 @@ const UserSchema = mongoose.Schema(
 		},
 		jenisKelamin: {
 			type: String,
-			// required: true,
+			default: null,
 		},
 		numberphone: {
 			type: String,
@@ -119,6 +123,14 @@ const UserSchema = mongoose.Schema(
 		typeUser: {
 			type: String,
 			required: true,
+		},
+		tinggiBadan: {
+			type: Number,
+			default: 0,
+		},
+		beratBadan: { 
+			type: Number,
+			default: 0,
 		}
 	},
 	{

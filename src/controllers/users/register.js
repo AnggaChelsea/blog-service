@@ -37,8 +37,11 @@ class PhoneController {
 	// } 
 	static async registerEmail(req, res){
 		const salt = bcrypt.genSaltSync(10)
-		const code = Math.floor(Math.random() * 10000);
-		const { email, password, name, alamat, image, tanggalLahir, pemain ,numberphone, jenisKelamin, typeUser, tinggiBadan } =
+		const code = Math.floor(Math.random() * 1000000000);
+		const slicesCode = code.toString().slice(0, 4)
+		console.log(slicesCode)
+		const { email, password, name, alamat, image, tanggalLahir, pemain ,numberphone, jenisKelamin, typeUser, beratBadan, tinggiBadan
+			, codeOtp } =
 			req.body;
 		console.log("registerEmail", email, password, name, alamat);
 		const createUser = await new userModel({
@@ -51,14 +54,17 @@ class PhoneController {
 			jenisKelamin,
 			image, 
 			pemain,
-			typeUser
+			typeUser,
+			codeOtp: slicesCode,
+			beratBadan,
+			tinggiBadan
 		}); 
 		console.log(createUser); 
 		console.log(code, 'otp') 
-		const sendemail = await emailVerif(email, name, code);
+		const sendemail = await emailVerif(email, name, slicesCode);
 		console.log(sendemail,'console email');
 		if (sendemail) {
-			console.log("success send email", sendemail(email, name, code));
+			console.log("success send email", sendemail(email, name, slicesCode));
 		} else {
 			console.log("error send email");
 		}
@@ -68,35 +74,14 @@ class PhoneController {
 			.status(200)
 			.json({
 				message: "Success",
-				data: createUser,
+				data: {
+					name: createUser.name,
+					email: createUser.email,
+					typeUser: createUser.typeUser
+				},
 				email: "success send code ke email anda",
 			});
 		console.log(await save, "success");
-	}
-	// static async regisWhatsapp(req, res) {
-	// 	const codeOtp = Math.floor(Math.random() * 1000000);
-	// 	const toStrin = codeOtp.toString();
-	// 	const codeSend = toStrin.slice(0, 4);
-	// 	const { phone, password } = req.body;
-	// 	const dataSave = await new phoneS({
-	// 		phone: phone,
-	// 		password,
-	// 		codeOtp: codeSend,
-	// 		typeNumber: 'WA'
-	// 	});
-	// 	console.log(dataSave);
-	// 	if (!dataSave) {
-	// 		res.status(400).json({ message: "regis error" });
-	// 	} else {
-	// 		const codeVerif = whatsappVerif(codeSend, phone);
-	// 		console.log(codeVerif, 'whatsappVerif');
-	// 		dataSave.save()
-	// 		if (codeVerif) return res.status(200).json({ message: "success" });
-	// 	}
-	// }
-	
-	static async loginEmail(req, res){
-		
 	}
 
 	static async loginNumberPhone(req, res) {
@@ -104,7 +89,7 @@ class PhoneController {
 		const data = await phoneS.findOne({phone: phone})
 		if(data.phone === phone && data.password === password){
 			res.status(200).json({ message: "success login"}); 
-		}else{
+		}else{ 
 			res.status(404).json({ message: "not found",})
 			
 		}
