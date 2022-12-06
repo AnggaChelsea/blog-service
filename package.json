@@ -45,8 +45,6 @@
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.4",
     "nodemon": "^2.0.15",
-    "socket.io": "^4.5.0",
-    "socket.io-client": "^4.4.1",
     "sparkpost": "^2.1.4"
   },
   "devDependencies": {
