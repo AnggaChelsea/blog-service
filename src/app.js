@@ -8,7 +8,6 @@ const cors = require("cors");
 const mongooseConnection = require("./config/db");
 const configSql = require("./config/sql_connect");
 const http = require("http").Server(app);
-const io = require("socket.io")(http);
 const mysql = require('mysql2');
 var helmet = require("helmet");
 
