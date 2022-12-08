@@ -101,7 +101,7 @@ class LapangController {
 
 	static async getLapangByPemilik(req, res) {
 		const { pemilikId } = req.body;
-		let lapang = await lapangModel.findOne({ pemilikId: pemilikId });
+		let lapang = await lapangModel.findOne({ pemilikId: pemilikId }).populate('pemilikId')
 		if (lapang === null) {
 			res.status(404).send({ message: "Belum Register Lapang" });
 		} else {
