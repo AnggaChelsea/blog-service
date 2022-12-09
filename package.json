@@ -48,6 +48,7 @@
     "sparkpost": "^2.1.4"
   },
   "devDependencies": {
+    "@vercel/node": "^2.8.0",
     "jest": "^27.5.1",
     "supertest": "^6.2.2"
   },
