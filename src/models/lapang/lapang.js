@@ -6,16 +6,7 @@ const LapangSchema = new mongoose.Schema({
 		required: true,
 	},
 	jadwal: [
-		{
-			jam: [
-				{
-					type: String,
-				},
-				{
-					open: Boolean,
-				}
-			],
-		},
+		
 	],
 	pemilikId: {
 		type: schema.Types.ObjectId,
