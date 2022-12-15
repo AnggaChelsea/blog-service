@@ -7,7 +7,7 @@ const jadwalController = require('../../controllers/lapang/jadwal')
 
 router.post('/get-by-pemilik', lapangcontrollers.getLapangByPemilik)
 router.post('/create-katagory', lapangcontrollers.createCatagory)
-router.post('/create-lapang', auth, lapangcontrollers.CreateLapang)
+router.post('/create-lapang',  lapangcontrollers.CreateLapang)
 router.get('/get-lapang', auth, lapangcontrollers.getLapang)
 router.post('/get-by-category', auth, lapangcontrollers.getLapangByKatagori)
 router.post('/join-member', auth, lapangcontrollers.joinMember)

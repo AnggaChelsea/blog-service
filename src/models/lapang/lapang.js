@@ -1,12 +1,26 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 const LapangSchema = new mongoose.Schema({
-	nama: {
+	namaLapang: {
 		type: String,
 		required: true,
 	},
+	description: {
+		type: String,
+		required: true,
+	},
+
 	jadwal: [
-		
+		{
+			jadwalHari: {
+				type: String,
+			},
+			jadwalJam: [],
+			libur: {
+				type: Boolean,
+				default: false,
+			},
+		},
 	],
 	pemilikId: {
 		type: schema.Types.ObjectId,
@@ -22,16 +36,47 @@ const LapangSchema = new mongoose.Schema({
 	},
 	gambar: [
 		{
-			type: String,
-			required: true,
+			gambar1: {
+				type: String,
+			},
+			gambar2: {
+				type: String,
+			},
+			video: {
+				type: String,
+			},
 		},
 	],
 	video: {
 		type: String,
 	},
-	lokasi: {
+	alamatLengkap: {
 		type: String,
 		required: true,
+	},
+	provinsi: {
+		type: String,
+	},
+	kotan: {
+		type: String,
+	},
+	kecamatan: {
+		type: String,
+	},
+	kelurahan: {
+		type: String,
+	},
+	namaLengkap: {
+		type: String,
+	},
+	email: {
+		type: String,
+	},
+	tlpn: {
+		type: String,
+	},
+	kodePost: {
+		type: String,
 	},
 	latitude: {
 		type: String,
@@ -57,7 +102,7 @@ const LapangSchema = new mongoose.Schema({
 				type: Boolean,
 				default: false,
 				required: false,
-			}
+			},
 		},
 	],
 	createdAt: {

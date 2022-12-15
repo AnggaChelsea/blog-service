@@ -5,7 +5,7 @@ const pemainModel = require("../../models/user");
 class LapangController {
 	static async CreateLapang(req, res) {
 		const {
-			nama,
+			namaLapang,
 			hargaSewaPerjam,
 			gambar,
 			lokasi,
@@ -16,15 +16,18 @@ class LapangController {
 			description,
 			turnament,
 			members,
+			alamatLengkap,
 			katagory,
 			pemilikId,
 			jadwal,
 		} = req.body;
 		const newData = await new lapangModel({
-			nama: nama,
+			namaLapang,
 			hargaSewaPerjam,
 			gambar,
 			lokasi,
+			alamatLengkap,
+			hargaSewaPerjam,
 			rate,
 			video,
 			latitude,

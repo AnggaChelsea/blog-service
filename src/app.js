@@ -5,8 +5,8 @@ require('dotenv').config();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-const mongooseConnection = require("./src/config/db");
-const configSql = require("./src/config/sql_connect");
+const mongooseConnection = require("./config/db");
+const configSql = require("./config/sql_connect");
 const http = require("http").Server(app);
 const mysql = require('mysql2');
 var helmet = require("helmet");
@@ -115,7 +115,7 @@ require("dotenv").config();
 app.use(morgan("tiny"));
 
 //router
-const routes = require("./src/routes");
+const routes = require("./routes");
 
 const connections = []
 app.use(routes);
