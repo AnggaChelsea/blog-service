@@ -65,27 +65,13 @@ class LapangController {
 			new: true,
 			useFindAndModify: false
 		})
-		// const dataRate = parseFloat(numbrate.rate)
-		// const total = dataRate + numb
-		// const databaru = await lapangModel.findOneAndReplace(idLapang, {
-		// 	rate: total,
-		// },
-		// {
-		// 	new: true,
-		// 	useFindAndModify: false
-		// },
-		// )
-		// console.log(total)
+		
 		if(numbrate){
 			res.status(200).json({message: 'makasih', data: numbrate})
 		}else{
 			res.status(400).json({message:'error'})
 		}
-		// .then(_ => {
-		// 	res.status(200).json({message: 'thank u', data: databaru})
-		// }).catch(_ => {
-		// 	res.status(500).json({message: 'error'})
-		// })
+		
 	}
 
 	static async getLapang(req, res) {
@@ -154,9 +140,7 @@ class LapangController {
 							pemainId,
 							statusAcc,
 						},
-						// statusAcc: {
-						// 	statusAcc: statusAcc ? statusAcc : false,
-						// },
+						
 					},
 				},
 
@@ -179,6 +163,17 @@ class LapangController {
 		} else {
 			res.status(400).json({ message: "error" });
 		}
+	}
+	static async filterLapangTerdekat(req, res){
+		const { desa } = req.body;
+		const alamatLapang = await lapangModel.findOne({desa: desa})
+		.then(() => {
+			res.status(200).json({ message:'success', data: alamatLapang})
+		})
+		.catch((err) => {
+			res.status(500).json({ message: err.message})
+		})
+
 	}
 }
 

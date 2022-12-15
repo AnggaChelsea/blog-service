@@ -19,4 +19,6 @@ router.post('/checkout-booking', bookingController.doBooking)
 router.post('/create-jadwal', jadwalController.createJadwal)
 router.get('/get-jadwal', jadwalController.getJadwal)
 
+router.post('/cari-lapang-terdekat', lapangcontrollers.filterLapangTerdekat)
+
 module.exports = router;
