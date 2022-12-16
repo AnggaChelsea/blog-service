@@ -25,6 +25,7 @@ const LapangSchema = new mongoose.Schema({
 	pemilikId: {
 		type: schema.Types.ObjectId,
 		ref: "users",
+		required: true,
 	},
 	hargaSewaPerjam: {
 		type: String,
@@ -117,7 +118,7 @@ const LapangSchema = new mongoose.Schema({
 		type: Date,
 		default: new Date(),
 	},
-	katagory: {
+	type: {
 		type: schema.Types.ObjectId,
 		ref: "category-lapangs",
 	},

@@ -115,12 +115,11 @@ const UserSchema = mongoose.Schema(
 			type: Date,
 			default: Date.now,
 		},
-		pemain: {
+		type: {
 			type: mongoose.Schema.ObjectId,
 			ref: "category-lapangs",
-			// required: true,
 		},
-		typeUser: {
+		typeUser: { 
 			type: String,
 			required: true,
 		},
@@ -131,7 +130,12 @@ const UserSchema = mongoose.Schema(
 		beratBadan: { 
 			type: Number,
 			default: 0,
+		},
+		typeLogin: {
+			type: String,
+			required: true,
 		}
+
 	},
 	{
 		collection: "",

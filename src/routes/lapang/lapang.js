@@ -11,7 +11,7 @@ router.post('/create-lapang',  lapangcontrollers.CreateLapang)
 router.get('/get-lapang', auth, lapangcontrollers.getLapang)
 router.post('/get-by-category', auth, lapangcontrollers.getLapangByKatagori)
 router.post('/join-member', auth, lapangcontrollers.joinMember)
-router.get('/get-kategory', auth, lapangcontrollers.getKategory)
+router.get('/get-kategory', lapangcontrollers.getKategory)
 router.post('/add-rating',  lapangcontrollers.addrat)
 
 router.post('/checkout-booking', bookingController.doBooking)

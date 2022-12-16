@@ -2,23 +2,21 @@ swagger: "2.0"
 info:
   description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
   version: "1.0.0"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
+  title: "Swagger OSI Service"
+  termsOfService: "http://localhost:5000"
   contact:
-    email: "apiteam@swagger.io"
+    email: "osi.oursportindonesia@swagger.com"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
+host: "osi.oursportindonesia.com"
 basePath: "/v2"
 tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
+- name: "OSI"
+  description: "Semua Contoh Integrate API Service"
+  
+- name: "lapang"
+  description: "Access to lapang Service"
 - name: "user"
   description: "Operations about user"
   externalDocs:
@@ -28,13 +26,13 @@ schemes:
 - "https"
 - "http"
 paths:
-  /pet:
+  /user/login-by-email:
     post:
       tags:
-      - "pet"
-      summary: "Add a new pet to the store"
+      - "user"
+      summary: "Login by email"
       description: ""
-      operationId: "addPet"
+      operationId: "login-by-email"
       consumes:
       - "application/json"
       - "application/xml"
@@ -44,7 +42,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Pet object that needs to be added to the store"
+        description: "Data json harus di sesuakan saat login email"
         required: true
         schema:
           $ref: "#/definitions/Pet"
