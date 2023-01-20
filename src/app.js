@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const mongooseConnection = require("./config/db");
 const configSql = require("./config/sql_connect");
+const sqlConnection = require("./config/db_sql_connect")
 const http = require("http").Server(app);
 const mysql = require('mysql2');
 var helmet = require("helmet");
@@ -24,23 +25,23 @@ app.all("*", function (req, res, next) {
 	res.header("Access-Control-Allow-Headers", "Content-Type");
 	next();
 });
-const allowedOrigins = [
-	'capacitor://localhost',
-	'ionic://localhost',
-	'http://localhost',
-	'http://localhost:8080',
-	'http://localhost:8100',
-  ];
-  const corsOptions = {
-	origin: (origin, callback) => {
-	  if (allowedOrigins.includes(origin) || !origin) {
-		callback(null, true);
-	  } else {
-		callback(new Error('Origin not allowed by CORS'));
-	  }
-	},
-  };
-  app.options('*', cors(corsOptions));
+// const allowedOrigins = [
+// 	'capacitor://localhost',
+// 	'ionic://localhost',
+// 	'http://localhost',
+// 	'http://localhost:8080',
+// 	'http://localhost:8100',
+//   ];
+//   const corsOptions = {
+// 	origin: (origin, callback) => {
+// 	  if (allowedOrigins.includes(origin) || !origin) {
+// 		callback(null, true);
+// 	  } else {
+// 		callback(new Error('Origin not allowed by CORS'));
+// 	  }
+// 	},
+//   };
+//   app.options('*', cors(corsOptions));
 
 app.get("/", (req, res) => {
 	res.send("Hello World!");
@@ -85,27 +86,41 @@ app.use(bodyParser.json({ limit: "50mb" }))
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }))
 
 mongooseConnection();
-const dbpool = mysql.createPool({
-	host: 'localhost',
-	user: 'root',
-	database: 'osi_admin',
-	waitForConnections: true,
-	connectionLimit: 10,
-	queueLimit: 0
-  });
+sqlConnection()
+// app.use(sqlConnection)
+// const dbpool = mysql.createPool({
+// 	host: 'localhost',
+// 	user: 'root',
+// 	database: 'indowalks',
+// 	waitForConnections: true,
+// 	connectionLimit: 10,
+// 	queueLimit: 0
+//   });
 
-  app.use('/connection', (req, res) => {
-	dbpool.execute('SELECT * FROM navbar', (err, rows) => {
-		if(err){
-			res.json({
-				message: 'Error executing connection query failed'
-			})
-		}
-		res.json({message: 'Connection success', data: rows});
-	})
-} )
+//   app.use('/connection', (req, res) => {
+// 	dbpool.execute('SELECT * FROM wilayah_provinsi', (err, rows) => {
+// 		if(err){
+// 			res.json({
+// 				message: 'Error executing connection query failed'
+// 			})
+// 		}
+// 		res.json({message: 'Connection success', data: rows});
+// 	})
+// 	app.use('/connection/kabupaten', (req, res) => {
+// 		const id = req.params.id;
+// 		dbpool.execute(`SELECT * FROM wilayah_kabupaten WHERE id = 32`, (err, rows) => {
+// 			if(err){
+// 				res.json({
+// 					message: 'Error executing connection query failed'
+// 				})
+// 			}
+// 			res.json({message: 'Connection success', data: rows});
+// 		})
+// })
+// })
 
-app.get("/", function (req, res) {
+
+app.get("/test_sql", function (req, res) {
 	if (configSql.configSql.db) {
 		res.send("mysql connect");
 	}

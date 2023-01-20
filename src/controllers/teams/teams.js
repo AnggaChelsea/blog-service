@@ -59,7 +59,7 @@ class TeamController {
 			const lengPemain = coun.length
 			datapemain = lengPemain
 		}
-		console.log(datapemain, 'ini data pemain')
+		// console.log(datapemain, 'ini data pemain')
 		if (!timedata) return;
 
 		res.status(200).send({ message: "success get data", data: timedata, jumlahPemain: datapemain });

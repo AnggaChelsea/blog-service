@@ -1,6 +1,6 @@
 const lapangModel = require("../../models/lapang/lapang");
 const katagoryModel = require("../../models/lapang/katagory-lapang");
-const pemainModel = require("../../models/user");
+const pemainModel = require("../../models/users/user");
 
 class LapangController {
 	static async CreateLapang(req, res) {
@@ -18,8 +18,9 @@ class LapangController {
 			members,
 			alamatLengkap,
 			katagory,
-			pemilikId,
+			pemilikId,  
 			jadwal,
+			type
 		} = req.body;
 		const newData = await new lapangModel({
 			namaLapang,
@@ -38,18 +39,13 @@ class LapangController {
 			katagory,
 			pemilikId,
 			jadwal,
+			type
 		});
-		console.log(newData.pemilikId);
+		// console.log(newData.pemilikId);
 		newData
 			.save()
 			.then((newdatasuccess) => {
-				if (newdatasuccess && newData) {
-					res
-						.status(201)
-						.json({ message: "success create data", data: newdatasuccess });
-				} else {
-					res.status(400).json({ message: "error creating data" });
-				}
+				res.status(200).json({message: 'success', data: newData});
 			})
 			.catch((err) => {
 				res.status(500).json({ message: err });
@@ -77,7 +73,7 @@ class LapangController {
 	static async getLapang(req, res) {
 		const lapangdata = await lapangModel
 			.find()
-			.populate("katagory")
+			// .populate("katagory")
 			.populate("members")
 			.populate("pemilikId");
 
@@ -157,7 +153,6 @@ class LapangController {
 	}
 	static async getKategory(req, res) {
 		const data = await katagoryModel.find();
-		console.log(data);
 		if (data != null) {
 			res.status(200).json({ message: "success", data: data });
 		} else {
@@ -173,7 +168,16 @@ class LapangController {
 		.catch((err) => {
 			res.status(500).json({ message: err.message})
 		})
+	}
 
+	static async filterLapang(req, res){
+		const {type} = req.body
+		const typeData = await lapangModel.findOne({type: type})
+		.then(() => {
+			res.status(200).json({ message: 'success', data: typeData})
+		}).catch((err) => {
+			res.status(500).json({ message: err.message})
+		});
 	}
 }
 

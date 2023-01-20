@@ -1,6 +1,7 @@
-const userModel = require("../models/user");
+const userModel = require("../models/users/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const lapangModel = require("../models/lapang/lapang");
 const sendVeryficationEmail = require("../helper/emailVerifycation");
 const smsVerify = require("../helper/smsverif");
 const sendVeryficationPassword = require("../helper/passwordVerification");
@@ -14,8 +15,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 const navbarM = require("../models/navbar");
 
-console.log(process.env.URL_HOST);
-const { find } = require("../models/user");
+// console.log(process.env.URL_HOST);
+const { find } = require("../models/users/user");
 var kode = null;
 class UserController {
 	static async createNav(req, res) {
@@ -37,7 +38,17 @@ class UserController {
 	static async updateUser(req, res) {
 		const filename = req.file;
 		const nameFileImage = Math.round(Math.random() * 100000) + filename;
-		const { name, email, password, image, alamat, numberphone, beratBadan,jenisKelamin, tinggiBadan, } = req.body;
+		const {
+			name,
+			email,
+			password,
+			image,
+			alamat,
+			numberphone,
+			beratBadan,
+			jenisKelamin,
+			tinggiBadan,
+		} = req.body;
 		const user = await userModel.findByIdAndUpdate(
 			req.params.id,
 			{
@@ -50,7 +61,7 @@ class UserController {
 				beratBadan,
 				tinggiBadan,
 				jenisKelamin,
-				tanggalLahir
+				tanggalLahir,
 			},
 			{
 				new: true,
@@ -265,8 +276,8 @@ class UserController {
 			coordinateLocation,
 		} = req.body;
 
-		if(name || email || password || numberphone || alamat || image == ''){
-			res.status(400).json({message: 'wajib isi data'})
+		if (name || email || password || numberphone || alamat || image == "") {
+			res.status(400).json({ message: "wajib isi data" });
 		}
 
 		const usernew = await new userModel({
@@ -279,7 +290,6 @@ class UserController {
 			codeOtp: slic,
 			coordinateLocation,
 		});
-		console.log(usernew.password)
 		if (!usernew) {
 			res.status(500).json(err);
 		} else {
@@ -303,17 +313,17 @@ class UserController {
 						{
 							userId: user.id,
 							name: user.name,
-						 	email: user.email,
+							email: user.email,
 							userRole: user.role,
 							verified: user.verified,
-							typeUser: user.typeUser
+							typeUser: user.typeUser,
+							expiresIn: 43200000
 						},
 						"sayangmamah",
 						{
 							expiresIn: "12h",
 						}
 					);
-					console.log(token.expiresIn);
 					return res.status(200).json({
 						message: "success login",
 						id: user.id,
@@ -325,7 +335,7 @@ class UserController {
 				} else {
 					res.status(400).json({
 						message: "password or email wrong",
-					}); 
+					});
 				}
 			} else if (user.verified === false) {
 				res.status(400).json({
@@ -386,22 +396,21 @@ class UserController {
 
 	static async verifyOtp(req, res) {
 		const { codeOtp } = req.body;
-		const code = await userModel.findOne({codeOtp: codeOtp})
-		console.log(codeOtp, code);
-		if(code !== null){
+		const code = await userModel.findOne({ codeOtp: codeOtp });
+		if (code !== null) {
 			const findOtp = await userModel.updateOne(
-				{codeOtp: codeOtp},
-				{ $set:
-					{
-					  verified: true,
-					}
-				 } 
-		);
-		res.status(200).json({message:'success', data: findOtp})
-		}else{
-			res.status(404).json({message:'code otp salah'})
+				{ codeOtp: codeOtp },
+				{
+					$set: {
+						verified: true,
+					},
+				}
+			);
+			res.status(200).json({ message: "success", data: findOtp });
+		} else {
+			res.status(404).json({ message: "code otp salah" });
 		}
-		res.status(500).json({message:'error'})
+		res.status(500).json({ message: "error" });
 	}
 
 	static async message(req, res) {
@@ -514,9 +523,7 @@ class UserController {
 			};
 			nodemailer.sendMail(mailOptions, (err, info) => {
 				if (err) {
-					console.log(err);
 				} else {
-					console.log(info);
 				}
 			});
 			res.status(200).json({
@@ -616,9 +623,9 @@ class UserController {
 	}
 
 	static async getAllUser(req, res) {
-		const user = await userModel.find().populate("pemain")
+		const user = await userModel.find().populate("pemain");
 		if (user) {
-			res.status(200).json({ 
+			res.status(200).json({
 				message: "success get all user",
 				data: user,
 			});
@@ -656,6 +663,49 @@ class UserController {
 				message: "success",
 				data: productgetProductbyCategory,
 			});
+		}
+	}
+
+	static cariLapangTerdekat(lat1, lon1, lat2, lon2, unit) {
+		var radlat1 = (Math.PI * lat1) / 180;
+		var radlat2 = (Math.PI * lat2) / 180;
+		var theta = lon1 - lon2;
+		var radtheta = (Math.PI * theta) / 180;
+		var dist =
+			Math.sin(radlat1) * Math.sin(radlat2) +
+			Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = (dist * 180) / Math.PI;
+		dist = dist * 60 * 1.1515;
+		if (unit == "K") {
+			dist = dist * 1.609344;
+		}
+		if (unit == "N") {
+			dist = dist * 0.8684;
+		}
+		return dist;
+	}
+
+	static async getLocationNearbe(req, res) {
+		try {
+			const { latitude, longitude } = req.body;
+			const dataGet = await lapangModel.aggregate([
+				{
+					$geoNear: {
+						near: {type: 'Point', latitude: parseFloat(latitude), longitude: parseFloat(longitude)},
+						key: 'location',
+						maxDistance: parseFloat(1000)*1609,
+						distanceField: 'dist.calculated',
+						spherical: true
+					},
+				},
+			]);
+			res.status(200).send({message: 'Location find', data: dataGet});
+		} catch (err) {
+			res.status(500).send({message: err.message});
 		}
 	}
 }

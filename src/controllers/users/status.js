@@ -9,12 +9,13 @@ class Status {
             status,
             like
         })
+        console.log(statusData);
         await statusData.save();
         if(statusData){
             return res.status(200).json({
                 status: statusData.message,
                 data: statusData
-            })
+            }) 
         }else{
             return res.status(200).json({
                 status: 'error',
@@ -39,6 +40,7 @@ class Status {
     }
     static async getAllStatus(req, res){
         const status = await statusModel.find({}).populate('pemainId')
+      
         if(status){
             return res.status(200).json({
                 status: status.message,

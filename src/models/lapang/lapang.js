@@ -121,6 +121,7 @@ const LapangSchema = new mongoose.Schema({
 	type: {
 		type: schema.Types.ObjectId,
 		ref: "category-lapangs",
+		required: true,
 	},
 });
 

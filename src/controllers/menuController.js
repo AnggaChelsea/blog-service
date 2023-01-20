@@ -10,7 +10,7 @@ class MenuController {
         } = req.body;
         const namaMenu = menuModel.findOne(name);
         for(let i=0; i<namaMenu.length; i++){
-            console.log(namaMenu[i].name != null)
+            // console.log(namaMenu[i].name != null)
         }
             if(namaMenu.name != name ){
                 const menuData = new menuModel({

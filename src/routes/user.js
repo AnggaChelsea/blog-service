@@ -33,6 +33,8 @@ router.post('/get-status', statusController.getStatusByUser)
 router.get('/get-all-status', statusController.getAllStatus)
 router.post('/comment-status', statusController.commentStatus)
 
+router.post('/get-lapang-terdekat', registerController.getLocationNearbe)
+
 
 // router.post('/regis-phone', regisphone.regisPhone)
 // router.post('/regis-whatsapp', regisphone.regisWhatsapp)

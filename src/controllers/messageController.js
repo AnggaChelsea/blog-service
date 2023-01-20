@@ -57,7 +57,6 @@ class MessageController {
       productId,
       buyyerId,
     });
-    console.log('succes1')
     newMessage.save();
     res.status(201).json({
       message: "success send message",

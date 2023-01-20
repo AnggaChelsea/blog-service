@@ -1,5 +1,5 @@
 const expressjwt = require('express-jwt');
-const userModel = require('../models/user');
+const userModel = require('../models/users/user');
 
 function authJwtAdmin() {
     require("dotenv").config();

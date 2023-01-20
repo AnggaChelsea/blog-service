@@ -7,7 +7,7 @@ class jadwalController {
 			jadwalJam,
 			libur,
 		})
-        console.log(dataJadwal)
+        // console.log(dataJadwal)
         dataJadwal.save()
         .then(() => {
             res.status(200).json({message:'success', data:dataJadwal})

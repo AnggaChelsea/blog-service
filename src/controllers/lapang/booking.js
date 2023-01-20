@@ -18,7 +18,7 @@ class BookingController {
 			durasiMain,
 			totalBayar,
 		}); 
-		console.log(dataLapang);
+		// console.log(dataLapang);
 		dataLapang.save()
         .then(() => {
 			res

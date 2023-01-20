@@ -3,7 +3,7 @@
 // const accountSid = "ACad0696755cd0669e8c4165a1e8a6bdec";
 // const authToken = "74940f0d26f25e42b5a3175f3485c186";
 // const client = require("twilio")(accountSid, authToken);
-const userModel = require("../../models/user");
+const userModel = require("../../models/users/user");
 const emailVerif = require("../../helper/emailVerifycation");
 const moment = require("moment");
 const whatsappVerif = require("../../helper/whatsappverif");
@@ -39,7 +39,6 @@ class PhoneController {
 		const salt = bcrypt.genSaltSync(10);
 		const code = Math.floor(Math.random() * 1000000000);
 		const slicesCode = code.toString().slice(0, 4);
-		console.log(slicesCode);
 		const {
 			email,
 			password,
@@ -47,16 +46,17 @@ class PhoneController {
 			alamat,
 			image,
 			tanggalLahir,
-			pemain,
+			type,
 			numberphone,
 			jenisKelamin,
 			typeUser,
 			beratBadan,
-			tinggiBadan,
+			tinggiBadan,  
 			typeLogin,
+			latitude,
+			longitude, 
 			codeOtp,
 		} = req.body;
-		console.log("registerEmail", email, password, name, alamat);
 		const createUser = await new userModel({
 			email: email,
 			password: bcrypt.hashSync(password, salt),
@@ -66,24 +66,21 @@ class PhoneController {
 			numberphone,
 			jenisKelamin,
 			image,
-			pemain,
+			type,
 			typeUser,
 			codeOtp: slicesCode,
 			beratBadan,
 			tinggiBadan,
 			typeLogin,
+			latitude,
+			longitude,
 		});
-		console.log(createUser);
-		console.log(code, "otp");
+		// console.log(createUser);
 		const sendemail = await emailVerif(email, name, slicesCode);
-		console.log(sendemail, "console email");
 		if (sendemail) {
-			console.log("success send email", sendemail(email, name, slicesCode));
 		} else {
-			console.log("error send email");
 		}
 		const save = await createUser.save();
-		console.log(createUser);
 		res.status(200).json({
 			message: "Success",
 			data: {
@@ -93,7 +90,6 @@ class PhoneController {
 			},
 			email: "success send code ke email anda",
 		});
-		console.log(await save, "success");
 	}
 
 	static async loginNumberPhone(req, res) {

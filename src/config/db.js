@@ -22,9 +22,9 @@ const mongodbconnection = () => {
         useUnifiedTopology: true
     }, (err) => {
         if (err) {
-            console.log(err);
+            // console.log(err);
         } else {
-            console.log('MongoDB Connected');
+            // console.log('MongoDB Connected');
         }
     });
 }
