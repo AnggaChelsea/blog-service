@@ -6,14 +6,18 @@ const projectSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    imageLink: {
+        type: String,
+        required: true,
+    },
+    linkVideo:{
+        type: String,
+        required: true
+    },
     description: {
         type: String,
         required: true,
     },
-    imageLink: {
-        type: String,
-        required: true,
-    }
 });
 const project = mongoose.model('projects', projectSchema);
 module.exports = project

@@ -2,11 +2,9 @@ const projectModel = require('../../../models/blog/projects/projects');
 
 class ProjectController {
     static async createProject(req, res) {
-        const {name, description, imageLink} = req.body;
-        console.log(name, description, imageLink);
+        const {name, description, imageLink, linkVideo} = req.body;
         try {
-            const project = await new projectModel({name, description, imageLink}).save();
-            console.log(project.name, project.description, project.imageLink);
+            const project = await new projectModel({name, imageLink, linkVideo, description}).save();
             res.send('Blog created!')
         } catch {
             res.status(500).json(
@@ -36,16 +34,13 @@ class ProjectController {
         static async edit(req, res){
             try{
                 const {id} = req.params; 
-                console.log(id)
-                const {name, description, imageLink} = req.body;
+               
+                const {name, imageLink, linkVideo, description} = req.body;
                 const project = await projectModel.findByIdAndUpdate(id, {
-                    name,
-                    description,
-                    imageLink,
+                    name, imageLink, linkVideo, description
                 }, {
                     new: true
                 })
-                console.log(project, 'project')
               if(project){
                 res.status(200).json({message: 'project updated'})
               }
@@ -56,9 +51,7 @@ class ProjectController {
         static async getDetail(req, res){
             try{
                 const {id} = req.params
-                console.log(id)
                 const data = await projectModel.findById(id)
-                console.log(data)
                 if(data){
                     res.status(200).send({message: 'success', data: data})
                 }

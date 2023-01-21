@@ -15,6 +15,8 @@ router.use('/lapang', require('./lapang/lapang'))
 router.use('/menu', require('./menu'))
 router.use('/projects', blog)
 router.use('/hire', require('./blog/hire'))
+router.use('/story', require('./blog/story/story'))
+router.use('/work', require('./blog/work'))
 
 router.use('/alamat', require('./service/sql/alamat'))
 
