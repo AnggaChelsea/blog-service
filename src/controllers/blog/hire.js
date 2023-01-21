@@ -31,6 +31,19 @@ class hireController {
             res.status(500).json({message: '500'})
         }
     }
+    static async deleteHire(req, res){
+        try{
+            const {id} = req.params
+            const data = await hireModel.findByIdAndDelete(id)
+            if(data){
+                res.status(200).json({message: 'success delete', data: data})
+            }else{
+                res.status(404).json({message: '404'})
+            }
+        }catch{
+            res.status(500).json({message: '500'})
+        }
+    }
 }
 
 module.exports = hireController
