@@ -17,6 +17,7 @@ router.use('/projects', blog)
 router.use('/hire', require('./blog/hire'))
 router.use('/story', require('./blog/story/story'))
 router.use('/work', require('./blog/work'))
+router.use('/member', require('./blog/member'))
 
 router.use('/alamat', require('./service/sql/alamat'))
 
