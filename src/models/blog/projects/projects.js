@@ -18,6 +18,10 @@ const projectSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    status: {
+        type: String,
+        required: true,
+    }
 });
 const project = mongoose.model('projects', projectSchema);
 module.exports = project

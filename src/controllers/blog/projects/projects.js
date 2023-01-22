@@ -2,10 +2,12 @@ const projectModel = require('../../../models/blog/projects/projects');
 
 class ProjectController {
     static async createProject(req, res) {
-        const {name, description, imageLink, linkVideo} = req.body;
+        const {name, description, imageLink, linkVideo, status} = req.body;
         try {
-            const project = await new projectModel({name, imageLink, linkVideo, description}).save();
-            res.send('Blog created!')
+            const project = await new projectModel({name, imageLink, linkVideo, description, status}).save();
+            if(project){
+                res.status(200).json({message:'success', data:project});
+            }
         } catch {
             res.status(500).json(
                 {message: 'error 500'}
