@@ -21,6 +21,9 @@ const memberSchema = mongoose.Schema({
     role: {
         type: String,
         default: 'member'
+    },
+    codeOtp: {
+        type: Number
     }
 })
 
