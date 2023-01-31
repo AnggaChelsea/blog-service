@@ -5,4 +5,5 @@ basic
 npm-debug.log
 .DS_Store
 /*.env
-golang
+./golang
+./package/api-server/node_modules

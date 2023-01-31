@@ -25,7 +25,6 @@ router.put('/verify/:id', registerController.verifyEmail);
 router.put('/verify-code-otp', registerController.verifyOtp);
 router.post('/login', registerController.logins)
 
-
 router.post('/verify/otp-password', registerController.checkCodeOtpPassword);
 
 router.post('/post-status', statusController.createStatus)

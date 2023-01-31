@@ -17,9 +17,14 @@ class ProjectController {
         static async getData(req, res){
             try{
                 const dataProject = await projectModel.find()
-                res.status(200).json({message: dataProject})
+                console.log(dataProject)
+                if(dataProject){
+                    return res.status(200).json({message: dataProject}) 
+                }else{
+                    return res.status(400).json({message:400})
+                }
             }catch{
-                res.status(500).json({message: 'error'})
+              return  res.status(500).json({message: 'error'})
             }
         }
         static async deleteProject(req, res){
@@ -56,6 +61,9 @@ class ProjectController {
                 const data = await projectModel.findById(id)
                 if(data){
                     res.status(200).send({message: 'success', data: data})
+                }else{
+                    res.status(400).json({message: 'error'});
+                    
                 }
             }catch{
                 res.status(500).json({message: 'error',})

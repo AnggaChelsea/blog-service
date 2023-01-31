@@ -20,7 +20,11 @@ class LapangController {
 			katagory,
 			pemilikId,  
 			jadwal,
-			type
+			type,
+			kelurahan, 
+			kecamatan,
+			kota,
+			provinsi
 		} = req.body;
 		const newData = await new lapangModel({
 			namaLapang,
@@ -39,7 +43,11 @@ class LapangController {
 			katagory,
 			pemilikId,
 			jadwal,
-			type
+			type,
+			kelurahan, 
+			kecamatan,
+			kota,
+			provinsi
 		});
 		// console.log(newData.pemilikId);
 		newData

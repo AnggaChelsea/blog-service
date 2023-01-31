@@ -59,15 +59,11 @@ const LapangSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	kotan: {
+	kota: {
 		type: String,
 		required: true,
 	},
 	kecamatan: {
-		type: String,
-		required: true,
-	},
-	kelurahan: {
 		type: String,
 		required: true,
 	},
