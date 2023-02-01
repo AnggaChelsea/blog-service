@@ -16,7 +16,8 @@ class ProjectController {
 
         static async getData(req, res){
             try{
-                const dataProject = await projectModel.find()
+                    const dataProject = await projectModel.find()
+                    const allData = dataProject.length
                     const pageinate = 7;
                     const page = parseInt(req.body.page) || 1;
                     const startIndex = (page - 1) * pageinate;
@@ -30,6 +31,7 @@ class ProjectController {
                         page: page,
                         pages: Math.ceil(result.length / pageinate),
                         data: result,
+                        pagesAll: allData,
                     });
                     // console.log(datares, 'datares')
                
