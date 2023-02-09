@@ -16,11 +16,11 @@ const memberSchema = mongoose.Schema({
     },
     verify: {
         type: Boolean,
-        default: false,
+        default: false, 
     },
-    role: {
+    type: {
         type: String,
-        default: 'member'
+        default: 'free'
     },
     codeOtp: {
         type: Number

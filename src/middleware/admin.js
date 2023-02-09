@@ -1,17 +1,17 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
-    try {
+    try{
         const token = req.headers.authorization.split(" ")[1];
         const decoded = jwt.verify(token, "sayangmamah");
         console.log(decoded);
-        if(decoded.name === "free"){
-            res.status(403).json({message:'access denied just for premium'})
+        if(decoded.name === "premium" || decoded.name === "free"){
+            res.status(403).json({message:'access denied just for admin'})
         }else{
             req.userData = decoded;
             next();
         }
-    } catch (error) {
+    }catch{
         return res.status(401).json({message: "Auth failed"})
     }
 }

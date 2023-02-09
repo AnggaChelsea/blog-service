@@ -18,6 +18,7 @@ class ProjectController {
             try{
                     const dataProject = await projectModel.find()
                     const allData = dataProject.length
+                    console.log(allData, 'lengt')
                     const pageinate = 7;
                     const page = parseInt(req.body.page) || 1;
                     const startIndex = (page - 1) * pageinate;
@@ -27,7 +28,7 @@ class ProjectController {
                     const result = dataProject.slice(startIndex, endIndex)
                     res.status(200).json({
                         currentPage: page,
-                        length: result.length,
+                        lengthproject: result.length,
                         page: page,
                         pages: Math.ceil(result.length / pageinate),
                         data: result,

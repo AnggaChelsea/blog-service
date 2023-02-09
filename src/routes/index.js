@@ -20,6 +20,7 @@ router.use('/work', require('./blog/work'))
 router.use('/member', require('./blog/member'))
 
 router.use('/alamat', require('./service/sql/alamat'))
+router.use('/project-course', require('./testkerja/projects'))
 
 
 

@@ -1,4 +1,5 @@
 const hireModel = require('../../models/blog/hire/hire')
+const errorHandler = require('../../helper/blog/errorhandler')
 
 class hireController {
     static async createHire(req, res){
@@ -12,10 +13,10 @@ class hireController {
             if(hireData){
                 res.status(200).json({message: 'message sended'})
             }else{
-                res.status(400).json({message: 'message wrong'})
+                errorHandler(400, res)
             }
         }catch{
-            res.status(500).json({message: 'message erro 500'})
+            errorHandler(500, res)
         }
     }
     static async getHireData(req, res){
@@ -25,10 +26,10 @@ class hireController {
             if(data){
                 res.status(200).json({message:'succes get data', data: data})
             }else{
-                res.status(404).json({message: 'not found', data:data})
+                errorHandler(400, res)
             }
         }catch{
-            res.status(500).json({message: '500'})
+            errorHandler(500, res)
         }
     }
     static async deleteHire(req, res){
@@ -38,10 +39,10 @@ class hireController {
             if(data){
                 res.status(200).json({message: 'success delete', data: data})
             }else{
-                res.status(404).json({message: '404'})
+                errorHandler(400, res)
             }
         }catch{
-            res.status(500).json({message: '500'})
+            errorHandler(500, res)
         }
     }
 }
