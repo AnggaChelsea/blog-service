@@ -35,6 +35,13 @@ const productSchema = mongoose.Schema({
     reviews: {
         type: Number,
         default:0
+    },
+    createAt: {
+        type: Date,
+        default: Date.now()
+    },
+    isPromo: {
+        type:Boolean,
     }
 })
 const products = mongoose.model('product-course', productSchema)
