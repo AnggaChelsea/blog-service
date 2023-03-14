@@ -81,9 +81,47 @@ class ProjectController {
             }catch{
                 res.status(500).json({message: 'error',})
             }
-            
-
         }
+
+        static async createService(req, res){
+            try{
+                const {name, description, imageLink, linkVideo, status} = req.body;
+                const project = await new projectModel({name, imageLink, linkVideo, description, status}).save();
+                if(project){
+                    res.status(200).json({message:'success', data:project});
+                }
+            }catch{
+                res.status(500).json({message: 'error',})
+            }
+        }
+
+        static async getService(req, res){
+            try{
+                    const dataProject = await projectModel.find()
+                    const allData = dataProject.length
+                    console.log(allData, 'lengt')
+                    const pageinate = 7;
+                    const page = parseInt(req.body.page) || 1;
+                    const startIndex = (page - 1) * pageinate;
+                    console.log(startIndex, 'start')
+                    const endIndex = startIndex + pageinate;
+                    console.log(endIndex, 'end')
+                    const result = dataProject.slice(startIndex, endIndex)
+                    res.status(200).json({
+                        currentPage: page,
+                        lengthproject: result.length,
+                        page: page,
+                        pages: Math.ceil(result.length / pageinate),
+                        data: result,
+                        pagesAll: allData,
+                    });
+                    // console.log(datares, 'datares')
+               
+            }catch{
+              return  res.status(500).json({message: 'error'})
+            }
+        }
+
 }
 
 module.exports = ProjectController

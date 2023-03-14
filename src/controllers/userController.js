@@ -243,8 +243,8 @@ class UserController {
                         userRole: user.role,
                         verified: user.verified,
                         typeUser: user.typeUser,
-                        expiresIn: 43200000
-                    }, "sayangmamah", {expiresIn: "12h"});
+                        expiresIn: '1m'
+                    }, "sayangmamah", {expiresIn: "1m"});
                     return res.status(200).json({
                         message: "success login",
                         id: user.id,

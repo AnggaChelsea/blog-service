@@ -67,7 +67,7 @@ class memberController {
                             email: user.email,
                             userRole: user.type,
                             verified: user.verified,
-                            typeUser: user.typeUser,
+                            typeUser: user.type,
                             iat: Math.floor(Date.now() / 1000)
                         }
                         const token = jwt.sign({
@@ -78,9 +78,9 @@ class memberController {
                             email: user.email,
                             userRole: user.role,
                             verified: user.verified,
-                            typeUser: user.typeUser,
+                            typeUser: user.type,
                             iat: Math.floor(Date.now() / 1000)
-                        }, "sayangmamah", {expiresIn: "12h"});
+                        }, "sayangmamah", {expiresIn: "5m"});
                         console.log("success login", datatoken)
                         return res.status(200).json({
                             message: "success login",
