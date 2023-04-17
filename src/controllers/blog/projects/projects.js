@@ -121,6 +121,17 @@ class ProjectController {
               return  res.status(500).json({message: 'error'})
             }
         }
+        static async doSearchProject(req, res){
+            try{
+                const name = req.body.name;
+                console.log(namefilter)
+                const data = await projectModel.find({name: {$regex: name, $options: 'i'}})
+                console.log(data)
+               return res.status(200).json({message: 'succes', data: data})
+            }catch(err){
+               return res.status(500).json({message: 'error', err})
+            }
+        }
 
 }
 
